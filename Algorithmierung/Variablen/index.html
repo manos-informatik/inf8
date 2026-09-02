@@ -25,7 +25,7 @@
       <div class="task-body">
         <p class="section-text">Klicke zu jedem Wert den passenden Datentyp &ndash; oder dr&uuml;cke die Tasten 1 bis 5.</p>
 
-        <div class="quiz-bar">
+        <div class="pill-row">
           <p class="status-pill" id="quizTime" aria-live="off">30 s</p>
           <p class="status-pill" id="quizScore" aria-live="off">0 richtig</p>
           <p class="status-pill" id="quizRecord" aria-live="off">Rekord: 0</p>
@@ -67,12 +67,17 @@
 
         <div class="split">
           <section class="subpanel" aria-labelledby="code2Title">
-            <h3 id="code2Title" class="subpanel-title">Code</h3>
+            <div class="subpanel-heading">
+              <h3 id="code2Title" class="subpanel-title">Code</h3>
+              <button class="btn ghost small" type="button" data-kopieren="code2" data-feedback="feedback2">Kopieren</button>
+            </div>
             <pre class="code-block"><code id="code2" aria-label="Processing-Code"></code></pre>
           </section>
 
           <section class="subpanel" aria-labelledby="canvas2Title">
-            <h3 id="canvas2Title" class="subpanel-title">Zeichenfl&auml;che</h3>
+            <div class="subpanel-heading">
+              <h3 id="canvas2Title" class="subpanel-title">Zeichenfl&auml;che</h3>
+            </div>
             <div class="canvas-board">
               <div class="canvas-stack">
                 <canvas id="canvas2" class="drawing-layer" width="400" height="400" aria-label="Zeichenfl&auml;che 400 mal 400 Pixel"></canvas>
@@ -103,12 +108,17 @@
 
         <div class="split">
           <section class="subpanel" aria-labelledby="code3Title">
-            <h3 id="code3Title" class="subpanel-title">Code</h3>
+            <div class="subpanel-heading">
+              <h3 id="code3Title" class="subpanel-title">Code</h3>
+              <button class="btn ghost small" type="button" data-kopieren="code3" data-feedback="feedback3">Kopieren</button>
+            </div>
             <pre class="code-block"><code id="code3" aria-label="Processing-Code"></code></pre>
           </section>
 
           <section class="subpanel" aria-labelledby="canvas3Title">
-            <h3 id="canvas3Title" class="subpanel-title">Zeichenfl&auml;che</h3>
+            <div class="subpanel-heading">
+              <h3 id="canvas3Title" class="subpanel-title">Zeichenfl&auml;che</h3>
+            </div>
             <div class="canvas-board">
               <div class="canvas-stack">
                 <canvas id="canvas3" class="drawing-layer" width="400" height="400" aria-label="Zeichenfl&auml;che 400 mal 400 Pixel"></canvas>
@@ -124,6 +134,60 @@
         </div>
 
         <div class="feedback-box" id="feedback3" aria-live="polite"></div>
+      </div>
+    </details>
+
+    <details class="task" id="task4">
+      <summary class="task-summary">
+        <span class="station-label">Aufgabe 4</span>
+        <span class="task-title">Der wachsende Kreis</span>
+      </summary>
+      <div class="task-body">
+        <p class="section-text">Starte das Programm und schalte danach die <code>draw()</code>-Zyklen einzeln weiter.</p>
+
+        <div class="fn-row" role="group" aria-label="Verstehensstufe w&auml;hlen">
+          <button class="stufe-btn" type="button" data-stufe="1" aria-pressed="false">Stufe 1</button>
+          <button class="stufe-btn" type="button" data-stufe="2" aria-pressed="false">Stufe 2</button>
+          <button class="stufe-btn" type="button" data-stufe="3" aria-pressed="false">Stufe 3</button>
+        </div>
+
+        <div class="pill-row">
+          <p class="status-pill" id="stufeZyklus">Zyklus: 0</p>
+          <p class="status-pill" id="stufeWert">durchmesser: 20</p>
+          <p class="status-pill" id="stufeRichtung" hidden>richtung: 1</p>
+        </div>
+
+        <div class="split">
+          <section class="subpanel" aria-labelledby="code4Title">
+            <div class="subpanel-heading">
+              <h3 id="code4Title" class="subpanel-title">Code</h3>
+              <button class="btn ghost small" type="button" data-kopieren="code4" data-feedback="feedback4">Kopieren</button>
+            </div>
+            <pre class="code-block"><code id="code4" aria-label="Processing-Code"></code></pre>
+          </section>
+
+          <section class="subpanel" aria-labelledby="canvas4Title">
+            <div class="subpanel-heading">
+              <h3 id="canvas4Title" class="subpanel-title">Zeichenfl&auml;che</h3>
+            </div>
+            <div class="canvas-board">
+              <div class="canvas-stack">
+                <canvas id="canvas4" class="drawing-layer" width="400" height="400" aria-label="Zeichenfl&auml;che 400 mal 400 Pixel"></canvas>
+                <canvas id="grid4" class="grid-layer" width="400" height="400" aria-hidden="true"></canvas>
+              </div>
+            </div>
+            <p class="canvas-caption" id="stufeAufruf">noch nichts gezeichnet</p>
+          </section>
+        </div>
+
+        <div class="action-row">
+          <button class="btn" id="stufeStart" type="button">Start</button>
+          <button class="btn" id="stufeSchritt" type="button" disabled>N&auml;chster Draw-Zyklus</button>
+          <button class="btn ghost" id="stufeReset" type="button">Zur&uuml;cksetzen</button>
+          <button class="btn ghost hint-bulb" id="hintDraw" type="button" data-overlay="overlayDraw" aria-label="Hinweis zu draw()">&#128161;</button>
+        </div>
+
+        <div class="feedback-box" id="feedback4" aria-live="polite"></div>
       </div>
     </details>
 
@@ -167,6 +231,17 @@
       <h3 id="overlayRasterTitle" class="overlay-title">Koordinaten ablesen</h3>
       <p class="section-text">Der Nullpunkt liegt oben links, x geht nach rechts, y nach unten. Ein Rasterk&auml;stchen ist 10 Pixel breit.</p>
       <p class="section-text"><code>rect(x, y, b, h)</code> setzt die <em>obere linke Ecke</em>, <code>circle(x, y, d)</code> den <em>Mittelpunkt</em>.</p>
+      <div class="action-row">
+        <button class="btn ghost" type="button" data-close>Schlie&szlig;en</button>
+      </div>
+    </div>
+  </div>
+  <div id="overlayDraw" class="overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="overlayDrawTitle">
+    <div class="overlay-content">
+      <h3 id="overlayDrawTitle" class="overlay-title">Was macht draw()?</h3>
+      <p class="section-text"><code>setup()</code> l&auml;uft einmal, <code>draw()</code> danach immer wieder &ndash; hier Schritt f&uuml;r Schritt per Knopf.</p>
+      <p class="section-text">Der Wert einer Variablen bleibt dabei erhalten: Was am Ende eines Zyklus drinsteht, gilt am Anfang des n&auml;chsten.</p>
+      <p class="section-text">In Processing laufen die Zyklen von allein &ndash; <code>frameRate(2)</code> bremst sie auf zwei pro Sekunde, damit man zusehen kann.</p>
       <div class="action-row">
         <button class="btn ghost" type="button" data-close>Schlie&szlig;en</button>
       </div>

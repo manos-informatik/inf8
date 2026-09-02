@@ -156,14 +156,26 @@ h3 { margin-top: 0; color: #d9f8ff; }
 .subpanel {
   display: flex;
   flex-direction: column;
+  min-width: 0;
   padding: 0.9rem;
   border: 1px solid rgba(168, 181, 199, 0.18);
   border-radius: 12px;
   background: rgba(15, 23, 42, 0.5);
 }
 
+/* Ueberschriftzeile: Titel links, Kopieren-Knopf rechts oben in der Ecke.
+   Beide Spalten bekommen sie, damit die Panels auf gleicher Hoehe beginnen. */
+.subpanel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  min-height: 36px;
+  margin-bottom: 0.7rem;
+}
+
 .subpanel-title {
-  margin: 0 0 0.7rem;
+  margin: 0;
   font-size: 1rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -206,6 +218,12 @@ h3 { margin-top: 0; color: #d9f8ff; }
 
 .hint-bulb { font-size: 1.15rem; padding: 0.55rem 0.75rem; }
 
+.btn.small {
+  min-height: 36px;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.85rem;
+}
+
 .action-row {
   display: flex;
   flex-wrap: wrap;
@@ -244,7 +262,7 @@ h3 { margin-top: 0; color: #d9f8ff; }
 .status-pill.is-warning { border-color: rgba(251, 191, 36, 0.7); color: #fff2cc; }
 
 /* --- Aufgabe 1: Datentyp-Blitz --- */
-.quiz-bar {
+.pill-row {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -340,7 +358,7 @@ h3 { margin-top: 0; color: #d9f8ff; }
   margin-bottom: 1rem;
 }
 
-.fn-btn, .step-btn {
+.fn-btn, .step-btn, .stufe-btn {
   min-height: 44px;
   padding: 0.5rem 1rem;
   border: 1px solid var(--button-border);
@@ -353,10 +371,10 @@ h3 { margin-top: 0; color: #d9f8ff; }
   transition: transform 150ms ease, filter 150ms ease, border-color 150ms ease;
 }
 
-.fn-btn:hover, .step-btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
-.fn-btn:focus-visible, .step-btn:focus-visible { outline: none; box-shadow: var(--focus); }
+.fn-btn:hover, .step-btn:hover, .stufe-btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
+.fn-btn:focus-visible, .step-btn:focus-visible, .stufe-btn:focus-visible { outline: none; box-shadow: var(--focus); }
 
-.fn-btn[aria-pressed="true"], .step-btn[aria-pressed="true"] {
+.fn-btn[aria-pressed="true"], .step-btn[aria-pressed="true"], .stufe-btn[aria-pressed="true"] {
   border-color: rgba(34, 211, 238, 0.7);
   color: #05202e;
   background: linear-gradient(165deg, var(--primary), #17afc8);
@@ -373,6 +391,7 @@ h3 { margin-top: 0; color: #d9f8ff; }
 /* --- Codeansicht mit Zeilennummern --- */
 .code-block {
   flex: 1;
+  min-width: 0;
   margin: 0;
   padding: 14px 0;
   overflow-x: auto;
@@ -392,8 +411,17 @@ h3 { margin-top: 0; color: #d9f8ff; }
   counter-increment: code-line;
   min-height: 30px;
   padding: 2px 14px 2px 50px;
+  border-left: 4px solid transparent;
   color: #e2e8f0;
   white-space: nowrap;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+/* markiert die Zeilen, die im letzten draw()-Zyklus ausgefuehrt wurden */
+.code-line.is-active {
+  border-left-color: var(--accent);
+  color: #fff7d6;
+  background: rgba(251, 191, 36, 0.16);
 }
 
 .code-line::before {
@@ -407,6 +435,7 @@ h3 { margin-top: 0; color: #d9f8ff; }
 }
 
 .code-indent { padding-left: 74px; }
+.code-double-indent { padding-left: 98px; }
 .code-line.is-spaced { margin-top: 12px; }
 
 .keyword { color: #67e8f9; }
@@ -448,6 +477,14 @@ h3 { margin-top: 0; color: #d9f8ff; }
 }
 
 /* --- Zeichenfläche --- */
+.canvas-caption {
+  margin: 0.6rem 0 0;
+  color: var(--muted);
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+  font-size: 0.92rem;
+  text-align: center;
+}
+
 .canvas-board {
   display: flex;
   flex: 1;
@@ -541,7 +578,7 @@ code { font-family: "Cascadia Code", Consolas, "Courier New", monospace; color: 
 
 /* --- Mobil --- */
 @media (max-width: 900px) {
-  .split { grid-template-columns: 1fr; }
+  .split { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (max-width: 620px) {
@@ -550,5 +587,6 @@ code { font-family: "Cascadia Code", Consolas, "Courier New", monospace; color: 
   .task-summary { flex-wrap: wrap; gap: 0.5rem; }
   .code-block { font-size: 0.88rem; }
   .code-indent { padding-left: 64px; }
+  .code-double-indent { padding-left: 84px; }
   .status-pill { min-width: 6rem; padding: 0.45rem 0.7rem; font-size: 0.9rem; }
 }

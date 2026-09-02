@@ -12,13 +12,15 @@
   /* ---------------------------------------------------------------- Zustand */
 
   const state = {
-    offen: { task1: true, task2: false, task3: false },
+    offen: { task1: true, task2: false, task3: false, task4: false },
     rekord: 0,
     funktion: "rect",
     werte2: {},
     schritt3: "3.1",
     werte3: {},
-    geloest3: []
+    geloest3: [],
+    stufe: 1,
+    sim: { zyklus: 0, durchmesser: 20, richtung: 1, gezeichnet: null, gestartet: false }
   };
 
   const persist = () => {
@@ -38,7 +40,7 @@
       if (!data || typeof data !== "object") return;
 
       if (data.offen && typeof data.offen === "object") {
-        ["task1", "task2", "task3"].forEach((id) => {
+        ["task1", "task2", "task3", "task4"].forEach((id) => {
           if (typeof data.offen[id] === "boolean") state.offen[id] = data.offen[id];
         });
       }
@@ -48,6 +50,15 @@
       if (typeof data.schritt3 === "string" && AUFGABEN3.some((a) => a.id === data.schritt3)) state.schritt3 = data.schritt3;
       if (data.werte3 && typeof data.werte3 === "object") state.werte3 = { ...data.werte3 };
       if (Array.isArray(data.geloest3)) state.geloest3 = data.geloest3.filter((id) => typeof id === "string");
+      if ([1, 2, 3].includes(data.stufe)) state.stufe = data.stufe;
+      if (data.sim && typeof data.sim === "object") {
+        const sim = data.sim;
+        if (Number.isFinite(sim.zyklus)) state.sim.zyklus = Math.max(0, Math.trunc(sim.zyklus));
+        if (Number.isFinite(sim.durchmesser)) state.sim.durchmesser = Math.trunc(sim.durchmesser);
+        if (sim.richtung === 1 || sim.richtung === -1) state.sim.richtung = sim.richtung;
+        if (sim.gezeichnet === null || Number.isFinite(sim.gezeichnet)) state.sim.gezeichnet = sim.gezeichnet;
+        if (typeof sim.gestartet === "boolean") state.sim.gestartet = sim.gestartet;
+      }
     } catch {
       /* ungültige Daten ignorieren, Seite startet leer */
     }
@@ -457,7 +468,7 @@
     grid: document.querySelector("#grid2"),
     feedback: document.querySelector("#feedback2"),
     reset: document.querySelector("#reset2"),
-    knoepfe: Array.from(document.querySelectorAll(".fn-btn"))
+    knoepfe: Array.from(document.querySelectorAll("#task2 .fn-btn"))
   };
 
   const ctx2 = els2.canvas.getContext("2d");
@@ -626,6 +637,342 @@
     }
   });
 
+  /* ------------------------------------- Aufgabe 4: Der wachsende Kreis */
+
+  /* Gemeinsamer Anfang aller drei Stufen: feste Position, veraenderlicher Durchmesser. */
+  const stufenKopf = (mitRichtung) => {
+    const zeilen = [
+      { key: "declX", tokens: [["type", "int"], " ", ["var", "x"], " = ", ["num", "200"], ";"] },
+      { key: "declY", tokens: [["type", "int"], " ", ["var", "y"], " = ", ["num", "200"], ";"] },
+      { key: "declD", tokens: [["type", "int"], " ", ["var", "durchmesser"], " = ", ["num", "20"], ";"] }
+    ];
+
+    if (mitRichtung) {
+      zeilen.push({ key: "declR", tokens: [["type", "int"], " ", ["var", "richtung"], " = ", ["num", "1"], ";"] });
+    }
+
+    zeilen.push(
+      { abstand: true, key: "setup", tokens: [["keyword", "void"], " ", ["fn", "setup"], "(){"] },
+      { tief: 1, key: "size", tokens: [["fn", "size"], "(", ["num", "400"], ", ", ["num", "400"], ");"] },
+      // frameRate bremst die Zyklen in Processing auf zwei pro Sekunde
+      { tief: 1, key: "framerate", tokens: [["fn", "frameRate"], "(", ["num", "2"], ");"] },
+      { tokens: ["}"] },
+      { abstand: true, tokens: [["keyword", "void"], " ", ["fn", "draw"], "(){"] },
+      { tief: 1, key: "bg", tokens: [["fn", "background"], "(", ["num", "255"], ");"] },
+      { tief: 1, key: "circle", tokens: [["fn", "circle"], "(", ["var", "x"], ", ", ["var", "y"], ", ", ["var", "durchmesser"], ");"] }
+    );
+
+    return zeilen;
+  };
+
+  const wachsen = { tokens: [["var", "durchmesser"], " = ", ["var", "durchmesser"], " + ", ["num", "20"], ";"] };
+
+  /* Angezeigter Code und schritt() gehoeren zusammen - beides beschreibt denselben Zyklus. */
+  const STUFEN = {
+    1: {
+      zeigtRichtung: false,
+      zeilen: [
+        ...stufenKopf(false),
+        { tief: 1, key: "inc", tokens: wachsen.tokens },
+        { tokens: ["}"] }
+      ],
+      schritt(v) {
+        const gezeichnet = v.durchmesser;
+        v.durchmesser += 20;
+        return {
+          aktiv: ["bg", "circle", "inc"],
+          gezeichnet,
+          hinweis: gezeichnet > 400 ? "Der Kreis passt nicht mehr auf die Zeichenfläche - durchmesser wächst trotzdem weiter." : null
+        };
+      }
+    },
+
+    2: {
+      zeigtRichtung: false,
+      zeilen: [
+        ...stufenKopf(false),
+        { tief: 1, key: "if", tokens: [["keyword", "if"], "(", ["var", "durchmesser"], " < ", ["num", "400"], "){"] },
+        { tief: 2, key: "inc", tokens: wachsen.tokens },
+        { tief: 1, tokens: ["}"] },
+        { tokens: ["}"] }
+      ],
+      schritt(v) {
+        const gezeichnet = v.durchmesser;
+        const aktiv = ["bg", "circle", "if"];
+
+        if (v.durchmesser < 400) {
+          v.durchmesser += 20;
+          aktiv.push("inc");
+          return { aktiv, gezeichnet, hinweis: null };
+        }
+
+        return { aktiv, gezeichnet, hinweis: "Die Bedingung ist falsch - durchmesser bleibt bei 400." };
+      }
+    },
+
+    3: {
+      zeigtRichtung: true,
+      zeilen: [
+        ...stufenKopf(true),
+        { tief: 1, key: "if1", tokens: [["keyword", "if"], "(", ["var", "durchmesser"], " >= ", ["num", "400"], "){"] },
+        { tief: 2, key: "ab", tokens: [["var", "richtung"], " = ", ["num", "-1"], ";"] },
+        { tief: 1, tokens: ["}"] },
+        { tief: 1, key: "if2", tokens: [["keyword", "if"], "(", ["var", "durchmesser"], " <= ", ["num", "20"], "){"] },
+        { tief: 2, key: "auf", tokens: [["var", "richtung"], " = ", ["num", "1"], ";"] },
+        { tief: 1, tokens: ["}"] },
+        { tief: 1, key: "inc", tokens: [["var", "durchmesser"], " = ", ["var", "durchmesser"], " + ", ["num", "20"], " * ", ["var", "richtung"], ";"] },
+        { tokens: ["}"] }
+      ],
+      schritt(v) {
+        const gezeichnet = v.durchmesser;
+        const aktiv = ["bg", "circle", "if1"];
+        let hinweis = null;
+
+        if (v.durchmesser >= 400) {
+          v.richtung = -1;
+          aktiv.push("ab");
+          hinweis = "Obere Grenze erreicht: richtung ist jetzt -1.";
+        }
+
+        aktiv.push("if2");
+
+        if (v.durchmesser <= 20) {
+          v.richtung = 1;
+          aktiv.push("auf");
+          hinweis = "Untere Grenze erreicht: richtung ist jetzt 1.";
+        }
+
+        v.durchmesser += 20 * v.richtung;
+        aktiv.push("inc");
+
+        return { aktiv, gezeichnet, hinweis };
+      }
+    }
+  };
+
+  const els4 = {
+    code: document.querySelector("#code4"),
+    canvas: document.querySelector("#canvas4"),
+    grid: document.querySelector("#grid4"),
+    feedback: document.querySelector("#feedback4"),
+    start: document.querySelector("#stufeStart"),
+    schritt: document.querySelector("#stufeSchritt"),
+    reset: document.querySelector("#stufeReset"),
+    zyklus: document.querySelector("#stufeZyklus"),
+    wert: document.querySelector("#stufeWert"),
+    richtung: document.querySelector("#stufeRichtung"),
+    aufruf: document.querySelector("#stufeAufruf"),
+    knoepfe: Array.from(document.querySelectorAll(".stufe-btn"))
+  };
+
+  const ctx4 = els4.canvas.getContext("2d");
+  let zeilen4 = new Map();
+
+  /* Baut die Codeansicht aus der Zeilenbeschreibung und merkt sich die markierbaren Zeilen. */
+  const baueStufenCode = (zeilen) => {
+    els4.code.textContent = "";
+    const merker = new Map();
+
+    zeilen.forEach((zeile) => {
+      const el = document.createElement("span");
+      const tiefe = zeile.tief === 2 ? " code-double-indent" : zeile.tief === 1 ? " code-indent" : "";
+      el.className = `code-line${tiefe}${zeile.abstand ? " is-spaced" : ""}`;
+
+      zeile.tokens.forEach((token) => {
+        if (typeof token === "string") el.appendChild(document.createTextNode(token));
+        else el.appendChild(span(token[0], token[1]));
+      });
+
+      els4.code.appendChild(el);
+      if (zeile.key) merker.set(zeile.key, el);
+    });
+
+    return merker;
+  };
+
+  const markiereZeilen = (keys) => {
+    zeilen4.forEach((el) => el.classList.remove("is-active"));
+    (keys || []).forEach((key) => {
+      const el = zeilen4.get(key);
+      if (el) el.classList.add("is-active");
+    });
+  };
+
+  const zeigeStufe = () => {
+    els4.zyklus.textContent = `Zyklus: ${state.sim.zyklus}`;
+    els4.wert.textContent = `durchmesser: ${state.sim.durchmesser}`;
+    els4.richtung.textContent = `richtung: ${state.sim.richtung}`;
+    els4.richtung.hidden = !STUFEN[state.stufe].zeigtRichtung;
+    els4.aufruf.textContent = state.sim.gezeichnet === null
+      ? "noch nichts gezeichnet"
+      : `circle(200, 200, ${state.sim.gezeichnet})`;
+
+    ctx4.clearRect(0, 0, CANVAS_GROESSE, CANVAS_GROESSE);
+    if (state.sim.gezeichnet === null) return;
+
+    ctx4.fillStyle = "#ffffff";
+    ctx4.strokeStyle = "#000000";
+    ctx4.lineWidth = 1;
+    ctx4.beginPath();
+    ctx4.arc(200, 200, state.sim.gezeichnet / 2, 0, Math.PI * 2);
+    ctx4.fill();
+    ctx4.stroke();
+  };
+
+  /* Die Zeilen, die einmalig beim Programmstart laufen: Deklarationen und setup(). */
+  const setupZeilen = (stufe) => {
+    const keys = ["declX", "declY", "declD"];
+    if (STUFEN[stufe].zeigtRichtung) keys.push("declR");
+    return keys.concat(["setup", "size", "framerate"]);
+  };
+
+  const aktualisiereLauf = () => {
+    els4.start.disabled = state.sim.gestartet;
+    els4.schritt.disabled = !state.sim.gestartet;
+  };
+
+  const setzeStufe = (stufe, neuStarten) => {
+    state.stufe = stufe;
+    if (neuStarten) state.sim = { zyklus: 0, durchmesser: 20, richtung: 1, gezeichnet: null, gestartet: false };
+    persist();
+
+    els4.knoepfe.forEach((btn) => {
+      btn.setAttribute("aria-pressed", String(Number(btn.dataset.stufe) === stufe));
+    });
+
+    zeilen4 = baueStufenCode(STUFEN[stufe].zeilen);
+    markiereZeilen(state.sim.gestartet && state.sim.zyklus === 0 ? setupZeilen(stufe) : []);
+    zeigeStufe();
+    aktualisiereLauf();
+    setFeedback(
+      els4.feedback,
+      state.sim.gestartet
+        ? "Schalte die draw()-Zyklen einzeln weiter."
+        : "Klicke auf Start, dann läuft setup() einmal.",
+      null
+    );
+  };
+
+  els4.knoepfe.forEach((btn) => {
+    btn.addEventListener("click", () => setzeStufe(Number(btn.dataset.stufe), true));
+  });
+
+  els4.start.addEventListener("click", () => {
+    state.sim.gestartet = true;
+    persist();
+
+    aktualisiereLauf();
+    markiereZeilen(setupZeilen(state.stufe));
+    setFeedback(els4.feedback, "setup() ist gelaufen - jetzt Zyklus für Zyklus weiterschalten.", null);
+    els4.schritt.focus();
+  });
+
+  els4.schritt.addEventListener("click", () => {
+    if (!state.sim.gestartet) return;
+
+    const ergebnis = STUFEN[state.stufe].schritt(state.sim);
+    state.sim.zyklus += 1;
+    state.sim.gezeichnet = ergebnis.gezeichnet;
+    persist();
+
+    markiereZeilen(ergebnis.aktiv);
+    zeigeStufe();
+    setFeedback(
+      els4.feedback,
+      ergebnis.hinweis || `Zyklus ${state.sim.zyklus}: circle(200, 200, ${ergebnis.gezeichnet}) wurde gezeichnet.`,
+      null
+    );
+  });
+
+  els4.reset.addEventListener("click", () => setzeStufe(state.stufe, true));
+
+  /* ------------------------------------------------ Code kopieren */
+
+  /* Erzeugt den Text aus der angezeigten Codeansicht - Eingabefelder mit ihrem
+     aktuellen Wert, damit Anzeige und Zwischenablage nicht auseinanderlaufen. */
+  const codeAlsText = (codeEl) =>
+    Array.from(codeEl.querySelectorAll(".code-line"))
+      .map((zeile) => {
+        const einzug = zeile.classList.contains("code-double-indent")
+          ? "    "
+          : zeile.classList.contains("code-indent")
+            ? "  "
+            : "";
+
+        let text = "";
+        zeile.childNodes.forEach((knoten) => {
+          if (knoten.nodeType === Node.TEXT_NODE) text += knoten.textContent;
+          else if (knoten.tagName === "INPUT") text += knoten.value;
+          else text += knoten.textContent;
+        });
+
+        return (zeile.classList.contains("is-spaced") ? "\n" : "") + einzug + text;
+      })
+      .join("\n");
+
+  const inZwischenablage = async (text) => {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    } catch {
+      /* faellt unten auf die Ersatzloesung zurueck */
+    }
+
+    try {
+      const feld = document.createElement("textarea");
+      feld.value = text;
+      feld.setAttribute("readonly", "");
+      feld.style.position = "fixed";
+      feld.style.top = "-1000px";
+      document.body.appendChild(feld);
+      feld.select();
+      const geklappt = document.execCommand("copy");
+      document.body.removeChild(feld);
+      return geklappt;
+    } catch {
+      return false;
+    }
+  };
+
+  const kopierMerker = new Map();
+
+  const meldeKopie = (btn, text) => {
+    if (!kopierMerker.has(btn)) kopierMerker.set(btn, { beschriftung: btn.textContent, id: null });
+    const eintrag = kopierMerker.get(btn);
+
+    window.clearTimeout(eintrag.id);
+    btn.textContent = text;
+    eintrag.id = window.setTimeout(() => { btn.textContent = eintrag.beschriftung; }, 1600);
+  };
+
+  document.querySelectorAll("[data-kopieren]").forEach((btn) => {
+    const codeEl = document.querySelector(`#${btn.dataset.kopieren}`);
+    const feedback = document.querySelector(`#${btn.dataset.feedback}`);
+    if (!codeEl) return;
+
+    btn.addEventListener("click", async () => {
+      const luecke = Array.from(codeEl.querySelectorAll(".code-input")).some((input) => input.value === "");
+
+      if (luecke) {
+        meldeKopie(btn, "Werte fehlen");
+        if (feedback) setFeedback(feedback, "Trage erst alle Werte ein, dann kannst du den Code kopieren.", false);
+        return;
+      }
+
+      const geklappt = await inZwischenablage(codeAlsText(codeEl));
+      meldeKopie(btn, geklappt ? "Kopiert!" : "Klappt nicht");
+      if (feedback) {
+        setFeedback(
+          feedback,
+          geklappt ? "Code kopiert - füge ihn in Processing ein." : "Kopieren hat nicht geklappt, markiere den Code von Hand.",
+          geklappt ? true : false
+        );
+      }
+    });
+  });
+
   /* --------------------------------------------------------------- Modale */
 
   let letzterAusloeser = null;
@@ -671,7 +1018,7 @@
     if (summary) summary.classList.toggle("is-open", details.open);
   };
 
-  ["task1", "task2", "task3"].forEach((id) => {
+  ["task1", "task2", "task3", "task4"].forEach((id) => {
     const details = document.querySelector(`#${id}`);
     if (!details) return;
     details.addEventListener("toggle", () => {
@@ -685,7 +1032,7 @@
 
   restore();
 
-  ["task1", "task2", "task3"].forEach((id) => {
+  ["task1", "task2", "task3", "task4"].forEach((id) => {
     const details = document.querySelector(`#${id}`);
     if (!details) return;
     details.open = state.offen[id];
@@ -697,6 +1044,8 @@
   quiz.beutel = mische(WERTE);
 
   zeichneRaster(els2.grid.getContext("2d"));
+  zeichneRaster(els4.grid.getContext("2d"));
   setzeFunktion(state.funktion);
   setzeSchritt(state.schritt3);
+  setzeStufe(state.stufe, false);
 })();
