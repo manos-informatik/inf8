@@ -1013,17 +1013,11 @@
 
   /* ------------------------------------------------------ Aufklappzustand */
 
-  const setzePfeil = (details) => {
-    const summary = details.querySelector(".task-summary");
-    if (summary) summary.classList.toggle("is-open", details.open);
-  };
-
   ["task1", "task2", "task3", "task4"].forEach((id) => {
     const details = document.querySelector(`#${id}`);
     if (!details) return;
     details.addEventListener("toggle", () => {
       state.offen[id] = details.open;
-      setzePfeil(details);
       persist();
     });
   });
@@ -1036,7 +1030,6 @@
     const details = document.querySelector(`#${id}`);
     if (!details) return;
     details.open = state.offen[id];
-    setzePfeil(details);
   });
 
   aktualisiereScore();

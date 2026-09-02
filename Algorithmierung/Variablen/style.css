@@ -116,10 +116,7 @@ h3 { margin-top: 0; color: #d9f8ff; }
   transition: transform 180ms ease;
 }
 
-/* Chromium wertet [open] fuer das Pseudoelement nicht zuverlaessig neu aus,
-   deshalb setzt das Skript zusaetzlich .is-open auf die Zusammenfassung. */
-.task[open] > .task-summary::after,
-.task-summary.is-open::after { transform: rotate(-135deg); }
+.task[open] > .task-summary::after { transform: rotate(-135deg); }
 
 .task-summary:focus-visible {
   outline: none;
