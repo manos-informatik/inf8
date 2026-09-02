@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Variablen</title>
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">Klasse 8 &middot; Algorithmierung</p>
+      <h1>Variablen</h1>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <details class="task" id="task1" open>
+      <summary class="task-summary">
+        <span class="station-label">Aufgabe 1</span>
+        <span class="task-title">Datentyp-Blitz</span>
+      </summary>
+      <div class="task-body">
+        <p class="section-text">Klicke zu jedem Wert den passenden Datentyp &ndash; oder dr&uuml;cke die Tasten 1 bis 5.</p>
+
+        <div class="quiz-bar">
+          <p class="status-pill" id="quizTime" aria-live="off">30 s</p>
+          <p class="status-pill" id="quizScore" aria-live="off">0 richtig</p>
+          <p class="status-pill" id="quizRecord" aria-live="off">Rekord: 0</p>
+        </div>
+
+        <div class="value-field" id="quizValue" aria-live="off">Bereit?</div>
+        <p class="quiz-note" id="quizNote"></p>
+
+        <div class="type-row" role="group" aria-label="Datentypen">
+          <button class="type-btn" type="button" data-typ="int" disabled><span class="type-key">1</span>int</button>
+          <button class="type-btn" type="button" data-typ="float" disabled><span class="type-key">2</span>float</button>
+          <button class="type-btn" type="button" data-typ="boolean" disabled><span class="type-key">3</span>boolean</button>
+          <button class="type-btn" type="button" data-typ="char" disabled><span class="type-key">4</span>char</button>
+          <button class="type-btn" type="button" data-typ="String" disabled><span class="type-key">5</span>String</button>
+        </div>
+
+        <div class="action-row">
+          <button class="btn" id="quizStart" type="button">Start</button>
+          <button class="btn ghost hint-bulb" id="hintTypen" type="button" data-overlay="overlayTypen" aria-label="Hinweis zu den Datentypen">&#128161;</button>
+        </div>
+
+        <div class="feedback-box" id="quizFeedback" aria-live="polite">30 Sekunden, so viele Werte wie m&ouml;glich.</div>
+      </div>
+    </details>
+
+    <details class="task" id="task2">
+      <summary class="task-summary">
+        <span class="station-label">Aufgabe 2</span>
+        <span class="task-title">Variablen zeichnen</span>
+      </summary>
+      <div class="task-body">
+        <p class="section-text">W&auml;hle eine Funktion, trage Werte in die Variablen ein und beobachte die Zeichenfl&auml;che.</p>
+
+        <div class="fn-row" role="group" aria-label="Zeichenfunktion w&auml;hlen">
+          <button class="fn-btn" type="button" data-fn="rect" aria-pressed="false">rect()</button>
+          <button class="fn-btn" type="button" data-fn="circle" aria-pressed="false">circle()</button>
+          <button class="fn-btn" type="button" data-fn="line" aria-pressed="false">line()</button>
+        </div>
+
+        <div class="split">
+          <section class="subpanel" aria-labelledby="code2Title">
+            <h3 id="code2Title" class="subpanel-title">Code</h3>
+            <pre class="code-block"><code id="code2" aria-label="Processing-Code"></code></pre>
+          </section>
+
+          <section class="subpanel" aria-labelledby="canvas2Title">
+            <h3 id="canvas2Title" class="subpanel-title">Zeichenfl&auml;che</h3>
+            <div class="canvas-board">
+              <div class="canvas-stack">
+                <canvas id="canvas2" class="drawing-layer" width="400" height="400" aria-label="Zeichenfl&auml;che 400 mal 400 Pixel"></canvas>
+                <canvas id="grid2" class="grid-layer" width="400" height="400" aria-hidden="true"></canvas>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="action-row">
+          <button class="btn ghost" id="reset2" type="button">Werte leeren</button>
+          <button class="btn ghost hint-bulb" id="hintVariable" type="button" data-overlay="overlayVariable" aria-label="Hinweis zu Variablen">&#128161;</button>
+        </div>
+
+        <div class="feedback-box" id="feedback2" aria-live="polite">Trage alle Werte ein.</div>
+      </div>
+    </details>
+
+    <details class="task" id="task3">
+      <summary class="task-summary">
+        <span class="station-label">Aufgabe 3</span>
+        <span class="task-title">Triff den Umriss</span>
+      </summary>
+      <div class="task-body">
+        <p class="section-text">Setze die Variablen so, dass deine Form genau auf dem gestrichelten Umriss liegt.</p>
+
+        <div class="step-row" role="group" aria-label="Teilaufgaben"></div>
+
+        <div class="split">
+          <section class="subpanel" aria-labelledby="code3Title">
+            <h3 id="code3Title" class="subpanel-title">Code</h3>
+            <pre class="code-block"><code id="code3" aria-label="Processing-Code"></code></pre>
+          </section>
+
+          <section class="subpanel" aria-labelledby="canvas3Title">
+            <h3 id="canvas3Title" class="subpanel-title">Zeichenfl&auml;che</h3>
+            <div class="canvas-board">
+              <div class="canvas-stack">
+                <canvas id="canvas3" class="drawing-layer" width="400" height="400" aria-label="Zeichenfl&auml;che 400 mal 400 Pixel"></canvas>
+                <canvas id="grid3" class="grid-layer" width="400" height="400" aria-hidden="true"></canvas>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="action-row">
+          <button class="btn" id="check3" type="button">Pr&uuml;fen</button>
+          <button class="btn ghost hint-bulb" id="hintRaster" type="button" data-overlay="overlayRaster" aria-label="Hinweis zum Raster">&#128161;</button>
+        </div>
+
+        <div class="feedback-box" id="feedback3" aria-live="polite"></div>
+      </div>
+    </details>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Martin-Andersen-Nexö-Gymnasium Dresden</p>
+  </footer>
+
+  <div id="overlayTypen" class="overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="overlayTypenTitle">
+    <div class="overlay-content">
+      <h3 id="overlayTypenTitle" class="overlay-title">Die f&uuml;nf Datentypen</h3>
+      <dl class="glossar">
+        <dt>int</dt><dd>Ganze Zahl, ohne Komma: <code>42</code>, <code>-7</code></dd>
+        <dt>float</dt><dd>Kommazahl, mit Punkt geschrieben: <code>3.14</code></dd>
+        <dt>boolean</dt><dd>Nur <code>true</code> oder <code>false</code></dd>
+        <dt>char</dt><dd>Genau ein Zeichen in einfachen Anf&uuml;hrungszeichen: <code>'A'</code></dd>
+        <dt>String</dt><dd>Zeichenkette in doppelten Anf&uuml;hrungszeichen: <code>"Hallo"</code></dd>
+      </dl>
+      <p class="section-text">Achtung: <code>'7'</code> ist ein char, <code>"42"</code> ist ein String.</p>
+      <div class="action-row">
+        <button class="btn ghost" type="button" data-close>Schlie&szlig;en</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="overlayVariable" class="overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="overlayVariableTitle">
+    <div class="overlay-content">
+      <h3 id="overlayVariableTitle" class="overlay-title">Was ist eine Variable?</h3>
+      <p class="section-text">Eine Variable ist ein benannter Speicherplatz mit einem Datentyp und einem Wert.</p>
+      <pre class="code-sample"><code>int x = 100;</code></pre>
+      <p class="section-text">Der Name <code>x</code> steht ab jetzt f&uuml;r den Wert 100. &Auml;nderst du den Wert, &auml;ndert sich jede Stelle mit, an der <code>x</code> benutzt wird.</p>
+      <div class="action-row">
+        <button class="btn ghost" type="button" data-close>Schlie&szlig;en</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="overlayRaster" class="overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="overlayRasterTitle">
+    <div class="overlay-content">
+      <h3 id="overlayRasterTitle" class="overlay-title">Koordinaten ablesen</h3>
+      <p class="section-text">Der Nullpunkt liegt oben links, x geht nach rechts, y nach unten. Ein Rasterk&auml;stchen ist 10 Pixel breit.</p>
+      <p class="section-text"><code>rect(x, y, b, h)</code> setzt die <em>obere linke Ecke</em>, <code>circle(x, y, d)</code> den <em>Mittelpunkt</em>.</p>
+      <div class="action-row">
+        <button class="btn ghost" type="button" data-close>Schlie&szlig;en</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

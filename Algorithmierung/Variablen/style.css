@@ -1,0 +1,554 @@
+/* Variablen - Klasse 8, Algorithmierung
+   Basis-Tokens aus dem Haus-Stil, danach seitenspezifische Bausteine. */
+
+:root {
+  color-scheme: dark;
+
+  --primary: #22d3ee;
+  --secondary: #10b981;
+  --accent: #fbbf24;
+  --danger: #fb7185;
+
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --surface-soft: #253248;
+  --text: #f1f5f9;
+  --muted: #a8b5c7;
+  --border: #334155;
+
+  --button-dark: #182336;
+  --button-light: #30445c;
+  --button-border: #4b5e7a;
+  --button-text: #dcf4ff;
+  --on-primary: #05202e;
+
+  --shadow: 0 16px 30px -14px rgba(0, 0, 0, 0.55);
+  --focus: 0 0 0 3px rgba(34, 211, 238, 0.3);
+  --radius: 18px;
+}
+
+* { box-sizing: border-box; }
+
+/* WICHTIG: Muss stehenbleiben, sonst gewinnen eigene display-Angaben
+   gegen das eingebaute [hidden]-Verhalten des Browsers. */
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", "Trebuchet MS", Verdana, sans-serif;
+  color: var(--text);
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at 25% 25%, rgba(100, 116, 139, 0.45) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, rgba(100, 116, 139, 0.35) 1px, transparent 1px),
+    radial-gradient(circle at 88% 16%, rgba(16, 185, 129, 0.18), transparent 22%),
+    radial-gradient(circle at 8% 10%, rgba(34, 211, 238, 0.16), transparent 24%);
+  background-size: 44px 44px, 44px 44px, auto, auto;
+  background-position: 0 0, 22px 22px, center, center;
+}
+
+button, input, select, textarea { font: inherit; }
+
+.hero-inner, .container, .footer {
+  width: min(1100px, 100% - 2rem);
+  margin: 0 auto;
+}
+
+.hero-inner { padding: 1.8rem 0 0.6rem; }
+
+.eyebrow {
+  margin: 0;
+  color: var(--secondary);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0.35rem 0 0.6rem;
+  color: var(--primary);
+  font-size: clamp(1.9rem, 3.6vw, 2.9rem);
+  text-shadow: 0 0 12px rgba(34, 211, 238, 0.22);
+}
+
+h2 { margin: 0; font-size: clamp(1.4rem, 2.5vw, 2rem); color: var(--text); }
+h3 { margin-top: 0; color: #d9f8ff; }
+
+.intro, .section-text {
+  color: var(--muted);
+  line-height: 1.58;
+  max-width: 68ch;
+}
+
+.section-text { margin: 0 0 0.9rem; }
+
+/* --- Aufklappbare Aufgabenkarten --- */
+.task {
+  margin-bottom: 1.2rem;
+  background: linear-gradient(175deg, var(--surface), var(--surface-soft));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.task-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem 1.1rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  list-style: none;
+}
+
+.task-summary::-webkit-details-marker { display: none; }
+
+.task-summary::after {
+  content: "";
+  width: 0.7rem;
+  height: 0.7rem;
+  margin-left: auto;
+  border-right: 2px solid var(--primary);
+  border-bottom: 2px solid var(--primary);
+  transform: rotate(45deg);
+  transition: transform 180ms ease;
+}
+
+/* Chromium wertet [open] fuer das Pseudoelement nicht zuverlaessig neu aus,
+   deshalb setzt das Skript zusaetzlich .is-open auf die Zusammenfassung. */
+.task[open] > .task-summary::after,
+.task-summary.is-open::after { transform: rotate(-135deg); }
+
+.task-summary:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+}
+
+.station-label {
+  padding: 0.25rem 0.6rem;
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  border-radius: 999px;
+  color: var(--secondary);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.task-title {
+  color: var(--text);
+  font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+  font-weight: 800;
+}
+
+.task-body { padding: 0 1.1rem 1.2rem; }
+
+/* --- Zwei gleich breite, gleich hohe Bereiche --- */
+.split {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+.subpanel {
+  display: flex;
+  flex-direction: column;
+  padding: 0.9rem;
+  border: 1px solid rgba(168, 181, 199, 0.18);
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.subpanel-title {
+  margin: 0 0 0.7rem;
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* --- Buttons --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid rgba(34, 211, 238, 0.6);
+  border-radius: 10px;
+  color: var(--on-primary);
+  background: linear-gradient(165deg, var(--primary), #17afc8);
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 150ms ease, filter 150ms ease, border-color 150ms ease;
+}
+
+.btn.ghost {
+  border-color: var(--button-border);
+  color: var(--button-text);
+  background: linear-gradient(165deg, var(--button-dark), var(--button-light));
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+  border-color: rgba(34, 211, 238, 0.6);
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+}
+
+.btn:disabled { cursor: not-allowed; opacity: 0.48; }
+
+.hint-bulb { font-size: 1.15rem; padding: 0.55rem 0.75rem; }
+
+.action-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+/* --- Rückmeldungen --- */
+.feedback-box {
+  margin-top: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.66);
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.feedback-box.success { border-color: rgba(16, 185, 129, 0.75); color: #b9f8dc; }
+.feedback-box.error   { border-color: rgba(251, 113, 133, 0.82); color: #fecdd3; }
+
+/* --- Status-Pills --- */
+.status-pill {
+  margin: 0;
+  min-width: 7rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid rgba(34, 211, 238, 0.5);
+  border-radius: 999px;
+  color: #d7f7ff;
+  background: rgba(15, 23, 42, 0.92);
+  font-weight: 800;
+  text-align: center;
+}
+
+.status-pill.is-warning { border-color: rgba(251, 191, 36, 0.7); color: #fff2cc; }
+
+/* --- Aufgabe 1: Datentyp-Blitz --- */
+.quiz-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.value-field {
+  display: grid;
+  place-items: center;
+  min-height: 7rem;
+  padding: 1rem;
+  border: 1px solid rgba(168, 181, 199, 0.18);
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.5);
+  color: var(--accent);
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+
+.value-field.is-idle { color: var(--muted); font-family: inherit; font-size: 1.2rem; }
+
+.quiz-note {
+  min-height: 1.5rem;
+  margin: 0.5rem 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.type-row {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+}
+
+.type-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 56px;
+  padding: 0.55rem 0.5rem;
+  border: 1px solid var(--button-border);
+  border-radius: 10px;
+  color: var(--button-text);
+  background: linear-gradient(165deg, var(--button-dark), var(--button-light));
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 150ms ease, filter 150ms ease, border-color 150ms ease, background-color 150ms ease;
+}
+
+.type-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+  border-color: rgba(34, 211, 238, 0.6);
+}
+
+.type-btn:focus-visible { outline: none; box-shadow: var(--focus); }
+.type-btn:disabled { cursor: not-allowed; opacity: 0.48; }
+
+.type-key {
+  padding: 0.05rem 0.4rem;
+  border: 1px solid rgba(168, 181, 199, 0.35);
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.type-btn.is-right {
+  border-color: rgba(16, 185, 129, 0.85);
+  background: linear-gradient(165deg, #10b981, #0d8f66);
+  color: #04201a;
+}
+
+.type-btn.is-wrong {
+  border-color: rgba(251, 113, 133, 0.85);
+  background: linear-gradient(165deg, #fb7185, #c2495c);
+  color: #2a0a11;
+}
+
+/* --- Aufgabe 2/3: Funktions- und Schrittwahl --- */
+.fn-row, .step-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.fn-btn, .step-btn {
+  min-height: 44px;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--button-border);
+  border-radius: 999px;
+  color: var(--button-text);
+  background: linear-gradient(165deg, var(--button-dark), var(--button-light));
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 150ms ease, filter 150ms ease, border-color 150ms ease;
+}
+
+.fn-btn:hover, .step-btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
+.fn-btn:focus-visible, .step-btn:focus-visible { outline: none; box-shadow: var(--focus); }
+
+.fn-btn[aria-pressed="true"], .step-btn[aria-pressed="true"] {
+  border-color: rgba(34, 211, 238, 0.7);
+  color: #05202e;
+  background: linear-gradient(165deg, var(--primary), #17afc8);
+}
+
+.step-btn.is-solved::after {
+  content: " \2713";
+  color: var(--secondary);
+  font-weight: 900;
+}
+
+.step-btn[aria-pressed="true"].is-solved::after { color: #04201a; }
+
+/* --- Codeansicht mit Zeilennummern --- */
+.code-block {
+  flex: 1;
+  margin: 0;
+  padding: 14px 0;
+  overflow-x: auto;
+  border: 1px solid rgba(168, 181, 199, 0.18);
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.58);
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+  font-size: 0.98rem;
+  line-height: 1.7;
+}
+
+.code-block code { counter-reset: code-line; }
+
+.code-line {
+  position: relative;
+  display: block;
+  counter-increment: code-line;
+  min-height: 30px;
+  padding: 2px 14px 2px 50px;
+  color: #e2e8f0;
+  white-space: nowrap;
+}
+
+.code-line::before {
+  content: counter(code-line);
+  position: absolute;
+  left: 12px;
+  width: 22px;
+  color: #76869a;
+  text-align: right;
+  user-select: none;
+}
+
+.code-indent { padding-left: 74px; }
+.code-line.is-spaced { margin-top: 12px; }
+
+.keyword { color: #67e8f9; }
+.type { color: #fca97a; }
+.fn { color: #6ee7b7; }
+.var { color: var(--accent); }
+.num { color: #93c5fd; }
+
+.code-input {
+  min-width: 3ch;
+  margin: 0 1px;
+  padding: 1px 3px;
+  border: 1px solid rgba(34, 211, 238, 0.36);
+  border-radius: 4px;
+  color: #fef3c7;
+  background: rgba(15, 23, 42, 0.82);
+  font-family: inherit;
+  font-size: 0.96em;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.code-input::placeholder { color: #64748b; }
+
+.code-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--focus);
+}
+
+.code-sample {
+  margin: 0 0 0.9rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid rgba(168, 181, 199, 0.18);
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.58);
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+  color: #e2e8f0;
+}
+
+/* --- Zeichenfläche --- */
+.canvas-board {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: 1px solid rgba(168, 181, 199, 0.18);
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.canvas-stack {
+  position: relative;
+  width: min(400px, 100%);
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 0 0 1px rgba(226, 232, 240, 0.9);
+}
+
+.canvas-stack canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.drawing-layer { z-index: 1; }
+.grid-layer { z-index: 2; pointer-events: none; }
+
+/* --- Glossar im Modal --- */
+.glossar {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.4rem 0.9rem;
+  margin: 0 0 0.9rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.glossar dt {
+  color: var(--primary);
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+  font-weight: 800;
+}
+
+.glossar dd { margin: 0; }
+
+code { font-family: "Cascadia Code", Consolas, "Courier New", monospace; color: #d9f8ff; }
+
+/* --- Modal --- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+}
+
+.overlay.is-visible { opacity: 1; pointer-events: auto; }
+
+.overlay-content {
+  width: min(720px, calc(100% - 32px));
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  padding: 24px;
+  background: linear-gradient(175deg, var(--surface), var(--surface-soft));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  transform: scale(0.95);
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.overlay.is-visible .overlay-content { transform: scale(1); }
+.overlay-title { margin: 0 0 16px; color: var(--primary); }
+
+/* --- Footer --- */
+.footer {
+  text-align: center;
+  padding: 0.6rem 0 1.8rem;
+  color: #a6b7cc;
+}
+
+/* --- Mobil --- */
+@media (max-width: 900px) {
+  .split { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 620px) {
+  .type-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .type-key { display: none; }
+  .task-summary { flex-wrap: wrap; gap: 0.5rem; }
+  .code-block { font-size: 0.88rem; }
+  .code-indent { padding-left: 64px; }
+  .status-pill { min-width: 6rem; padding: 0.45rem 0.7rem; font-size: 0.9rem; }
+}
