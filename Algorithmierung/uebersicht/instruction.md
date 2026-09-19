@@ -93,31 +93,76 @@ Unter 820 px Breite wird das Raster einspaltig.
 1. **Kachelseite:** `uebersicht/<thema>/index.html` anlegen –
    `uebersicht/variablen/index.html` kopieren, Titel, `h1` und die Kachel-Links anpassen.
 2. **Inhaltsordner:** `<Thema>/uebersicht/` und `<Thema>/uebung/` anlegen, je mit
-   eigener `index.html` und `style.css`. `Variablen/uebersicht/` ist die leere Vorlage.
+   eigener `index.html` und `style.css`. `Variablen/uebersicht/` dient als Vorlage –
+   worauf es dabei ankommt, steht im nächsten Abschnitt.
 3. **Landingpage:** in `uebersicht/index.html` ein `<li>` ans Ende von `.tile-grid`
    hängen.
 
-## Aufteilung der Inhalte zum Thema Variablen
+## Übersichtsseiten bauen
 
-Die beiden Inhaltsseiten haben verschiedene Aufgaben und überschneiden sich nicht:
+Gelernt beim Bau von `Variablen/uebersicht/`: Der erste Versuch war unbemerkt eine
+zweite Übungsseite geworden und musste komplett neu gemacht werden. Damit das nicht
+wieder passiert, hier die Punkte, an denen es hing.
 
-**Übersicht = Nachschlagen.** Sechs Karten, alle sofort sichtbar, kein Aufklappen:
-Darum geht es · Datentypen · Deklarieren, initialisieren, zuweisen ·
-Global oder lokal · In die Konsole schreiben · Systemvariablen.
-Interaktiv heißt hier **umschalten und vergleichen**, nicht lösen: einen Datentyp
-anklicken zeigt sein Beispiel samt Gegenbeispiel, ein Blickwinkel-Umschalter stellt
-globale und lokale Variable nebeneinander, ein Regler zeigt `print()` und `println()`
-an denselben Zyklen, und die Zeichenfläche liefert `mouseX`/`mouseY`/`width`/`height` live.
+### Die Prüffrage
 
-**Keine Aufgaben auf der Übersicht.** Kein Prüfen-Knopf, keine Eingabefelder, keine
-Rückmeldung richtig/falsch, kein Punktestand. Das gehört alles auf die Übungsseite.
+**Kann man auf der Seite etwas falsch machen? Dann ist es keine Übersicht.**
+Eine Übersicht ist zum Nachschlagen da: Sie prüft nichts, bewertet nichts und
+verlangt nichts. Sichere Zeichen, dass die Seite abgerutscht ist:
 
-**Übungen = anwenden.** Vier aufklappbare Aufgaben mit Prüfen und Rückmeldung:
-Datentyp-Blitz · Variablen zeichnen · Triff den Umriss · Der wachsende Kreis.
+- ein Prüfen-Knopf oder eine `.feedback-box` mit richtig/falsch
+- Eingabefelder, in die man selbst etwas tippt
+- ein Zähler, Punktestand oder eine Fortschrittsanzeige
+- „Aufgabe 1", „Aufgabe 2" als Überschriften
+- Start/Schritt-Knöpfe, die man in einer bestimmten Reihenfolge drücken muss
 
-Grundlage ist der LogSeq-Knoten „01 Datentypen, Variablen und Systemvariablen".
+Das alles gehört auf die Übungsseite daneben.
 
-## Farbcode in den Codebeispielen
+### Aufbau
+
+- **Karten (`section.card`), keine `<details>`.** Nachschlagen heißt sehen, nicht erst
+  aufklappen. Alles steht sofort da, man scrollt.
+- **Erste Karte „Darum geht es"**: vier bis sechs Sätze, die den Stoff zusammenfassen.
+  Das ist der Kern der Seite, alles Weitere sind Beispiele dazu.
+- **Eine Karte pro Begriff**, benannt wie der Begriff („Global oder lokal"), nicht wie
+  eine Tätigkeit.
+- Pro Karte ein bis zwei Sätze Anleitung, dann sofort das Beispiel.
+
+### Was „interaktiv" hier heißt
+
+Nicht lösen, sondern **umschalten und vergleichen**. Vier Muster haben sich bewährt:
+
+| Muster | Beispiel auf der Variablen-Seite |
+|---|---|
+| Auswahl → Beispiel | Datentyp in der Tabelle anklicken, Beispiel erscheint darunter |
+| Blickwinkel-Umschalter | „aus setup() gesehen" / „aus draw() gesehen" – **beide** Seiten der Gegenüberstellung antworten gleichzeitig |
+| Parameter-Regler | Zahl der `draw()`-Zyklen; der Unterschied zwischen `print()` und `println()` wächst sichtbar mit |
+| lebende Werte | Zeiger über die Zeichenfläche, `mouseX`/`mouseY` stehen direkt in der Tabelle |
+
+### Gegenüberstellung heißt nebeneinander, nicht nacheinander
+
+Beide Fälle sind **gleichzeitig** sichtbar (`.split` mit zwei `.subpanel`). Der Schalter
+wechselt nicht, welchen Fall man sieht, sondern von wo aus man ihn betrachtet. Sonst
+muss man hin- und herklicken und vergleicht aus dem Gedächtnis.
+
+### Beispiele: vollständig und ehrlich
+
+- **Ganze Programme zeigen, keine Fragmente.** `println("x = " + x);` allein erklärt
+  nicht, woher `x` kommt und warum es wächst. Erst mit `int x = 0;` und `x = x + 2;`
+  darüber ergibt die Konsolenausgabe daneben einen Sinn.
+- **Die Ausgabe aus dem gezeigten Programm ableiten**, nicht danebenschreiben. Im
+  Skript läuft dieselbe Rechnung wie im angezeigten Code. So können Beispiel und
+  Ergebnis nicht auseinanderlaufen – und ein Test kann beides gegeneinander prüfen.
+- **Gegenbeispiel dazustellen.** Neben „Beispiel" steht „Geht nicht" mit dem typischen
+  Fehler (`int punkte = 0.5;`). Genau deswegen schlägt man nach.
+- **Eine Markierung darf nichts Falsches suggerieren.** Der lokale Sketch lässt sich in
+  *keinem* Blickwinkel starten, also bleibt der rote Balken in Zeile 2 immer stehen –
+  auch bei „aus draw() gesehen". Eine Markierung, die je nach Schalter verschwindet,
+  würde behaupten, das Programm liefe.
+- **Der Einleitungssatz sagt, was das Bedienelement tut**, z. B. „Der Regler bestimmt,
+  wie viele `draw()`-Zyklen die Konsole zeigt." Ohne das rät man herum.
+
+### Farbcode der Markierungen im Code
 
 | Markierung | Bedeutung |
 |---|---|
@@ -125,5 +170,35 @@ Grundlage ist der LogSeq-Knoten „01 Datentypen, Variablen und Systemvariablen"
 | gelber Balken (`.is-active`) | die gerade betrachtete Zeile |
 | roter Balken (`.is-broken`) | so geht es nicht |
 
-Jede Seite speichert ihren Zustand unter einem eigenen Schlüssel:
-`inf8-variablen-uebersicht-v1` bzw. `inf8-variablen-v1`.
+### Zustand
+
+Auch die Übersicht sichert automatisch, aber nur die **Auswahl** – welcher Datentyp,
+welcher Blickwinkel, Reglerstellung, Mausposition. Keinen Fortschritt, denn es gibt
+keinen. Eigener `localStorage`-Schlüssel pro Seite.
+
+### Zwei Layoutfallen von dieser Seite
+
+- **Eine Karte darf beim Bedienen nicht springen.** Wächst ein Bereich mit dem Regler
+  (hier die Konsole), bekommt er eine `min-height` für den größten Fall. Sonst hüpft
+  die halbe Seite, während man schiebt.
+- **`.subpanel .code-block` hat `flex: 1`**, damit zwei Panels nebeneinander gleich hoch
+  werden. Steht eine Konsole darunter, braucht der Codeblock `flex: none` (Klasse
+  `kompakt`) – sonst streiten sich beide um denselben Platz.
+
+## Thema Variablen im Einzelnen
+
+Grundlage ist der LogSeq-Knoten „01 Datentypen, Variablen und Systemvariablen".
+Die beiden Inhaltsseiten überschneiden sich nicht:
+
+| Übersicht (Nachschlagen) | Übungen (Anwenden) |
+|---|---|
+| Darum geht es | Aufgabe 1 · Datentyp-Blitz |
+| Datentypen | Aufgabe 2 · Variablen zeichnen |
+| Deklarieren, initialisieren, zuweisen | Aufgabe 3 · Triff den Umriss |
+| Global oder lokal | Aufgabe 4 · Der wachsende Kreis |
+| In die Konsole schreiben | |
+| Systemvariablen | |
+
+Links sechs Karten, alle offen; rechts vier aufklappbare Aufgaben mit Prüfen und
+Rückmeldung. `localStorage`-Schlüssel: `inf8-variablen-uebersicht-v1` bzw.
+`inf8-variablen-v1`.
