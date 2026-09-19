@@ -13,6 +13,8 @@ Repo: `manos-informatik/inf8` · Pages-Wurzel: `https://manos-informatik.github.
 | Variablen (Kachelseite) | `Algorithmierung/uebersicht/variablen/` | `…/inf8/Algorithmierung/uebersicht/variablen/` |
 | Variablen – Übersicht | `Algorithmierung/Variablen/uebersicht/` | `…/inf8/Algorithmierung/Variablen/uebersicht/` |
 | Variablen – Übungen | `Algorithmierung/Variablen/uebung/` | `…/inf8/Algorithmierung/Variablen/uebung/` |
+| Funktionen (Kachelseite) | `Algorithmierung/uebersicht/funktionen/` | `…/inf8/Algorithmierung/uebersicht/funktionen/` |
+| Funktionen – Übersicht | `Algorithmierung/Funktionen/uebersicht/` | `…/inf8/Algorithmierung/Funktionen/uebersicht/` |
 
 ## Zwei Zweige: Navigation und Inhalt
 
@@ -23,9 +25,10 @@ inf8/Algorithmierung/
 │   │                           Kacheln: Variablen
 │   ├── style.css               gemeinsames Stylesheet der Kachelseiten
 │   ├── instruction.md          diese Datei
-│   └── variablen/
-│       └── index.html          Kachelseite Variablen
-│                               Kacheln: Übersicht · Übungen
+│   ├── variablen/
+│   │   └── index.html      Kachelseite Variablen
+│   └── funktionen/
+│       └── index.html      Kachelseite Funktionen
 │
 └── Variablen/                  INHALT zum Thema Variablen
     ├── uebersicht/             Nachschlagewerk zum Thema
@@ -36,6 +39,9 @@ inf8/Algorithmierung/
         ├── index.html
         ├── style.css
         └── script.js
+
+Funktionen/                INHALT zum Thema Funktionen
+└── uebersicht/             Nachschlagewerk (uebung/ fehlt noch)
 ```
 
 Ebenen: **Landingpage → Thema → Übersicht | Übungen**
@@ -166,9 +172,16 @@ muss man hin- und herklicken und vergleicht aus dem Gedächtnis.
 
 | Markierung | Bedeutung |
 |---|---|
-| grüner Balken links (`.is-scope`) | hier gilt die Variable |
-| gelber Balken (`.is-active`) | die gerade betrachtete Zeile |
+| grüner Balken links (`.is-scope`) | gehört zusammen / hier gilt die Variable |
+| gelber Balken (`.is-active`) | läuft gerade / wird gerade betrachtet |
 | roter Balken (`.is-broken`) | so geht es nicht |
+
+**Höchstens eine Farbe je Ansicht.** Grün und Gelb gleichzeitig auf denselben Zeilen ist
+unlesbar – auf der Funktionen-Seite stand bei „global" der ganze Code grün und der laufende
+Block zusätzlich gelb, bei „lokal" leuchteten zwei Bereiche in zwei Farben. Jetzt benutzt der
+Schrittzähler nur Gelb; wo die Variable gilt, sagt die Wertanzeige im Klartext
+(`x in bewegeFigur() = 53`). Wer beides zeigen will, nimmt zwei Karten oder Worte statt einer
+zweiten Farbe.
 
 ### Zustand
 
@@ -279,6 +292,14 @@ Beim Ergänzen einer Aufgabe: `merkeStufe("<taskId>", stufe)` beim Bestehen aufr
 danach `zeigeFortschritt()`. Die Bedingung für die ganze Aufgabe steht in `zeigeFortschritt`
 in der Tabelle `fertig`.
 
+### Karten kommen ohne Einleitungssatz aus
+
+Auf der Funktionen-Übersicht sind die Sätze über den Bedienelementen nach und nach
+weggefallen: Wer „x global / x lokal" und „Nächster Schritt" liest, braucht keine Erklärung
+davor. Geblieben ist nur einer, wo der Klick nicht selbsterklärend ist. Achtung dabei: der
+Absatz war auch der Abstandhalter zwischen Überschrift und Knopfreihe – deshalb
+`.card h2 + .fn-row { margin-top: 1.1rem; }`.
+
 ### Beim Bauen aufgefallen
 
 - **Selektoren in die eigene Aufgabe einsperren.** Zusatz 3 griff mit
@@ -358,3 +379,50 @@ Rückmeldung. `localStorage`-Schlüssel: `inf8-variablen-uebersicht-v1` bzw.
 
 Stufe 2 von Aufgabe 3 zielt auf den Zeitpunkt: `int mitte = width / 2;` vor `setup()` ergibt
 0, weil `size()` noch nicht gelaufen ist. Das ist die ==ACHTUNG==-Stelle aus dem LogSeq-Knoten.
+
+## Thema Funktionen im Einzelnen
+
+Grundlage ist der LogSeq-Knoten „02 Funktionen I – Parameterlose Funktionen".
+Die Übersicht hat fünf Karten:
+
+| Karte | woher sie kommt | Interaktion |
+|---|---|---|
+| Darum geht es | Lernziele | – |
+| Aufbau einer Funktion | Erklärungen | Bestandteil wählen (`void`, Name, `()`, Rumpf), Definition **und** Aufruf antworten |
+| Ein draw() oder viele Funktionen | A0 „Programm zerlegen" | Teilaufgabe wählen, grün markiert links die Zeilen und rechts Aufruf plus Definition |
+| Warum die Position global sein muss | drittes Lernziel, A1 | `x global` / `x lokal`, dann Schritt für Schritt durch das Programm |
+| Namen, die etwas sagen | „Verändern": `zeigeInfo()` umbenennen | – |
+
+Die vierte Karte ist der Kern und der einzige Schrittzähler der Seite. **Zwei Schritte je
+Zyklus**, und jeder markiert die Aufrufzeile in `draw()` **zusammen mit der ganzen Funktion**
+dahinter – so sieht man den Sprung vom Aufruf in den Rumpf:
+
+| Schritt | markiert | Wirkung |
+|---|---|---|
+| 1 | `bewegeFigur();` + die Funktion | `x` wird erhöht |
+| 2 | `zeichneFigur();` + die Funktion | der Kreis wird gemalt |
+
+Rechts unter der Zeichenfläche steht der aktuelle Wert groß in einem eigenen Kasten:
+`x = 59` bei global, `x in bewegeFigur() = 53` bzw. `x in zeichneFigur() = 50` bei lokal.
+Der Name des Gültigkeitsbereichs steht dabei, weil es lokal zwei verschiedene `x` gibt –
+das ersetzt die früher grün markierten Zeilen und ist eindeutiger.
+
+Bei **global** wandert die Figur pro Zyklus um 3 nach rechts. Bei **lokal** deklarieren beide
+Funktionen ihr eigenes `x`, beide Programme laufen fehlerfrei – und die Figur bleibt bei 50
+stehen. Das ist genau der Fehler, den der Hinweis zu A1 im Knoten meint.
+
+Nebenbei zeigt Schritt 1 des zweiten Zyklus etwas Feines: `x` steht schon bei 56, der Kreis
+aber noch bei 53. Gerechnet wird eben vor dem Zeichnen.
+
+Beide Fassungen zeigen ein **vollständiges Programm samt `setup()`** – ein Sketch ohne
+`size()` würde nur verwirren. Beide haben absichtlich 19 Zeilen, damit der Wechsel den
+Codeblock nicht springen lässt. Der Ablauf steht als Liste von Schritten in `VARIANTEN`; `standBei()` spielt ihn bis
+zum gespeicherten Stand nach, sodass Zyklus und Schritt einen Seitenwechsel überstehen.
+
+`localStorage`-Schlüssel: `inf8-funktionen-uebersicht-v1`.
+
+### Offener Punkt
+
+`Funktionen/uebung/` gibt es noch nicht. Die Übungen-Kachel steht deshalb auskommentiert
+in `uebersicht/funktionen/index.html` – eine Zeile einkommentieren, sobald die Seite da ist.
+Die Aufgaben A0 bis A2 und T0 (Ampel) aus dem Knoten warten dort.

@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Funktionen &ndash; Übersicht</title>
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <a class="back-link" href="../../uebersicht/funktionen/index.html">&larr; Funktionen</a>
+      <p class="eyebrow">Klasse 8 &middot; Algorithmierung &middot; Funktionen</p>
+      <h1>Übersicht</h1>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="card" aria-labelledby="kernTitle">
+      <h2 id="kernTitle">Darum geht es</h2>
+      <ul class="merkliste">
+        <li>Eine Funktion bündelt zusammengehörigen Code unter einem Namen.</li>
+        <li><code>void</code> heißt: die Funktion gibt keinen Wert zurück.</li>
+        <li>Definiert wird außerhalb von <code>setup()</code> und <code>draw()</code>, aufgerufen wird in <code>draw()</code>.</li>
+        <li>Die Aufrufe in <code>draw()</code> laufen von oben nach unten.</li>
+        <li>Was mehrere Funktionen brauchen, muss global stehen.</li>
+      </ul>
+    </section>
+
+    <section class="card" aria-labelledby="aufbauTitle">
+      <h2 id="aufbauTitle">Aufbau einer Funktion</h2>
+      <p class="section-text">Klicke einen Bestandteil an, um zu sehen, wo er steht und wofür er da ist.</p>
+
+      <div class="fn-row" role="group" aria-label="Bestandteil wählen">
+        <button class="fn-btn" type="button" data-teil="void" aria-pressed="false">void</button>
+        <button class="fn-btn" type="button" data-teil="name" aria-pressed="false">Name</button>
+        <button class="fn-btn" type="button" data-teil="klammern" aria-pressed="false">( )</button>
+        <button class="fn-btn" type="button" data-teil="rumpf" aria-pressed="false">Rumpf</button>
+      </div>
+
+      <div class="split">
+        <section class="subpanel" aria-labelledby="defTitle">
+          <div class="subpanel-heading">
+            <h3 id="defTitle" class="subpanel-title">Definition</h3>
+            <button class="btn ghost small" type="button" data-kopieren="defCode">Kopieren</button>
+          </div>
+          <pre class="code-block"><code id="defCode" aria-label="Definition der Funktion"></code></pre>
+          <p class="fazit" id="defFazit" aria-live="polite"></p>
+        </section>
+
+        <section class="subpanel" aria-labelledby="aufrufTitle">
+          <div class="subpanel-heading">
+            <h3 id="aufrufTitle" class="subpanel-title">Aufruf</h3>
+          </div>
+          <pre class="code-block"><code id="aufrufCode" aria-label="Aufruf der Funktion"></code></pre>
+          <p class="fazit" id="aufrufFazit" aria-live="polite"></p>
+        </section>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="zerlegtTitle">
+      <h2 id="zerlegtTitle">Ein draw() oder viele Funktionen</h2>
+      <div class="fn-row" role="group" aria-label="Teilaufgabe wählen">
+        <button class="fn-btn" type="button" data-teilaufgabe="hintergrund" aria-pressed="false">Hintergrund</button>
+        <button class="fn-btn" type="button" data-teilaufgabe="position" aria-pressed="false">Position</button>
+        <button class="fn-btn" type="button" data-teilaufgabe="figur" aria-pressed="false">Figur</button>
+      </div>
+
+      <div class="split">
+        <section class="subpanel" aria-labelledby="langTitle">
+          <div class="subpanel-heading">
+            <h3 id="langTitle" class="subpanel-title">alles in draw()</h3>
+            <button class="btn ghost small" type="button" data-kopieren="langCode">Kopieren</button>
+          </div>
+          <pre class="code-block"><code id="langCode" aria-label="Programm ohne eigene Funktionen"></code></pre>
+        </section>
+
+        <section class="subpanel" aria-labelledby="zerlegtCodeTitle">
+          <div class="subpanel-heading">
+            <h3 id="zerlegtCodeTitle" class="subpanel-title">in Funktionen zerlegt</h3>
+            <button class="btn ghost small" type="button" data-kopieren="zerlegtCode">Kopieren</button>
+          </div>
+          <pre class="code-block"><code id="zerlegtCode" aria-label="Programm in Funktionen zerlegt"></code></pre>
+        </section>
+      </div>
+
+      <p class="fazit" id="zerlegtFazit" aria-live="polite"></p>
+    </section>
+
+    <section class="card" aria-labelledby="globalTitle">
+      <h2 id="globalTitle">Warum die Position global sein muss</h2>
+      <div class="fn-row" role="group" aria-label="Ort der Variablen w&auml;hlen">
+        <button class="fn-btn" type="button" data-variante="global" aria-pressed="false">x global</button>
+        <button class="fn-btn" type="button" data-variante="lokal" aria-pressed="false">x lokal</button>
+      </div>
+
+      <div class="pill-row">
+        <p class="status-pill" id="figurZyklus">Zyklus: 1</p>
+        <p class="status-pill" id="figurSchritt">Schritt: 0</p>
+      </div>
+
+      <div class="split">
+        <section class="subpanel" aria-labelledby="figurCodeTitle">
+          <div class="subpanel-heading">
+            <h3 id="figurCodeTitle" class="subpanel-title">Code</h3>
+            <button class="btn ghost small" type="button" data-kopieren="figurCode">Kopieren</button>
+          </div>
+          <pre class="code-block"><code id="figurCode" aria-label="Processing-Code"></code></pre>
+        </section>
+
+        <section class="subpanel" aria-labelledby="figurCanvasTitle">
+          <div class="subpanel-heading">
+            <h3 id="figurCanvasTitle" class="subpanel-title">Zeichenfl&auml;che</h3>
+          </div>
+          <div class="canvas-board">
+            <div class="canvas-stack">
+              <canvas id="figurCanvas" class="drawing-layer" width="400" height="400" aria-label="Zeichenfl&auml;che 400 mal 400 Pixel"></canvas>
+              <canvas id="figurRaster" class="grid-layer" width="400" height="400" aria-hidden="true"></canvas>
+            </div>
+          </div>
+          <p class="wert-anzeige" id="figurWert" aria-live="polite"></p>
+          <p class="canvas-caption leise" id="figurAufruf"></p>
+        </section>
+      </div>
+
+      <div class="action-row">
+        <button class="btn" id="figurSchrittBtn" type="button">N&auml;chster Schritt</button>
+        <button class="btn ghost" id="figurReset" type="button">Von vorn</button>
+      </div>
+
+      <p class="fazit" id="figurFazit" aria-live="polite"></p>
+    </section>
+
+    <section class="card" aria-labelledby="namenTitle">
+      <h2 id="namenTitle">Namen, die etwas sagen</h2>
+
+      <table class="tabelle">
+        <thead>
+          <tr><th scope="col">statt</th><th scope="col">besser</th><th scope="col">warum</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row" class="mono schwach">f1()</th><td class="mono stark">zeichneAmpel()</td><td>Der Name sagt, was passiert</td></tr>
+          <tr><th scope="row" class="mono schwach">machWas()</th><td class="mono stark">aktualisierePosition()</td><td>Verb und Objekt</td></tr>
+          <tr><th scope="row" class="mono schwach">zeigeInfo()</th><td class="mono stark">zeigeXPosition()</td><td>&bdquo;Info&ldquo; kann alles heißen</td></tr>
+          <tr><th scope="row" class="mono schwach">kreisUndRechteck()</th><td class="mono stark">zeichneSpielfigur()</td><td>Der Name sagt <em>was</em>, nicht <em>wie</em></td></tr>
+        </tbody>
+      </table>
+
+      <ul class="merkliste">
+        <li>Ein Funktionsname beginnt mit einem Verb und wird klein geschrieben.</li>
+        <li>Ändert sich der Rumpf, muss der Name mitwachsen &ndash; sonst lügt er.</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Martin-Andersen-Nexö-Gymnasium Dresden</p>
+  </footer>
+</body>
+</html>
