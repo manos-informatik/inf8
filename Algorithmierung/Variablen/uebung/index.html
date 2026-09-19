@@ -22,6 +22,7 @@
       <summary class="task-summary">
         <span class="station-label">Aufgabe 1</span>
         <span class="task-title">Datentyp-Blitz</span>
+        <span class="task-haken" hidden>geschafft</span>
       </summary>
       <div class="task-body">
         <p class="section-text">Klicke zu jedem Wert den passenden Datentyp &ndash; oder dr&uuml;cke die Tasten 1 bis 5.</p>
@@ -52,9 +53,183 @@
       </div>
     </details>
 
-    <details class="task" id="task2">
+    <details class="task" id="taskVerlauf">
       <summary class="task-summary">
         <span class="station-label">Aufgabe 2</span>
+        <span class="task-title">Wertverlauf vorhersagen</span>
+        <span class="task-haken" hidden>geschafft</span>
+      </summary>
+      <div class="task-body">
+        <p class="section-text">Trage erst alle vier Vermutungen ein, dann pr&uuml;fe. Nicht vorher raten lassen.</p>
+
+        <div class="fn-row" role="group" aria-label="Stufe w&auml;hlen">
+          <button class="stufe-btn" type="button" data-verlauf="1" aria-pressed="false">Stufe 1</button>
+          <button class="stufe-btn" type="button" data-verlauf="2" aria-pressed="false">Stufe 2</button>
+          <button class="stufe-btn" type="button" data-verlauf="3" aria-pressed="false">Stufe 3</button>
+        </div>
+
+        <div class="split">
+          <section class="subpanel" aria-labelledby="verlaufCodeTitle">
+            <div class="subpanel-heading">
+              <h3 id="verlaufCodeTitle" class="subpanel-title">Code</h3>
+              <button class="btn ghost small" type="button" data-kopieren="verlaufCode" data-feedback="verlaufFeedback">Kopieren</button>
+            </div>
+            <pre class="code-block"><code id="verlaufCode" aria-label="Processing-Code"></code></pre>
+          </section>
+
+          <section class="subpanel" aria-labelledby="verlaufTippTitle">
+            <div class="subpanel-heading">
+              <h3 id="verlaufTippTitle" class="subpanel-title">Was steht in zaehler?</h3>
+            </div>
+            <table class="tipp-tabelle">
+              <thead>
+                <tr><th scope="col">Zeitpunkt</th><th scope="col">dein Tipp</th><th scope="col">echt</th></tr>
+              </thead>
+              <tbody id="verlaufZeilen"></tbody>
+            </table>
+          </section>
+        </div>
+
+        <div class="action-row">
+          <button class="btn" id="verlaufPruefen" type="button">Pr&uuml;fen</button>
+          <button class="btn ghost" id="verlaufReset" type="button">Neu raten</button>
+          <button class="btn ghost hint-bulb" type="button" data-overlay="overlayZuweisung" aria-label="Hinweis zur Zuweisung">&#128161;</button>
+        </div>
+
+        <div class="feedback-box" id="verlaufFeedback" aria-live="polite">F&uuml;lle alle vier Felder, dann pr&uuml;fe.</div>
+      </div>
+    </details>
+
+    <details class="task" id="taskOrt">
+      <summary class="task-summary">
+        <span class="station-label">Aufgabe 3</span>
+        <span class="task-title">Wohin mit der Deklaration?</span>
+        <span class="task-haken" hidden>geschafft</span>
+      </summary>
+      <div class="task-body">
+        <p class="section-text">W&auml;hle eine Stufe, dann eine Stelle f&uuml;r die Deklaration, und f&uuml;hre das Programm aus.</p>
+
+        <div class="fn-row" role="group" aria-label="Stufe w&auml;hlen">
+          <button class="stufe-btn" type="button" data-ortstufe="1" aria-pressed="false">Stufe 1</button>
+          <button class="stufe-btn" type="button" data-ortstufe="2" aria-pressed="false">Stufe 2</button>
+          <button class="stufe-btn" type="button" data-ortstufe="3" aria-pressed="false">Stufe 3</button>
+        </div>
+
+        <p class="ziel-satz" id="ortZiel"></p>
+
+        <div class="fn-row" id="ortWahl" role="group" aria-label="Stelle der Deklaration w&auml;hlen"></div>
+
+        <div class="split">
+          <section class="subpanel" aria-labelledby="ortCodeTitle">
+            <div class="subpanel-heading">
+              <h3 id="ortCodeTitle" class="subpanel-title">Code</h3>
+              <button class="btn ghost small" type="button" data-kopieren="ortCode" data-feedback="ortFeedback">Kopieren</button>
+            </div>
+            <pre class="code-block"><code id="ortCode" aria-label="Processing-Code"></code></pre>
+          </section>
+
+          <section class="subpanel" aria-labelledby="ortKonsoleTitle">
+            <div class="subpanel-heading">
+              <h3 id="ortKonsoleTitle" class="subpanel-title">Konsole</h3>
+            </div>
+            <pre class="console" id="ortKonsole" aria-live="polite" aria-label="Konsolenausgabe"></pre>
+          </section>
+        </div>
+
+        <div class="action-row">
+          <button class="btn" id="ortStart" type="button">Ausf&uuml;hren</button>
+          <button class="btn ghost" id="ortReset" type="button">Zur&uuml;cksetzen</button>
+          <button class="btn ghost hint-bulb" type="button" data-overlay="overlayGueltig" aria-label="Hinweis zum G&uuml;ltigkeitsbereich">&#128161;</button>
+        </div>
+
+        <div class="feedback-box" id="ortFeedback" aria-live="polite">W&auml;hle eine der drei Stellen.</div>
+      </div>
+    </details>
+
+    <details class="task" id="taskAusgabe">
+      <summary class="task-summary">
+        <span class="station-label">Aufgabe 4</span>
+        <span class="task-title">Ausgabe nach Vorgabe</span>
+        <span class="task-haken" hidden>geschafft</span>
+      </summary>
+      <div class="task-body">
+        <p class="section-text">Baue die Ausgabe so, dass in der Konsole genau das Vorgegebene steht. Die Maus steht bei (120, 80) und wandert im zweiten Zyklus ein Pixel nach rechts.</p>
+
+        <div class="fn-row" role="group" aria-label="Stufe w&auml;hlen">
+          <button class="stufe-btn" type="button" data-ausgabestufe="1" aria-pressed="false">Stufe 1</button>
+          <button class="stufe-btn" type="button" data-ausgabestufe="2" aria-pressed="false">Stufe 2</button>
+          <button class="stufe-btn" type="button" data-ausgabestufe="3" aria-pressed="false">Stufe 3</button>
+        </div>
+
+        <section class="subpanel breit" aria-labelledby="ausgabeCodeTitle">
+          <div class="subpanel-heading">
+            <h3 id="ausgabeCodeTitle" class="subpanel-title">Code</h3>
+            <button class="btn ghost small" type="button" data-kopieren="ausgabeCode" data-feedback="ausgabeFeedback">Kopieren</button>
+          </div>
+          <pre class="code-block"><code id="ausgabeCode" aria-label="Processing-Code"></code></pre>
+        </section>
+
+        <div class="split">
+          <section class="subpanel" aria-labelledby="ausgabeZielTitle">
+            <div class="subpanel-heading">
+              <h3 id="ausgabeZielTitle" class="subpanel-title">Vorgabe</h3>
+            </div>
+            <pre class="console is-ziel" id="ausgabeZiel" aria-label="Vorgegebene Konsolenausgabe"></pre>
+          </section>
+
+          <section class="subpanel" aria-labelledby="ausgabeKonsoleTitle">
+            <div class="subpanel-heading">
+              <h3 id="ausgabeKonsoleTitle" class="subpanel-title">Deine Konsole</h3>
+            </div>
+            <pre class="console" id="ausgabeKonsole" aria-live="polite" aria-label="Deine Konsolenausgabe"></pre>
+          </section>
+        </div>
+
+        <div class="action-row">
+          <button class="btn" id="ausgabePruefen" type="button">Pr&uuml;fen</button>
+          <button class="btn ghost" id="ausgabeReset" type="button">Felder leeren</button>
+          <button class="btn ghost hint-bulb" type="button" data-overlay="overlayAusgabe" aria-label="Hinweis zur Konsolenausgabe">&#128161;</button>
+        </div>
+
+        <div class="feedback-box" id="ausgabeFeedback" aria-live="polite">W&auml;hle eine Funktion und f&uuml;lle die beiden Textfelder.</div>
+      </div>
+    </details>
+
+    <details class="task" id="taskMitte">
+      <summary class="task-summary">
+        <span class="station-label">Aufgabe 5</span>
+        <span class="task-title">Die Mitte treffen</span>
+        <span class="task-haken" hidden>geschafft</span>
+      </summary>
+      <div class="task-body">
+        <p class="section-text">Der Kreis soll bei <em>jeder</em> Leinwandgr&ouml;&szlig;e in der Mitte sitzen. Erlaubt sind <code>width</code>, <code>height</code>, Zahlen und die Rechenzeichen <code>+ - * /</code>.</p>
+
+        <section class="subpanel" aria-labelledby="mitteCodeTitle">
+          <div class="subpanel-heading">
+            <h3 id="mitteCodeTitle" class="subpanel-title">Code</h3>
+            <button class="btn ghost small" type="button" data-kopieren="mitteCode" data-feedback="mitteFeedback">Kopieren</button>
+          </div>
+          <pre class="code-block"><code id="mitteCode" aria-label="Processing-Code"></code></pre>
+        </section>
+
+        <div class="mini-boards" id="mitteBoards"></div>
+
+        <div class="action-row">
+          <button class="btn" id="mittePruefen" type="button">Pr&uuml;fen</button>
+          <button class="btn ghost" id="mitteReset" type="button">Felder leeren</button>
+          <button class="btn ghost hint-bulb" type="button" data-overlay="overlaySystem" aria-label="Hinweis zu Systemvariablen">&#128161;</button>
+        </div>
+
+        <div class="feedback-box" id="mitteFeedback" aria-live="polite">Trage beide Werte ein.</div>
+      </div>
+    </details>
+
+    <h2 class="zusatz-trenner">Zusatz</h2>
+    <p class="section-text zusatz-hinweis">Diese drei drehen sich ums Zeichnen. Sie brauchen Variablen, &uuml;ben aber vor allem Koordinaten.</p>
+
+    <details class="task" id="task2">
+      <summary class="task-summary">
+        <span class="station-label">Zusatz 1</span>
         <span class="task-title">Variablen zeichnen</span>
       </summary>
       <div class="task-body">
@@ -99,8 +274,9 @@
 
     <details class="task" id="task3">
       <summary class="task-summary">
-        <span class="station-label">Aufgabe 3</span>
+        <span class="station-label">Zusatz 2</span>
         <span class="task-title">Triff den Umriss</span>
+        <span class="task-haken" hidden>geschafft</span>
       </summary>
       <div class="task-body">
         <p class="section-text">Setze die Variablen so, dass deine Form genau auf dem gestrichelten Umriss liegt.</p>
@@ -140,7 +316,7 @@
 
     <details class="task" id="task4">
       <summary class="task-summary">
-        <span class="station-label">Aufgabe 4</span>
+        <span class="station-label">Zusatz 3</span>
         <span class="task-title">Der wachsende Kreis</span>
       </summary>
       <div class="task-body">
@@ -243,6 +419,56 @@
       <p class="section-text"><code>setup()</code> l&auml;uft einmal, <code>draw()</code> danach immer wieder &ndash; hier Schritt f&uuml;r Schritt per Knopf.</p>
       <p class="section-text">Der Wert einer Variablen bleibt dabei erhalten: Was am Ende eines Zyklus drinsteht, gilt am Anfang des n&auml;chsten.</p>
       <p class="section-text">In Processing laufen die Zyklen von allein &ndash; <code>frameRate(2)</code> bremst sie auf zwei pro Sekunde, damit man zusehen kann.</p>
+      <div class="action-row">
+        <button class="btn ghost" type="button" data-close>Schlie&szlig;en</button>
+      </div>
+    </div>
+  </div>
+  <div id="overlayZuweisung" class="overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="overlayZuweisungTitle">
+    <div class="overlay-content">
+      <h3 id="overlayZuweisungTitle" class="overlay-title">Wie eine Zuweisung gelesen wird</h3>
+      <p class="section-text">Bei <code>zaehler = zaehler + 2;</code> wird zuerst die rechte Seite ausgerechnet, danach landet das Ergebnis links.</p>
+      <p class="section-text">Was am Ende eines <code>draw()</code>-Zyklus drinsteht, gilt am Anfang des n&auml;chsten.</p>
+      <div class="action-row">
+        <button class="btn ghost" type="button" data-close>Schlie&szlig;en</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="overlayGueltig" class="overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="overlayGueltigTitle">
+    <div class="overlay-content">
+      <h3 id="overlayGueltigTitle" class="overlay-title">Wo gilt eine Variable?</h3>
+      <dl class="glossar">
+        <dt>global</dt><dd>vor <code>setup()</code> deklariert &ndash; im ganzen Programm nutzbar</dd>
+        <dt>lokal</dt><dd>in einem Block <code>{ }</code> deklariert &ndash; nur dort nutzbar, und bei jedem Aufruf neu</dd>
+      </dl>
+      <p class="section-text">Nicht jeder falsche Ort gibt eine Fehlermeldung. Manchmal l&auml;uft das Programm und rechnet trotzdem falsch.</p>
+      <div class="action-row">
+        <button class="btn ghost" type="button" data-close>Schlie&szlig;en</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="overlayAusgabe" class="overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="overlayAusgabeTitle">
+    <div class="overlay-content">
+      <h3 id="overlayAusgabeTitle" class="overlay-title">Text und Wert zusammensetzen</h3>
+      <dl class="glossar">
+        <dt>+</dt><dd>h&auml;ngt Text und Wert aneinander: <code>"x = " + x</code></dd>
+        <dt>println()</dt><dd>schreibt und beginnt danach eine neue Zeile</dd>
+        <dt>print()</dt><dd>schreibt ohne Zeilenumbruch</dd>
+      </dl>
+      <p class="section-text">Leerzeichen z&auml;hlen mit. Sie geh&ouml;ren in den Text, nicht zwischen die Rechenzeichen.</p>
+      <div class="action-row">
+        <button class="btn ghost" type="button" data-close>Schlie&szlig;en</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="overlaySystem" class="overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="overlaySystemTitle">
+    <div class="overlay-content">
+      <h3 id="overlaySystemTitle" class="overlay-title">width und height</h3>
+      <p class="section-text">Processing setzt <code>width</code> und <code>height</code> selbst auf die Werte aus <code>size()</code>. Wer damit rechnet, passt sich jeder Leinwandgr&ouml;&szlig;e an.</p>
+      <p class="section-text">Feste Zahlen passen immer nur zu genau einer Gr&ouml;&szlig;e.</p>
       <div class="action-row">
         <button class="btn ghost" type="button" data-close>Schlie&szlig;en</button>
       </div>

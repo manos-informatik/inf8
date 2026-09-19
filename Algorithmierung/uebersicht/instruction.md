@@ -185,20 +185,176 @@ keinen. Eigener `localStorage`-Schlüssel pro Seite.
   werden. Steht eine Konsole darunter, braucht der Codeblock `flex: none` (Klasse
   `kompakt`) – sonst streiten sich beide um denselben Platz.
 
+## Übungsseiten bauen
+
+Gelernt beim Umbau von `Variablen/uebung/`. Die erste Fassung hatte vier Aufgaben, von
+denen nur eine wirklich Variablen übte – die anderen drei übten Zeichnen und Koordinaten.
+Aufgefallen ist das erst, als Übersicht und Übungen als zwei Spalten nebeneinander standen.
+
+### Die Prüffrage, umgekehrt
+
+Umgekehrt zur Übersicht: **hier muss man falsch liegen können.** Jede Aufgabe hat ein
+ausgesprochenes Ziel, einen Prüfen-Knopf und eine Rückmeldung, die sagt, woran es lag.
+Gibt es nichts zu bestehen, ist es keine Aufgabe, sondern ein Beispiel – und Beispiele
+stehen auf der Übersicht.
+
+### Eine Übung je Übersichts-Karte
+
+Der schnellste Test, ob eine Übungsseite zum Thema passt: die Karten der Übersicht und die
+Aufgaben der Übung in zwei Spalten nebeneinander schreiben. Bleibt links eine Karte ohne
+Übung oder rechts eine Aufgabe ohne Karte, stimmt etwas nicht. Eine Aufgabe ohne Karte übt
+meist ein anderes Thema mit – dann gehört sie auf dessen Seite, nicht hierher.
+
+### Stufen statt einer einzigen Aufgabe
+
+Drei Stufen je Aufgabe, mit steigendem Anspruch, jede mit eigenem Ziel und eigenem Stand.
+Sie dürfen sich ausdrücklich **widersprechen** – das ist der Gewinn:
+
+> In Aufgabe 3 muss die Variable in Stufe 1 global sein, damit sie ihren Wert behält,
+> und in Stufe 3 lokal, damit sie ihn gerade nicht behält.
+
+Wer nur eine Stufe sieht, lernt eine Regel. Wer beide sieht, lernt die Frage dahinter.
+
+### Genau eine richtige Antwort je Stufe
+
+Beim Bauen von Aufgabe 3, Stufe 2 waren zunächst zwei der drei Stellen richtig – „in draw()"
+erfüllte das Ziel genauso wie die gemeinte Lösung. Nach jeder neuen Stufe einmal **alle**
+Antwortmöglichkeiten gegen das Ziel halten. Ist mehr als eine richtig, muss entweder das
+Ziel schärfer werden oder die Möglichkeit ausgetauscht.
+
+### Der lehrreichste Fall läuft und ist trotzdem falsch
+
+Eine Fehlermeldung ist schnell verstanden. Schwieriger – und wichtiger – ist der Fall, der
+fehlerfrei durchläuft und das Falsche tut: die Deklaration in `draw()` gibt `1, 1, 1` statt
+`1, 2, 3`. Jede Aufgabe sollte mindestens eine solche Möglichkeit anbieten, und die
+Rückmeldung soll es benennen: „Kein Fehler, trotzdem falsch: …".
+
+### Bedienelemente in den Code, wenn die Wahl Teil der Aufgabe ist
+
+`print()` und `println()` standen erst als Knöpfe über dem Code. Als Auswahlfeld **im Code**,
+eines je Anweisung, ist die Aufgabe klarer, ein Bedienelement fällt weg – und Stufe 3 wird
+überhaupt erst möglich, weil sie zwei verschiedene Funktionen in einem Programm braucht.
+
+### Zustand je Stufe getrennt halten
+
+Alles, was der Lernende eingibt, wird pro Stufe gespeichert: `tipps[stufe]`, `wahl[stufe]`,
+und bei Aufgabe 4 tragen die Feldnamen die Stufe im Schlüssel (`ausgabe_2_1_fn`). Sonst
+löscht ein Stufenwechsel die Arbeit, und Zurückspringen wird zur Strafe statt zur Möglichkeit.
+
+### Rückmeldung aus dem Zustand ableiten
+
+Wer den Rückmeldungstext nur im Klick-Handler setzt, verliert ihn beim Stufenwechsel. Jede
+Aufgabe braucht eine Funktion, die aus dem gespeicherten Stand die passende Rückmeldung neu
+erzeugt – `verlaufRueckmeldung()`, `ortRueckmeldung()` – aufgerufen beim Stufenwechsel und
+beim Seitenstart. Dieselbe Regel wie beim Code: nichts anzeigen, was sich nicht aus dem
+Zustand herleiten lässt.
+
+### Fortschritt
+
+Eine bestandene Stufe wird grün und bleibt es, auch wenn man die Stufe verlässt oder
+eine andere falsch beantwortet. Sind **alle** Stufen einer Aufgabe bestanden, färbt sich
+die Aufgabenkarte grün und bekommt die Plakette „geschafft ✓" in der Kopfzeile.
+Zurückspringen ist jederzeit möglich; Eingaben und Rückmeldung einer Stufe kommen beim
+Wechseln zurück.
+
+Was als geschafft gilt, entscheidet jede Aufgabe für sich. Auf der Variablen-Seite:
+
+| Aufgabe | Bedingung |
+|---|---|
+| 1 · Datentyp-Blitz | eine Runde ohne Fehler mit mindestens 6 richtigen (`QUIZ_HUERDE`) |
+| 2 · Wertverlauf | alle vier Vermutungen richtig, je Stufe |
+| 3 · Deklarationsort | die richtige Stelle gewählt und ausgeführt, je Stufe |
+| 4 · Ausgabe | Konsole trifft die Vorgabe genau, je Stufe |
+| 5 · Die Mitte treffen | alle drei Leinwandgrößen bestanden |
+| Zusatz 2 · Triff den Umriss | alle vier Teilaufgaben gelöst |
+| Zusatz 1 und 3 | zum Ausprobieren, es gibt nichts zu bestehen |
+
+Gespeichert wird das unter `state.geschafft` im **`localStorage`**, nicht in einem Cookie:
+Ein Cookie würde bei jedem Seitenaufruf mitgeschickt werden, obwohl ihn niemand liest, und
+ist auf rund 4 KB begrenzt. `localStorage` bleibt im Browser, hat mehr Platz und übersteht
+das Schließen des Fensters genauso. Gelöscht wird der Stand nur, wenn die Schülerin oder
+der Schüler die Browserdaten löscht.
+
+Beim Ergänzen einer Aufgabe: `merkeStufe("<taskId>", stufe)` beim Bestehen aufrufen und
+danach `zeigeFortschritt()`. Die Bedingung für die ganze Aufgabe steht in `zeigeFortschritt`
+in der Tabelle `fertig`.
+
+### Beim Bauen aufgefallen
+
+- **Selektoren in die eigene Aufgabe einsperren.** Zusatz 3 griff mit
+  `querySelectorAll(".stufe-btn")` alle Stufenknöpfe der Seite ab und hat damit die
+  neuen Knöpfe von Aufgabe 2 mitgesteuert. Jetzt `#task4 .stufe-btn`, wie es bei
+  `#task2 .fn-btn` von Anfang an stand. Auf einer Seite mit vielen Aufgaben gilt das
+  für jede Klasse, die mehr als einmal vorkommt.
+- **Aufgabe 5 rechnet ohne `eval`.** Ein kleiner Auswerter kennt `width`, `height`,
+  Zahlen, Klammern und `+ - * /` und teilt ganzzahlig wie Java. Alles andere wird
+  abgelehnt und benannt („`breite` kenne ich nicht").
+- **Auswahlfelder ohne Vorbelegung.** Ein `<select>` hat immer einen Wert, also steht
+  als erste Option ein leeres `?`. Sonst beantwortet die Seite einen Teil der Aufgabe
+  selbst – dasselbe Prinzip wie bei leeren Eingabefeldern.
+- **Eine Zeile mit Eingabefeldern braucht die volle Breite.** Die `println()`-Zeile in
+  Aufgabe 4 passt nicht in eine halbe Spalte. Der Codeblock steht deshalb über beiden
+  Spalten (`.subpanel.breit`), darunter Vorgabe und eigene Konsole nebeneinander –
+  das ist zum Vergleichen ohnehin besser.
+- **`codeAlsText()` muss Auswahlfelder kennen.** Für ein `<select>` liefert
+  `textContent` alle Optionen hintereinander; ohne Sonderfall landet
+  `mouseXmouseYwidthheight` in der Zwischenablage.
+
+### Was sich an diesen Seiten zu testen lohnt
+
+- **Erwartete Werte im Test unabhängig nachrechnen**, nicht aus derselben Tabelle nehmen,
+  die die Seite benutzt. Bei Aufgabe 2 simuliert der Test die Zyklen selbst.
+- **Bei Zeichenflächen die Pixel prüfen**, nicht die Färbung des Rahmens – bei Aufgabe 5
+  wird in jeder der drei Vorschauen der Bildpunkt in der Mitte ausgelesen.
+- **Fortschritt über ein Neuladen hinweg prüfen**: iframe entfernen, neu laden, und
+  nachsehen, ob Stufen, Karten und Plaketten wieder grün sind.
+- **Einen absichtlich kaputten Speicherstand einspielen** (`taskVerlauf: "kaputt"`) und
+  prüfen, dass die Seite trotzdem normal startet.
+- **Jede Stufe einmal vollständig lösen und einmal absichtlich daneben** – die zweite
+  Hälfte findet die Rückmeldungen, die sonst nie erscheinen.
+
 ## Thema Variablen im Einzelnen
 
 Grundlage ist der LogSeq-Knoten „01 Datentypen, Variablen und Systemvariablen".
 Die beiden Inhaltsseiten überschneiden sich nicht:
 
+**Jede Übersichts-Karte hat ihre eigene Übung.** Das ist die Regel, nach der die
+Übungsseite gebaut ist – man kann von links nach rechts lesen:
+
 | Übersicht (Nachschlagen) | Übungen (Anwenden) |
 |---|---|
-| Darum geht es | Aufgabe 1 · Datentyp-Blitz |
-| Datentypen | Aufgabe 2 · Variablen zeichnen |
-| Deklarieren, initialisieren, zuweisen | Aufgabe 3 · Triff den Umriss |
-| Global oder lokal | Aufgabe 4 · Der wachsende Kreis |
-| In die Konsole schreiben | |
-| Systemvariablen | |
+| Darum geht es | – |
+| Datentypen | Aufgabe 1 · Datentyp-Blitz |
+| Deklarieren, initialisieren, zuweisen | Aufgabe 2 · Wertverlauf vorhersagen |
+| Global oder lokal | Aufgabe 3 · Wohin mit der Deklaration? |
+| In die Konsole schreiben | Aufgabe 4 · Ausgabe nach Vorgabe |
+| Systemvariablen | Aufgabe 5 · Die Mitte treffen |
 
-Links sechs Karten, alle offen; rechts vier aufklappbare Aufgaben mit Prüfen und
+Darunter stehen unter der Überschrift **Zusatz** drei ältere Aufgaben (Variablen
+zeichnen, Triff den Umriss, Der wachsende Kreis). Sie üben vor allem Koordinaten und
+gehören thematisch zu „00 Grundlagen Processing" – sobald es dafür eine Kachel gibt,
+können sie dorthin umziehen.
+
+Links sechs Karten, alle offen; rechts fünf aufklappbare Aufgaben mit Prüfen und
 Rückmeldung. `localStorage`-Schlüssel: `inf8-variablen-uebersicht-v1` bzw.
 `inf8-variablen-v1`.
+
+### Woher die Aufgaben kommen
+
+| Aufgabe | Vorlage im LogSeq-Knoten |
+|---|---|
+| 2 · Wertverlauf vorhersagen | „Vermutungen aufstellen und überprüfen" – erst alle Tipps, dann ausführen |
+| 3 · Wohin mit der Deklaration? | „Was würde passieren, wenn die Deklaration verschoben würde?" |
+| 4 · Ausgabe nach Vorgabe | A1, Zielformat `x-Position: … y-Position: …` |
+| 5 · Die Mitte treffen | T0, Ziffernblatt mittig über `width`/`height` |
+
+### Stufen in den Aufgaben 2 bis 4
+
+| | Stufe 1 | Stufe 2 | Stufe 3 |
+|---|---|---|---|
+| **2 · Wertverlauf** | `zaehler + 2` | `zaehler * 2` | zwei Variablen, die Schrittweite wächst mit |
+| **3 · Deklarationsort** | global ist richtig | wann hat `width` einen Wert? | lokal ist richtig |
+| **4 · Ausgabe** | eine Anweisung | zwei Anweisungen, zwei Zeilen | `print()` und `println()` zusammen |
+
+Stufe 2 von Aufgabe 3 zielt auf den Zeitpunkt: `int mitte = width / 2;` vor `setup()` ergibt
+0, weil `size()` noch nicht gelaufen ist. Das ist die ==ACHTUNG==-Stelle aus dem LogSeq-Knoten.

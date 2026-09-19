@@ -1,5 +1,6 @@
 /* Variablen - Klasse 8, Algorithmierung
-   Aufgabe 1: Datentyp-Blitz, Aufgabe 2: Variablen zeichnen, Aufgabe 3: Umriss treffen. */
+   Aufgabe 1 Datentyp-Blitz, 2 Wertverlauf, 3 Deklarationsort, 4 Ausgabe, 5 Mitte treffen.
+   Zusatz 1-3 (Variablen zeichnen, Umriss treffen, wachsender Kreis) ueben das Zeichnen. */
 
 (() => {
   "use strict";
@@ -11,8 +12,20 @@
 
   /* ---------------------------------------------------------------- Zustand */
 
+  /* Reihenfolge wie im Dokument: erst die fuenf Aufgaben, dann der Zusatz. */
+  const AUFGABEN_IDS = ["task1", "taskVerlauf", "taskOrt", "taskAusgabe", "taskMitte",
+    "task2", "task3", "task4"];
+
   const state = {
-    offen: { task1: true, task2: false, task3: false, task4: false },
+    offen: { task1: true, taskVerlauf: false, taskOrt: false, taskAusgabe: false,
+      taskMitte: false, task2: false, task3: false, task4: false },
+    verlauf: { stufe: "1", tipps: {}, geprueft: {} },
+    /* geschafft: je Aufgabe die Liste der bestandenen Stufen bzw. ein Schalter.
+       Wird mitgespeichert, damit der Fortschritt einen Seitenwechsel übersteht. */
+    geschafft: { task1: false, taskVerlauf: [], taskOrt: [], taskAusgabe: [], taskMitte: false },
+    ort: { stufe: "1", wahl: {}, gelaufen: {} },
+    ausgabe: { stufe: "1", felder: {} },
+    mitte: { x: "", y: "" },
     rekord: 0,
     funktion: "rect",
     werte2: {},
@@ -40,11 +53,58 @@
       if (!data || typeof data !== "object") return;
 
       if (data.offen && typeof data.offen === "object") {
-        ["task1", "task2", "task3", "task4"].forEach((id) => {
+        AUFGABEN_IDS.forEach((id) => {
           if (typeof data.offen[id] === "boolean") state.offen[id] = data.offen[id];
         });
       }
+      if (data.verlauf && typeof data.verlauf === "object") {
+        if (["1", "2", "3"].includes(data.verlauf.stufe)) state.verlauf.stufe = data.verlauf.stufe;
+        if (data.verlauf.tipps && typeof data.verlauf.tipps === "object") {
+          state.verlauf.tipps = { ...data.verlauf.tipps };
+        }
+        if (data.verlauf.geprueft && typeof data.verlauf.geprueft === "object") {
+          state.verlauf.geprueft = { ...data.verlauf.geprueft };
+        }
+      }
+      if (data.ort && typeof data.ort === "object") {
+        if (["1", "2", "3"].includes(data.ort.stufe)) state.ort.stufe = data.ort.stufe;
+        if (data.ort.wahl && typeof data.ort.wahl === "object") {
+          // nur Stellen übernehmen, die es in der jeweiligen Stufe wirklich gibt
+          Object.keys(ORT_STUFEN).forEach((stufe) => {
+            const id = data.ort.wahl[stufe];
+            if (ORT_STUFEN[stufe].stellen.some((st) => st.id === id)) state.ort.wahl[stufe] = id;
+          });
+        }
+        if (data.ort.gelaufen && typeof data.ort.gelaufen === "object") {
+          Object.keys(ORT_STUFEN).forEach((stufe) => {
+            if (typeof data.ort.gelaufen[stufe] === "boolean") state.ort.gelaufen[stufe] = data.ort.gelaufen[stufe];
+          });
+        }
+      }
+      if (data.ausgabe && typeof data.ausgabe === "object") {
+        if (["1", "2", "3"].includes(data.ausgabe.stufe)) state.ausgabe.stufe = data.ausgabe.stufe;
+        if (data.ausgabe.felder && typeof data.ausgabe.felder === "object") {
+          Object.entries(data.ausgabe.felder).forEach(([id, wert]) => {
+            if (typeof wert === "string") state.ausgabe.felder[id] = wert.slice(0, 40);
+          });
+        }
+      }
+      if (data.mitte && typeof data.mitte === "object") {
+        ["x", "y"].forEach((k) => {
+          if (typeof data.mitte[k] === "string") state.mitte[k] = data.mitte[k].slice(0, 30);
+        });
+      }
       if (Number.isFinite(data.rekord)) state.rekord = Math.max(0, Math.trunc(data.rekord));
+      if (data.geschafft && typeof data.geschafft === "object") {
+        ["task1", "taskMitte"].forEach((k) => {
+          if (typeof data.geschafft[k] === "boolean") state.geschafft[k] = data.geschafft[k];
+        });
+        ["taskVerlauf", "taskOrt", "taskAusgabe"].forEach((k) => {
+          if (Array.isArray(data.geschafft[k])) {
+            state.geschafft[k] = data.geschafft[k].filter((st) => ["1", "2", "3"].includes(st));
+          }
+        });
+      }
       if (typeof data.funktion === "string" && data.funktion in FUNKTIONEN) state.funktion = data.funktion;
       if (data.werte2 && typeof data.werte2 === "object") state.werte2 = { ...data.werte2 };
       if (typeof data.schritt3 === "string" && AUFGABEN3.some((a) => a.id === data.schritt3)) state.schritt3 = data.schritt3;
@@ -161,11 +221,11 @@
     quizEls.start.textContent = "Noch einmal";
 
     const neuerRekord = quiz.richtig > state.rekord;
-    if (neuerRekord) {
-      state.rekord = quiz.richtig;
-      persist();
-    }
+    if (neuerRekord) state.rekord = quiz.richtig;
+    if (quiz.falsch === 0 && quiz.richtig >= QUIZ_HUERDE) state.geschafft.task1 = true;
+    if (neuerRekord || state.geschafft.task1) persist();
     aktualisiereScore();
+    zeigeFortschritt();
 
     setFeedback(
       quizEls.feedback,
@@ -624,6 +684,7 @@
 
     if (passt) {
       if (!state.geloest3.includes(aufgabe.id)) state.geloest3.push(aufgabe.id);
+      zeigeFortschritt();
       persist();
       zeichneSchritte();
       const offen = AUFGABEN3.filter((a) => !state.geloest3.includes(a.id)).length;
@@ -762,7 +823,8 @@
     wert: document.querySelector("#stufeWert"),
     richtung: document.querySelector("#stufeRichtung"),
     aufruf: document.querySelector("#stufeAufruf"),
-    knoepfe: Array.from(document.querySelectorAll(".stufe-btn"))
+    // auf die eigene Aufgabe eingegrenzt - Aufgabe 2 benutzt dieselbe Knopfform
+    knoepfe: Array.from(document.querySelectorAll("#task4 .stufe-btn"))
   };
 
   const ctx4 = els4.canvas.getContext("2d");
@@ -886,6 +948,992 @@
 
   els4.reset.addEventListener("click", () => setzeStufe(state.stufe, true));
 
+  /* ================================================================
+     Aufgaben 2 bis 5 - gemeinsame Werkzeuge
+     ================================================================ */
+
+  const SYSTEMVARIABLEN = ["mouseX", "mouseY", "width", "height"];
+
+  /* Datentyp-Blitz gilt als geschafft nach einer Runde ohne Fehler mit
+     mindestens sechs richtigen Antworten. */
+  const QUIZ_HUERDE = 6;
+
+  const STUFEN_KNOEPFE = [
+    ["taskVerlauf", "data-verlauf"],
+    ["taskOrt", "data-ortstufe"],
+    ["taskAusgabe", "data-ausgabestufe"]
+  ];
+
+  const merkeStufe = (aufgabe, stufe) => {
+    if (state.geschafft[aufgabe].includes(stufe)) return;
+    state.geschafft[aufgabe].push(stufe);
+    persist();
+  };
+
+  /* Färbt geschaffte Stufen und abgeschlossene Aufgaben. Wird nach jeder
+     Prüfung und beim Seitenstart aufgerufen. */
+  const zeigeFortschritt = () => {
+    STUFEN_KNOEPFE.forEach(([aufgabe, attribut]) => {
+      document.querySelectorAll(`[${attribut}]`).forEach((btn) => {
+        btn.classList.toggle("ist-geschafft", state.geschafft[aufgabe].includes(btn.getAttribute(attribut)));
+      });
+    });
+
+    const fertig = {
+      task1: state.geschafft.task1,
+      taskVerlauf: state.geschafft.taskVerlauf.length === 3,
+      taskOrt: state.geschafft.taskOrt.length === 3,
+      taskAusgabe: state.geschafft.taskAusgabe.length === 3,
+      taskMitte: state.geschafft.taskMitte,
+      task3: state.geloest3.length === AUFGABEN3.length
+    };
+
+    Object.entries(fertig).forEach(([id, ok]) => {
+      const details = document.querySelector(`#${id}`);
+      if (!details) return;
+      details.classList.toggle("ist-geschafft", ok);
+      const haken = details.querySelector(".task-haken");
+      if (haken) haken.hidden = !ok;
+    });
+  };
+
+  /* Eine Zeile besteht aus Teilen: "text", ["klasse", "text"] oder
+     { feld: id } / { wahl: id } fuer Eingaben mitten im Code.
+     Einzug und Abstand laufen ueber dieselben Klassen wie in Aufgabe 4,
+     damit codeAlsText() den Text unveraendert herausgibt. */
+  const zeichneCode = (ziel, zeilen) => {
+    ziel.textContent = "";
+    const merker = new Map();
+
+    zeilen.forEach((zeile) => {
+      const el = document.createElement("span");
+      const tiefe = zeile.tief === 2 ? " code-double-indent" : zeile.tief === 1 ? " code-indent" : "";
+      el.className = `code-line${tiefe}${zeile.abstand ? " is-spaced" : ""}`;
+      if (zeile.aktiv) el.classList.add("is-active");
+      if (zeile.fehler) el.classList.add("is-broken");
+
+      (zeile.tokens || []).forEach((token) => {
+        if (typeof token === "string") { el.appendChild(document.createTextNode(token)); return; }
+        if (Array.isArray(token)) { el.appendChild(span(token[0], token[1])); return; }
+
+        if (token.feld) {
+          const input = document.createElement("input");
+          input.type = "text";
+          input.className = "code-input";
+          input.id = token.feld;
+          input.size = token.breite || 10;
+          input.autocomplete = "off";
+          input.spellcheck = false;
+          if (token.platzhalter) input.placeholder = token.platzhalter;
+          if (token.beschriftung) input.setAttribute("aria-label", token.beschriftung);
+          el.appendChild(input);
+          merker.set(token.feld, input);
+          return;
+        }
+
+        if (token.wahl) {
+          const select = document.createElement("select");
+          select.className = "code-select";
+          select.id = token.wahl;
+          if (token.beschriftung) select.setAttribute("aria-label", token.beschriftung);
+          (token.optionen || []).forEach((eintrag) => {
+            const [wert, text] = Array.isArray(eintrag) ? eintrag : [eintrag, eintrag];
+            const option = document.createElement("option");
+            option.value = wert;
+            option.textContent = text;
+            select.appendChild(option);
+          });
+          el.appendChild(select);
+          merker.set(token.wahl, select);
+        }
+      });
+
+      ziel.appendChild(el);
+      if (zeile.key) merker.set(zeile.key, el);
+    });
+
+    return merker;
+  };
+
+  const zeigeKonsole = (ziel, zeilen) => {
+    ziel.textContent = "";
+    zeilen.forEach((zeile) => {
+      const el = span("console-line" + (zeile.klasse ? " " + zeile.klasse : ""), zeile.text);
+      ziel.appendChild(el);
+    });
+  };
+
+  /* ================================================================
+     Aufgabe 2: Wertverlauf vorhersagen
+     ================================================================ */
+
+  const kopfZeilen = (deklarationen) => [
+    ...deklarationen,
+    { abstand: true, tokens: [["keyword", "void"], " ", ["fn", "setup"], "() {"] },
+    { tief: 1, tokens: [["fn", "size"], "(", ["num", "400"], ", ", ["num", "400"], ");"] },
+    { tokens: ["}"] },
+    { abstand: true, tokens: [["keyword", "void"], " ", ["fn", "draw"], "() {"] }
+  ];
+
+  const deklZeile = (name, wert) =>
+    ({ tokens: [["type", "int"], " ", ["var", name], " = ", ["num", String(wert)], ";"] });
+
+  /* Angezeigter Code und schritt() beschreiben denselben Zyklus. */
+  const VERLAUF_STUFEN = {
+    "1": {
+      anfang: { zaehler: 0 },
+      schritt: (v) => ({ zaehler: v.zaehler + 2 }),
+      zeilen: [
+        ...kopfZeilen([deklZeile("zaehler", 0)]),
+        { tief: 1, tokens: [["var", "zaehler"], " = ", ["var", "zaehler"], " + ", ["num", "2"], ";"] },
+        { tief: 1, tokens: [["fn", "println"], "(", ["var", "zaehler"], ");"] },
+        { tokens: ["}"] }
+      ]
+    },
+    "2": {
+      anfang: { zaehler: 1 },
+      schritt: (v) => ({ zaehler: v.zaehler * 2 }),
+      zeilen: [
+        ...kopfZeilen([deklZeile("zaehler", 1)]),
+        { tief: 1, tokens: [["var", "zaehler"], " = ", ["var", "zaehler"], " * ", ["num", "2"], ";"] },
+        { tief: 1, tokens: [["fn", "println"], "(", ["var", "zaehler"], ");"] },
+        { tokens: ["}"] }
+      ]
+    },
+    "3": {
+      anfang: { zaehler: 0, schritt: 1 },
+      schritt: (v) => ({ zaehler: v.zaehler + v.schritt, schritt: v.schritt + 1 }),
+      zeilen: [
+        ...kopfZeilen([deklZeile("zaehler", 0), deklZeile("schritt", 1)]),
+        { tief: 1, tokens: [["var", "zaehler"], " = ", ["var", "zaehler"], " + ", ["var", "schritt"], ";"] },
+        { tief: 1, tokens: [["var", "schritt"], " = ", ["var", "schritt"], " + ", ["num", "1"], ";"] },
+        { tief: 1, tokens: [["fn", "println"], "(", ["var", "zaehler"], ");"] },
+        { tokens: ["}"] }
+      ]
+    }
+  };
+
+  const VERLAUF_ZEITPUNKTE = ["nach setup()", "nach dem 1. draw()", "nach dem 2. draw()", "nach dem 3. draw()"];
+
+  const verlaufEls = {
+    code: document.querySelector("#verlaufCode"),
+    zeilen: document.querySelector("#verlaufZeilen"),
+    feedback: document.querySelector("#verlaufFeedback"),
+    pruefen: document.querySelector("#verlaufPruefen"),
+    reset: document.querySelector("#verlaufReset")
+  };
+
+  /* Die echten Werte laufen durch dieselbe schritt()-Funktion wie der gezeigte Code. */
+  const verlaufWerte = (stufe) => {
+    const s = VERLAUF_STUFEN[stufe];
+    let v = { ...s.anfang };
+    const werte = [v.zaehler];
+    for (let i = 0; i < 3; i += 1) { v = s.schritt(v); werte.push(v.zaehler); }
+    return werte;
+  };
+
+  const verlaufTipps = () => {
+    const stufe = state.verlauf.stufe;
+    if (!Array.isArray(state.verlauf.tipps[stufe])) state.verlauf.tipps[stufe] = ["", "", "", ""];
+    return state.verlauf.tipps[stufe];
+  };
+
+  const zeigeVerlauf = () => {
+    const stufe = state.verlauf.stufe;
+    document.querySelectorAll("[data-verlauf]").forEach((btn) => {
+      btn.setAttribute("aria-pressed", String(btn.dataset.verlauf === stufe));
+    });
+
+    zeichneCode(verlaufEls.code, VERLAUF_STUFEN[stufe].zeilen);
+
+    const tipps = verlaufTipps();
+    const geprueft = Boolean(state.verlauf.geprueft[stufe]);
+    const echt = verlaufWerte(stufe);
+
+    verlaufEls.zeilen.textContent = "";
+    VERLAUF_ZEITPUNKTE.forEach((label, i) => {
+      const tr = document.createElement("tr");
+
+      const th = document.createElement("th");
+      th.scope = "row";
+      th.textContent = label;
+      tr.appendChild(th);
+
+      const tdEingabe = document.createElement("td");
+      const input = document.createElement("input");
+      input.type = "number";
+      input.value = tipps[i];
+      input.setAttribute("aria-label", "zaehler " + label);
+      input.addEventListener("input", () => {
+        verlaufTipps()[i] = input.value;
+        persist();
+      });
+      tdEingabe.appendChild(input);
+      tr.appendChild(tdEingabe);
+
+      const tdEcht = document.createElement("td");
+      tdEcht.className = "tipp-echt";
+      tdEcht.textContent = geprueft ? String(echt[i]) : "–";
+      tr.appendChild(tdEcht);
+
+      if (geprueft) {
+        tr.classList.add(Number(tipps[i]) === echt[i] ? "ist-richtig" : "ist-falsch");
+      }
+      verlaufEls.zeilen.appendChild(tr);
+    });
+  };
+
+  /* Rückmeldung zur aktuellen Stufe - auch nach einem Stufenwechsel wieder herstellbar. */
+  const verlaufRueckmeldung = () => {
+    const stufe = state.verlauf.stufe;
+    if (!state.verlauf.geprueft[stufe]) {
+      setFeedback(verlaufEls.feedback, "Fülle alle vier Felder, dann prüfe.", null);
+      return;
+    }
+    const echt = verlaufWerte(stufe);
+    const treffer = verlaufTipps().filter((t, i) => Number(t) === echt[i]).length;
+    if (treffer === 4) {
+      setFeedback(verlaufEls.feedback, "Alle vier richtig - der Wert wird von Zyklus zu Zyklus mitgenommen.", true);
+    } else {
+      setFeedback(verlaufEls.feedback, `${treffer} von 4 richtig. Vergleiche Zeile für Zeile, was draw() mit zaehler macht.`, false);
+    }
+  };
+
+  document.querySelectorAll("[data-verlauf]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      state.verlauf.stufe = btn.dataset.verlauf;
+      persist();
+      zeigeVerlauf();
+      verlaufRueckmeldung();
+    });
+  });
+
+  verlaufEls.pruefen.addEventListener("click", () => {
+    const tipps = verlaufTipps();
+    if (tipps.some((t) => t.trim() === "")) {
+      setFeedback(verlaufEls.feedback, "Es fehlen noch Vermutungen - erst alle vier Felder füllen.", false);
+      return;
+    }
+
+    const echt = verlaufWerte(state.verlauf.stufe);
+    const treffer = tipps.filter((t, i) => Number(t) === echt[i]).length;
+    state.verlauf.geprueft[state.verlauf.stufe] = true;
+    if (treffer === 4) merkeStufe("taskVerlauf", state.verlauf.stufe);
+    persist();
+    zeigeVerlauf();
+    zeigeFortschritt();
+    verlaufRueckmeldung();
+  });
+
+  verlaufEls.reset.addEventListener("click", () => {
+    state.verlauf.tipps[state.verlauf.stufe] = ["", "", "", ""];
+    state.verlauf.geprueft[state.verlauf.stufe] = false;
+    persist();
+    zeigeVerlauf();
+    setFeedback(verlaufEls.feedback, "Fülle alle vier Felder, dann prüfe.", null);
+  });
+
+
+  /* ================================================================
+     Aufgabe 3: Wohin mit der Deklaration?
+     Drei Stufen. Stufe 1 braucht global, Stufe 3 braucht lokal,
+     Stufe 2 dreht sich darum, wann width einen Wert hat.
+     ================================================================ */
+
+  /* abstand nur, wenn oberhalb schon eine Deklaration steht */
+  const setupKopf = (zeilen, abstand) => [
+    { abstand: Boolean(abstand), tokens: [["keyword", "void"], " ", ["fn", "setup"], "() {"] },
+    { tief: 1, tokens: [["fn", "size"], "(", ["num", "400"], ", ", ["num", "400"], ");"] },
+    ...zeilen,
+    { tokens: ["}"] }
+  ];
+
+  const drawBlock = (zeilen) => [
+    { abstand: true, tokens: [["keyword", "void"], " ", ["fn", "draw"], "() {"] },
+    ...zeilen,
+    { tokens: ["}"] }
+  ];
+
+  const printlnVar = (name) => ({ tief: 1, tokens: [["fn", "println"], "(", ["var", name], ");"] });
+  const zuweisung = (name, rechts) => ({ tief: 1, tokens: [["var", name], " = ", ...rechts, ";"] });
+  const laeuftWeiter = { text: "… draw() läuft weiter", klasse: "is-hint" };
+
+  const ORT_STUFEN = {
+    "1": {
+      ziel: "zaehler soll bei jedem draw() um 1 hochzählen und den alten Wert behalten.",
+      stellen: [
+        {
+          id: "global", label: "vor setup()", geloest: true,
+          zeilen: () => [
+            { ...deklZeile("zaehler", 0), aktiv: true },
+            ...setupKopf([], true),
+            ...drawBlock([
+              zuweisung("zaehler", [["var", "zaehler"], " + ", ["num", "1"]]),
+              printlnVar("zaehler")
+            ])
+          ],
+          konsole: [{ text: "1" }, { text: "2" }, { text: "3" }, laeuftWeiter],
+          feedback: "Richtig - vor setup() deklariert gilt zaehler im ganzen Programm und behält seinen Wert."
+        },
+        {
+          id: "setup", label: "in setup()", geloest: false,
+          zeilen: () => [
+            ...setupKopf([{ tief: 1, ...deklZeile("zaehler", 0), aktiv: true }]),
+            ...drawBlock([
+              { ...zuweisung("zaehler", [["var", "zaehler"], " + ", ["num", "1"]]), fehler: true },
+              printlnVar("zaehler")
+            ])
+          ],
+          konsole: [
+            { text: 'The variable "zaehler" does not exist', klasse: "is-error" },
+            { text: "Das Programm startet gar nicht erst.", klasse: "is-hint" }
+          ],
+          feedback: "In setup() deklariert endet zaehler mit setup() - draw() kennt den Namen nicht."
+        },
+        {
+          id: "draw", label: "in draw()", geloest: false,
+          zeilen: () => [
+            ...setupKopf([]),
+            ...drawBlock([
+              { tief: 1, ...deklZeile("zaehler", 0), aktiv: true },
+              zuweisung("zaehler", [["var", "zaehler"], " + ", ["num", "1"]]),
+              printlnVar("zaehler")
+            ])
+          ],
+          konsole: [{ text: "1" }, { text: "1" }, { text: "1" }, { text: "… und immer weiter 1", klasse: "is-hint" }],
+          feedback: "Kein Fehler, trotzdem falsch: zaehler entsteht in jedem Zyklus neu und startet wieder bei 0."
+        }
+      ]
+    },
+
+    "2": {
+      ziel: "mitte soll die halbe Leinwandbreite enthalten, also 200.",
+      stellen: [
+        {
+          id: "mitWert", label: "vor setup() mit Wert", geloest: false,
+          zeilen: () => [
+            {
+              tokens: [["type", "int"], " ", ["var", "mitte"], " = ", ["var", "width"], " / ", ["num", "2"], ";"],
+              aktiv: true
+            },
+            ...setupKopf([], true),
+            ...drawBlock([printlnVar("mitte")])
+          ],
+          konsole: [
+            { text: "0" }, { text: "0" }, { text: "0" },
+            { text: "width ist vor dem Aufruf von size() noch 0.", klasse: "is-hint" }
+          ],
+          feedback: "Die Zeile läuft, bevor size() da war - width ist zu diesem Zeitpunkt noch 0."
+        },
+        {
+          id: "inSetup", label: "Wert erst in setup()", geloest: true,
+          zeilen: () => [
+            { tokens: [["type", "int"], " ", ["var", "mitte"], ";"], aktiv: true },
+            ...setupKopf([
+              { ...zuweisung("mitte", [["var", "width"], " / ", ["num", "2"]]), aktiv: true }
+            ], true),
+            ...drawBlock([printlnVar("mitte")])
+          ],
+          konsole: [{ text: "200" }, { text: "200" }, { text: "200" }, laeuftWeiter],
+          feedback: "Richtig - deklariert wird global, der Wert kommt nach size() dazu."
+        },
+        {
+          id: "ganzSetup", label: "ganz in setup()", geloest: false,
+          zeilen: () => [
+            ...setupKopf([
+              {
+                tief: 1, aktiv: true,
+                tokens: [["type", "int"], " ", ["var", "mitte"], " = ", ["var", "width"], " / ", ["num", "2"], ";"]
+              }
+            ]),
+            ...drawBlock([{ ...printlnVar("mitte"), fehler: true }])
+          ],
+          konsole: [
+            { text: 'The variable "mitte" does not exist', klasse: "is-error" },
+            { text: "Der Wert stimmt, nur kommt draw() nicht daran.", klasse: "is-hint" }
+          ],
+          feedback: "Der Zeitpunkt passt jetzt, der Ort nicht: mitte endet mit setup()."
+        }
+      ]
+    },
+
+    "3": {
+      ziel: "summe soll in jedem Zyklus bei 0 anfangen, also immer 3 ergeben.",
+      stellen: [
+        {
+          id: "global", label: "vor setup()", geloest: false,
+          zeilen: () => [
+            { ...deklZeile("summe", 0), aktiv: true },
+            ...setupKopf([], true),
+            ...drawBlock([
+              zuweisung("summe", [["var", "summe"], " + ", ["num", "1"]]),
+              zuweisung("summe", [["var", "summe"], " + ", ["num", "2"]]),
+              printlnVar("summe")
+            ])
+          ],
+          konsole: [{ text: "3" }, { text: "6" }, { text: "9" }, { text: "… und immer weiter", klasse: "is-hint" }],
+          feedback: "Hier ist global zu viel des Guten: summe nimmt den alten Wert mit und wächst immer weiter."
+        },
+        {
+          id: "setup", label: "in setup()", geloest: false,
+          zeilen: () => [
+            ...setupKopf([{ tief: 1, ...deklZeile("summe", 0), aktiv: true }]),
+            ...drawBlock([
+              { ...zuweisung("summe", [["var", "summe"], " + ", ["num", "1"]]), fehler: true },
+              zuweisung("summe", [["var", "summe"], " + ", ["num", "2"]]),
+              printlnVar("summe")
+            ])
+          ],
+          konsole: [
+            { text: 'The variable "summe" does not exist', klasse: "is-error" },
+            { text: "Das Programm startet gar nicht erst.", klasse: "is-hint" }
+          ],
+          feedback: "In setup() deklariert endet summe mit setup() - draw() kennt den Namen nicht."
+        },
+        {
+          id: "draw", label: "in draw()", geloest: true,
+          zeilen: () => [
+            ...setupKopf([]),
+            ...drawBlock([
+              { tief: 1, ...deklZeile("summe", 0), aktiv: true },
+              zuweisung("summe", [["var", "summe"], " + ", ["num", "1"]]),
+              zuweisung("summe", [["var", "summe"], " + ", ["num", "2"]]),
+              printlnVar("summe")
+            ])
+          ],
+          konsole: [{ text: "3" }, { text: "3" }, { text: "3" }, laeuftWeiter],
+          feedback: "Richtig - genau hier ist lokal das Passende: summe startet in jedem Zyklus neu bei 0."
+        }
+      ]
+    }
+  };
+
+  const ortEls = {
+    ziel: document.querySelector("#ortZiel"),
+    wahl: document.querySelector("#ortWahl"),
+    code: document.querySelector("#ortCode"),
+    konsole: document.querySelector("#ortKonsole"),
+    feedback: document.querySelector("#ortFeedback"),
+    start: document.querySelector("#ortStart"),
+    reset: document.querySelector("#ortReset")
+  };
+
+  const ortStelle = () => {
+    const stufe = ORT_STUFEN[state.ort.stufe];
+    return stufe.stellen.find((s) => s.id === state.ort.wahl[state.ort.stufe]) || null;
+  };
+
+  const zeigeOrt = () => {
+    const stufe = ORT_STUFEN[state.ort.stufe];
+    document.querySelectorAll("[data-ortstufe]").forEach((btn) => {
+      btn.setAttribute("aria-pressed", String(btn.dataset.ortstufe === state.ort.stufe));
+    });
+    ortEls.ziel.textContent = "Ziel: " + stufe.ziel;
+
+    // Die Stellen heißen je Stufe anders, deshalb baut sie das Skript
+    const gewaehlt = state.ort.wahl[state.ort.stufe] || "";
+    ortEls.wahl.textContent = "";
+    stufe.stellen.forEach((stelle) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "fn-btn";
+      btn.textContent = stelle.label;
+      btn.setAttribute("aria-pressed", String(stelle.id === gewaehlt));
+      btn.addEventListener("click", () => {
+        state.ort.wahl[state.ort.stufe] = stelle.id;
+        state.ort.gelaufen[state.ort.stufe] = false;
+        persist();
+        zeigeOrt();
+        setFeedback(ortEls.feedback, "Jetzt ausführen und die Konsole lesen.", null);
+      });
+      ortEls.wahl.appendChild(btn);
+    });
+
+    const stelle = ortStelle();
+    if (!stelle) {
+      zeichneCode(ortEls.code, [{ tokens: [["comment", "// wähle oben eine der drei Stellen"]] }]);
+      zeigeKonsole(ortEls.konsole, [{ text: "Noch nichts ausgeführt.", klasse: "is-hint" }]);
+      ortEls.start.disabled = true;
+      return;
+    }
+
+    zeichneCode(ortEls.code, stelle.zeilen());
+    ortEls.start.disabled = false;
+    if (state.ort.gelaufen[state.ort.stufe]) zeigeKonsole(ortEls.konsole, stelle.konsole);
+    else zeigeKonsole(ortEls.konsole, [{ text: "Noch nicht ausgeführt.", klasse: "is-hint" }]);
+  };
+
+  /* Rückmeldung zur aktuellen Stufe - bleibt nach einem Stufenwechsel erhalten. */
+  const ortRueckmeldung = () => {
+    const stelle = ortStelle();
+    if (stelle && state.ort.gelaufen[state.ort.stufe]) {
+      setFeedback(ortEls.feedback, stelle.feedback, stelle.geloest);
+      return;
+    }
+    setFeedback(ortEls.feedback, stelle ? "Jetzt ausführen und die Konsole lesen."
+      : "Wähle eine Stelle für die Deklaration.", null);
+  };
+
+  document.querySelectorAll("[data-ortstufe]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      state.ort.stufe = btn.dataset.ortstufe;
+      persist();
+      zeigeOrt();
+      ortRueckmeldung();
+    });
+  });
+
+  ortEls.start.addEventListener("click", () => {
+    const stelle = ortStelle();
+    if (!stelle) {
+      setFeedback(ortEls.feedback, "Wähle zuerst eine der drei Stellen.", false);
+      return;
+    }
+    state.ort.gelaufen[state.ort.stufe] = true;
+    if (stelle.geloest) merkeStufe("taskOrt", state.ort.stufe);
+    persist();
+    zeigeOrt();
+    zeigeFortschritt();
+    setFeedback(ortEls.feedback, stelle.feedback, stelle.geloest);
+  });
+
+  ortEls.reset.addEventListener("click", () => {
+    state.ort.wahl[state.ort.stufe] = "";
+    state.ort.gelaufen[state.ort.stufe] = false;
+    persist();
+    zeigeOrt();
+    setFeedback(ortEls.feedback, "Wähle eine Stelle für die Deklaration.", null);
+  });
+
+  /* ================================================================
+     Aufgabe 4: Ausgabe nach Vorgabe
+     Drei Stufen: eine Anweisung, zwei Anweisungen, und eine, die
+     print() und println() zusammen braucht.
+     ================================================================ */
+
+  /* Zwei Zyklen; die Maus wandert dazwischen ein Pixel nach rechts. */
+  const AUSGABE_ZYKLEN = [
+    { mouseX: 120, mouseY: 80, width: 400, height: 400 },
+    { mouseX: 121, mouseY: 80, width: 400, height: 400 }
+  ];
+
+  const FN_WAHL = [["", "?"], "println", "print"];
+  const VAR_WAHL = [["", "?"], ...SYSTEMVARIABLEN];
+
+  /* anweisungen: je Anweisung die Folge ihrer Teile - "text" wird getippt,
+     "var" ausgewählt. Die Vorgabe entsteht aus derselben Beschreibung. */
+  const AUSGABE_STUFEN = {
+    "1": {
+      ziel: ["x-Position: 120 y-Position: 80", "x-Position: 121 y-Position: 80"],
+      anweisungen: [["text", "var", "text", "var"]]
+    },
+    "2": {
+      ziel: ["x: 120", "y: 80", "x: 121", "y: 80"],
+      anweisungen: [["text", "var"], ["text", "var"]]
+    },
+    "3": {
+      ziel: ["x: 120 | y: 80", "x: 121 | y: 80"],
+      anweisungen: [["text", "var", "text"], ["text", "var"]]
+    }
+  };
+
+  const ausgabeEls = {
+    code: document.querySelector("#ausgabeCode"),
+    konsole: document.querySelector("#ausgabeKonsole"),
+    ziel: document.querySelector("#ausgabeZiel"),
+    feedback: document.querySelector("#ausgabeFeedback"),
+    pruefen: document.querySelector("#ausgabePruefen"),
+    reset: document.querySelector("#ausgabeReset")
+  };
+
+  const ausgabeId = (i, j) => `ausgabe_${state.ausgabe.stufe}_${i}_${j}`;
+  const ausgabeWert = (id) => state.ausgabe.felder[id] || "";
+
+  const ausgabeZeilen = () => {
+    const stufe = AUSGABE_STUFEN[state.ausgabe.stufe];
+    const zeilen = [{ tokens: [["keyword", "void"], " ", ["fn", "draw"], "() {"] }];
+
+    stufe.anweisungen.forEach((teile, i) => {
+      const tokens = [
+        { wahl: ausgabeId(i, "fn"), optionen: FN_WAHL, beschriftung: `Ausgabefunktion der ${i + 1}. Anweisung` },
+        "("
+      ];
+      teile.forEach((art, j) => {
+        if (j > 0) tokens.push(" + ");
+        if (art === "text") {
+          tokens.push(
+            ["str", '"'],
+            { feld: ausgabeId(i, j), breite: 12, platzhalter: "Text", beschriftung: `Textstück ${j + 1} der ${i + 1}. Anweisung` },
+            ["str", '"']
+          );
+        } else {
+          tokens.push({ wahl: ausgabeId(i, j), optionen: VAR_WAHL, beschriftung: `Variable ${j + 1} der ${i + 1}. Anweisung` });
+        }
+      });
+      tokens.push(");");
+      zeilen.push({ tief: 1, tokens });
+    });
+
+    zeilen.push({ tokens: ["}"] });
+    return zeilen;
+  };
+
+  const ausgabeFehlt = () => {
+    const stufe = AUSGABE_STUFEN[state.ausgabe.stufe];
+    let ohneFn = false;
+    let ohneWert = false;
+    stufe.anweisungen.forEach((teile, i) => {
+      if (!ausgabeWert(ausgabeId(i, "fn"))) ohneFn = true;
+      teile.forEach((art, j) => { if (!ausgabeWert(ausgabeId(i, j))) ohneWert = true; });
+    });
+    if (ohneFn && ohneWert) return "Wähle die Ausgabefunktionen und fülle alle Felder.";
+    if (ohneFn) return "Bei jeder Anweisung fehlt noch print() oder println().";
+    if (ohneWert) return "Es sind noch Felder leer.";
+    return null;
+  };
+
+  /* Erzeugt genau das, was der angezeigte Code in die Konsole schreiben würde:
+     print() lässt die Zeile offen, println() schließt sie ab. */
+  const ausgabeKonsolentext = () => {
+    const stufe = AUSGABE_STUFEN[state.ausgabe.stufe];
+    const zeilen = [];
+    let offen = false;
+
+    AUSGABE_ZYKLEN.forEach((zyklus) => {
+      stufe.anweisungen.forEach((teile, i) => {
+        let text = "";
+        teile.forEach((art, j) => {
+          const wert = ausgabeWert(ausgabeId(i, j));
+          text += art === "text" ? wert : String(zyklus[wert]);
+        });
+        if (offen) zeilen[zeilen.length - 1] += text;
+        else zeilen.push(text);
+        offen = ausgabeWert(ausgabeId(i, "fn")) === "print";
+      });
+    });
+
+    return zeilen;
+  };
+
+  const baueAusgabe = () => {
+    const felder = zeichneCode(ausgabeEls.code, ausgabeZeilen());
+
+    felder.forEach((el, id) => {
+      el.value = ausgabeWert(id);
+      el.addEventListener(el.tagName === "SELECT" ? "change" : "input", () => {
+        state.ausgabe.felder[id] = el.value;
+        persist();
+        zeigeAusgabe();
+      });
+    });
+  };
+
+  function zeigeAusgabe() {
+    const stufe = AUSGABE_STUFEN[state.ausgabe.stufe];
+    document.querySelectorAll("[data-ausgabestufe]").forEach((btn) => {
+      btn.setAttribute("aria-pressed", String(btn.dataset.ausgabestufe === state.ausgabe.stufe));
+    });
+
+    zeigeKonsole(ausgabeEls.ziel, stufe.ziel.map((text) => ({ text })));
+
+    const fehlt = ausgabeFehlt();
+    if (fehlt) {
+      zeigeKonsole(ausgabeEls.konsole, [{ text: fehlt, klasse: "is-hint" }]);
+      return;
+    }
+    zeigeKonsole(ausgabeEls.konsole, ausgabeKonsolentext().map((text) => ({ text })));
+  }
+
+  document.querySelectorAll("[data-ausgabestufe]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      state.ausgabe.stufe = btn.dataset.ausgabestufe;
+      persist();
+      baueAusgabe();
+      zeigeAusgabe();
+      // eine bereits bestandene Stufe zeigt ihre Rückmeldung wieder an
+      if (state.geschafft.taskAusgabe.includes(state.ausgabe.stufe)
+          && ausgabeKonsolentext().join("\n") === AUSGABE_STUFEN[state.ausgabe.stufe].ziel.join("\n")) {
+        setFeedback(ausgabeEls.feedback, "Genau so - Text und Werte stehen an der richtigen Stelle.", true);
+      } else {
+        setFeedback(ausgabeEls.feedback, "Baue die Ausgabe nach der Vorgabe.", null);
+      }
+    });
+  });
+
+  ausgabeEls.pruefen.addEventListener("click", () => {
+    const fehlt = ausgabeFehlt();
+    if (fehlt) { setFeedback(ausgabeEls.feedback, fehlt, false); return; }
+
+    const ziel = AUSGABE_STUFEN[state.ausgabe.stufe].ziel;
+    const ist = ausgabeKonsolentext();
+
+    if (ist.join("\n") === ziel.join("\n")) {
+      merkeStufe("taskAusgabe", state.ausgabe.stufe);
+      zeigeFortschritt();
+      setFeedback(ausgabeEls.feedback, "Genau so - Text und Werte stehen an der richtigen Stelle.", true);
+      return;
+    }
+    if (ist.length !== ziel.length) {
+      setFeedback(ausgabeEls.feedback, "Die Zeilenzahl stimmt nicht. Welche Funktion beginnt eine neue Zeile?", false);
+      return;
+    }
+    const ohneLeer = (liste) => liste.map((z) => z.replace(/\s+/g, ""));
+    if (ohneLeer(ist).join("\n") === ohneLeer(ziel).join("\n")) {
+      setFeedback(ausgabeEls.feedback, "Fast - die Leerzeichen stimmen noch nicht. Sie gehören in den Text.", false);
+      return;
+    }
+    setFeedback(ausgabeEls.feedback, "Noch nicht - vergleiche deine Konsole Zeichen für Zeichen mit der Vorgabe.", false);
+  });
+
+  ausgabeEls.reset.addEventListener("click", () => {
+    const stufe = AUSGABE_STUFEN[state.ausgabe.stufe];
+    stufe.anweisungen.forEach((teile, i) => {
+      delete state.ausgabe.felder[ausgabeId(i, "fn")];
+      teile.forEach((art, j) => { delete state.ausgabe.felder[ausgabeId(i, j)]; });
+    });
+    persist();
+    baueAusgabe();
+    zeigeAusgabe();
+    setFeedback(ausgabeEls.feedback, "Baue die Ausgabe nach der Vorgabe.", null);
+  });
+
+  /* ================================================================
+     Aufgabe 5: Die Mitte treffen
+     ================================================================ */
+
+  const MITTE_GROESSEN = [[400, 400], [500, 300], [300, 600]];
+
+  /* Winziger Rechner für width, height, Zahlen und + - * / mit Klammern.
+     Kein eval: alles andere gilt als Fehler. Gerechnet wird ganzzahlig,
+     so wie Processing zwei int-Werte teilt. */
+  const rechne = (text, w, h) => {
+    const quelle = String(text).trim();
+    if (!quelle) return { ok: false, grund: "leer" };
+
+    const tokens = [];
+    let i = 0;
+    while (i < quelle.length) {
+      const c = quelle[i];
+      if (/\s/.test(c)) { i += 1; continue; }
+      if (/[0-9]/.test(c)) {
+        let j = i;
+        while (j < quelle.length && /[0-9]/.test(quelle[j])) j += 1;
+        tokens.push({ art: "zahl", wert: Number(quelle.slice(i, j)) });
+        i = j;
+        continue;
+      }
+      if (/[a-zA-Z_]/.test(c)) {
+        let j = i;
+        while (j < quelle.length && /[a-zA-Z_]/.test(quelle[j])) j += 1;
+        const name = quelle.slice(i, j);
+        if (name !== "width" && name !== "height") return { ok: false, grund: "name", name };
+        tokens.push({ art: "zahl", wert: name === "width" ? w : h });
+        i = j;
+        continue;
+      }
+      if ("()+-*/".includes(c)) { tokens.push({ art: c }); i += 1; continue; }
+      return { ok: false, grund: "zeichen", name: c };
+    }
+
+    let pos = 0;
+    const schau = () => tokens[pos];
+
+    const faktor = () => {
+      const tok = schau();
+      if (!tok) throw new Error("form");
+      if (tok.art === "-") { pos += 1; return -faktor(); }
+      if (tok.art === "+") { pos += 1; return faktor(); }
+      if (tok.art === "zahl") { pos += 1; return tok.wert; }
+      if (tok.art === "(") {
+        pos += 1;
+        const wert = ausdruck();
+        if (!schau() || schau().art !== ")") throw new Error("form");
+        pos += 1;
+        return wert;
+      }
+      throw new Error("form");
+    };
+
+    const term = () => {
+      let wert = faktor();
+      while (schau() && (schau().art === "*" || schau().art === "/")) {
+        const op = tokens[pos].art;
+        pos += 1;
+        const rechts = faktor();
+        if (op === "/") {
+          if (rechts === 0) throw new Error("null");
+          wert = Math.trunc(wert / rechts);
+        } else {
+          wert *= rechts;
+        }
+      }
+      return wert;
+    };
+
+    function ausdruck() {
+      let wert = term();
+      while (schau() && (schau().art === "+" || schau().art === "-")) {
+        const op = tokens[pos].art;
+        pos += 1;
+        const rechts = term();
+        wert = op === "+" ? wert + rechts : wert - rechts;
+      }
+      return wert;
+    }
+
+    try {
+      const wert = ausdruck();
+      if (pos !== tokens.length) throw new Error("form");
+      return { ok: true, wert };
+    } catch (fehler) {
+      return { ok: false, grund: fehler.message };
+    }
+  };
+
+  const mitteEls = {
+    code: document.querySelector("#mitteCode"),
+    boards: document.querySelector("#mitteBoards"),
+    feedback: document.querySelector("#mitteFeedback"),
+    pruefen: document.querySelector("#mittePruefen"),
+    reset: document.querySelector("#mitteReset")
+  };
+
+  const mitteFelder = zeichneCode(mitteEls.code, [
+    { tokens: [["keyword", "void"], " ", ["fn", "draw"], "() {"] },
+    { tief: 1, tokens: [["fn", "background"], "(", ["num", "220"], ");"] },
+    {
+      tief: 1,
+      tokens: [
+        ["fn", "circle"], "(",
+        { feld: "mitteX", breite: 10, platzhalter: "x", beschriftung: "x-Position des Kreises" },
+        ", ",
+        { feld: "mitteY", breite: 10, platzhalter: "y", beschriftung: "y-Position des Kreises" },
+        ", ", ["num", "50"], ");"
+      ]
+    },
+    { tokens: ["}"] }
+  ]);
+
+  /* Drei Vorschauen, eine je Leinwandgröße. */
+  const mitteBoards = MITTE_GROESSEN.map(([w, h]) => {
+    const board = document.createElement("div");
+    board.className = "mini-board";
+
+    const titel = span("mini-titel", `size(${w}, ${h})`);
+    board.appendChild(titel);
+
+    const stack = document.createElement("div");
+    stack.className = "mini-stack";
+    stack.style.setProperty("--cw", String(w));
+    stack.style.setProperty("--ch", String(h));
+
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    canvas.setAttribute("aria-label", `Vorschau bei size(${w}, ${h})`);
+    stack.appendChild(canvas);
+    board.appendChild(stack);
+    mitteEls.boards.appendChild(board);
+    return { board, canvas, w, h };
+  });
+
+  const zeichneMitteVorschau = ({ canvas, w, h }, punkt) => {
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#dcdcdc";              // background(220)
+    ctx.fillRect(0, 0, w, h);
+
+    // gestricheltes Kreuz auf der echten Mitte als Ziel
+    ctx.save();
+    ctx.setLineDash([7, 5]);
+    ctx.strokeStyle = "rgba(15, 23, 42, 0.75)";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(w / 2, h / 2 - 34); ctx.lineTo(w / 2, h / 2 + 34);
+    ctx.moveTo(w / 2 - 34, h / 2); ctx.lineTo(w / 2 + 34, h / 2);
+    ctx.stroke();
+    ctx.restore();
+
+    if (!punkt) return;
+    ctx.beginPath();
+    ctx.arc(punkt.x, punkt.y, 25, 0, Math.PI * 2);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "#000000";
+    ctx.stroke();
+  };
+
+  const mitteErgebnisse = () => mitteBoards.map((board) => {
+    const x = rechne(state.mitte.x, board.w, board.h);
+    const y = rechne(state.mitte.y, board.w, board.h);
+    if (!x.ok || !y.ok) return { board, fehler: x.ok ? y : x };
+    return {
+      board,
+      punkt: { x: x.wert, y: y.wert },
+      passt: x.wert === board.w / 2 && y.wert === board.h / 2
+    };
+  });
+
+  const zeigeMitte = (mitBewertung) => {
+    mitteErgebnisse().forEach((e) => {
+      zeichneMitteVorschau(e.board, e.punkt || null);
+      e.board.board.classList.remove("ist-richtig", "ist-falsch");
+      if (mitBewertung && e.punkt) e.board.board.classList.add(e.passt ? "ist-richtig" : "ist-falsch");
+    });
+  };
+
+  ["x", "y"].forEach((schluessel) => {
+    const input = mitteFelder.get(schluessel === "x" ? "mitteX" : "mitteY");
+    input.addEventListener("input", () => {
+      state.mitte[schluessel] = input.value;
+      persist();
+      zeigeMitte(false);
+    });
+  });
+
+  mitteEls.pruefen.addEventListener("click", () => {
+    const ergebnisse = mitteErgebnisse();
+    const kaputt = ergebnisse.find((e) => e.fehler);
+
+    if (kaputt) {
+      const f = kaputt.fehler;
+      const text = f.grund === "leer"
+        ? "Trage beide Werte ein."
+        : f.grund === "name"
+          ? `"${f.name}" kenne ich nicht. Erlaubt sind width, height und Zahlen.`
+          : f.grund === "null"
+            ? "Durch 0 lässt sich nicht teilen."
+            : "Der Ausdruck lässt sich nicht ausrechnen - prüfe Klammern und Rechenzeichen.";
+      setFeedback(mitteEls.feedback, text, false);
+      zeigeMitte(false);
+      return;
+    }
+
+    zeigeMitte(true);
+    const treffer = ergebnisse.filter((e) => e.passt).length;
+
+    if (treffer === 3) {
+      state.geschafft.taskMitte = true;
+      persist();
+      zeigeFortschritt();
+      setFeedback(mitteEls.feedback, "Passt bei allen drei Größen - genau dafür gibt es width und height.", true);
+    } else if (treffer === 0) {
+      setFeedback(mitteEls.feedback, "Bei keiner der drei Größen trifft der Kreis die Mitte.", false);
+    } else {
+      const daneben = ergebnisse.filter((e) => !e.passt).map((e) => `size(${e.board.w}, ${e.board.h})`);
+      setFeedback(mitteEls.feedback, `Nur ${treffer} von 3. Daneben bei ${daneben.join(" und ")} - feste Zahlen passen immer nur zu einer Größe.`, false);
+    }
+  });
+
+  mitteEls.reset.addEventListener("click", () => {
+    state.mitte = { x: "", y: "" };
+    mitteFelder.get("mitteX").value = "";
+    mitteFelder.get("mitteY").value = "";
+    persist();
+    zeigeMitte(false);
+    setFeedback(mitteEls.feedback, "Trage beide Werte ein.", null);
+  });
+
   /* ------------------------------------------------ Code kopieren */
 
   /* Erzeugt den Text aus der angezeigten Codeansicht - Eingabefelder mit ihrem
@@ -902,7 +1950,7 @@
         let text = "";
         zeile.childNodes.forEach((knoten) => {
           if (knoten.nodeType === Node.TEXT_NODE) text += knoten.textContent;
-          else if (knoten.tagName === "INPUT") text += knoten.value;
+          else if (knoten.tagName === "INPUT" || knoten.tagName === "SELECT") text += knoten.value;
           else text += knoten.textContent;
         });
 
@@ -1013,7 +2061,7 @@
 
   /* ------------------------------------------------------ Aufklappzustand */
 
-  ["task1", "task2", "task3", "task4"].forEach((id) => {
+  AUFGABEN_IDS.forEach((id) => {
     const details = document.querySelector(`#${id}`);
     if (!details) return;
     details.addEventListener("toggle", () => {
@@ -1026,7 +2074,7 @@
 
   restore();
 
-  ["task1", "task2", "task3", "task4"].forEach((id) => {
+  AUFGABEN_IDS.forEach((id) => {
     const details = document.querySelector(`#${id}`);
     if (!details) return;
     details.open = state.offen[id];
@@ -1036,9 +2084,21 @@
   quizEls.wert.classList.add("is-idle");
   quiz.beutel = mische(WERTE);
 
+  baueAusgabe();
+  mitteFelder.get("mitteX").value = state.mitte.x;
+  mitteFelder.get("mitteY").value = state.mitte.y;
+
+  zeigeVerlauf();
+  verlaufRueckmeldung();
+  zeigeOrt();
+  ortRueckmeldung();
+  zeigeAusgabe();
+  zeigeMitte(false);
+
   zeichneRaster(els2.grid.getContext("2d"));
   zeichneRaster(els4.grid.getContext("2d"));
   setzeFunktion(state.funktion);
   setzeSchritt(state.schritt3);
   setzeStufe(state.stufe, false);
+  zeigeFortschritt();
 })();

@@ -180,7 +180,7 @@ h3 { margin-top: 0; color: #d9f8ff; }
   align-items: center;
   justify-content: space-between;
   gap: 0.6rem;
-  min-height: 36px;
+  min-height: 44px;
   margin-bottom: 0.7rem;
 }
 
@@ -228,8 +228,9 @@ h3 { margin-top: 0; color: #d9f8ff; }
 
 .hint-bulb { font-size: 1.15rem; padding: 0.55rem 0.75rem; }
 
+/* schmaler, aber volle Tippflaeche in der Hoehe */
 .btn.small {
-  min-height: 36px;
+  min-height: 44px;
   padding: 0.3rem 0.7rem;
   font-size: 0.85rem;
 }
@@ -599,4 +600,228 @@ code { font-family: "Cascadia Code", Consolas, "Courier New", monospace; color: 
   .code-indent { padding-left: 64px; }
   .code-double-indent { padding-left: 84px; }
   .status-pill { min-width: 6rem; padding: 0.45rem 0.7rem; font-size: 0.9rem; }
+}
+
+/* ==================================================================
+   Aufgaben 2 bis 5 - Wertverlauf, Deklarationsort, Ausgabe, Mitte
+   ================================================================== */
+
+/* --- Trennung zu den Zusatzaufgaben --- */
+.zusatz-trenner {
+  margin: 2.2rem 0 0.3rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--border);
+  color: var(--secondary);
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.zusatz-hinweis { margin-top: 0; margin-bottom: 1.2rem; }
+
+/* --- Konsole --- */
+.console {
+  flex: 1;
+  min-width: 0;
+  min-height: 7.5rem;
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  overflow: auto;
+  border: 1px solid rgba(168, 181, 199, 0.18);
+  border-radius: 8px;
+  background: #0b1220;
+  color: #cfe9f5;
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.console-line { display: block; white-space: pre-wrap; overflow-wrap: anywhere; }
+.console-line.is-error { color: var(--danger); }
+.console-line.is-hint { color: var(--muted); font-family: inherit; font-style: italic; }
+
+.console.is-ziel { border-color: rgba(16, 185, 129, 0.5); }
+
+/* Codeblock ueber voller Breite, wenn die Zeile zu lang fuer eine Spalte ist */
+.subpanel.breit { margin-bottom: 1.2rem; }
+
+/* --- Vermutungstabelle (Aufgabe 2) --- */
+.tipp-tabelle {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--muted);
+  text-align: left;
+}
+
+.tipp-tabelle th, .tipp-tabelle td {
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid rgba(168, 181, 199, 0.16);
+  vertical-align: middle;
+}
+
+.tipp-tabelle thead th {
+  color: var(--text);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tipp-tabelle tbody tr:last-child th,
+.tipp-tabelle tbody tr:last-child td { border-bottom: none; }
+
+.tipp-tabelle th[scope="row"] { color: var(--text); font-weight: 600; }
+
+.tipp-tabelle input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--button-border);
+  border-radius: 8px;
+  color: var(--text);
+  background: rgba(15, 23, 42, 0.7);
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+  text-align: center;
+}
+
+.tipp-tabelle input:focus-visible { outline: none; box-shadow: var(--focus); }
+
+.tipp-echt {
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+  font-weight: 800;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.tipp-tabelle tr.ist-richtig .tipp-echt { color: var(--secondary); }
+.tipp-tabelle tr.ist-richtig input { border-color: rgba(16, 185, 129, 0.7); }
+.tipp-tabelle tr.ist-falsch .tipp-echt { color: var(--danger); }
+.tipp-tabelle tr.ist-falsch input { border-color: rgba(251, 113, 133, 0.8); }
+
+/* --- Auswahlfeld mitten im Code (Aufgabe 4) --- */
+.code-select {
+  margin: 0 1px;
+  padding: 1px 3px;
+  border: 1px solid rgba(34, 211, 238, 0.36);
+  border-radius: 4px;
+  color: #fef3c7;
+  background: rgba(15, 23, 42, 0.82);
+  font-family: inherit;
+  font-size: 0.96em;
+}
+
+.code-select:focus-visible { outline: none; border-color: var(--accent); box-shadow: var(--focus); }
+
+/* --- Drei Vorschauen nebeneinander (Aufgabe 5) --- */
+.mini-boards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-top: 1.2rem;
+}
+
+.mini-board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  padding: 0.7rem;
+  border: 1px solid rgba(168, 181, 199, 0.18);
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.mini-board.ist-richtig { border-color: rgba(16, 185, 129, 0.65); }
+.mini-board.ist-falsch { border-color: rgba(251, 113, 133, 0.7); }
+
+.mini-titel {
+  margin: 0 0 0.5rem;
+  color: var(--muted);
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+/* --cw/--ch setzt das Skript je Vorschau */
+.mini-stack {
+  /* die hoechste Vorschau gibt die Kartenhoehe vor, die anderen sitzen mittig */
+  margin-block: auto;
+  width: min(calc(var(--cw, 400) * 0.5px), 100%);
+  aspect-ratio: var(--cw, 400) / var(--ch, 400);
+  background: #ffffff;
+  box-shadow: 0 0 0 1px rgba(226, 232, 240, 0.9);
+}
+
+.mini-stack canvas { display: block; width: 100%; height: 100%; }
+
+@media (max-width: 720px) {
+  .mini-boards { grid-template-columns: minmax(0, 1fr); }
+  .mini-stack { width: min(calc(var(--cw, 400) * 0.7px), 100%); }
+}
+
+/* rot markierte Zeile: so laeuft das Programm nicht */
+.code-line.is-broken {
+  border-left-color: var(--danger);
+  color: #fecdd3;
+  background: rgba(251, 113, 133, 0.16);
+}
+
+/* Zeichenketten und Kommentare im Code */
+.str { color: #fda4af; }
+.comment { color: #8497ad; font-style: italic; }
+
+/* Zielsatz einer Stufe (Aufgabe 3) */
+.ziel-satz {
+  margin: 0 0 1rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.66);
+  color: var(--text);
+  line-height: 1.45;
+}
+
+/* ==================================================================
+   Fortschritt: geschaffte Stufen und abgeschlossene Aufgaben
+   ================================================================== */
+
+/* geschaffte Stufe bleibt gruen, auch wenn man sie wieder verlaesst */
+.stufe-btn.ist-geschafft { border-color: rgba(16, 185, 129, 0.7); }
+
+.stufe-btn.ist-geschafft::after {
+  content: " \2713";
+  color: var(--secondary);
+  font-weight: 900;
+}
+
+.stufe-btn[aria-pressed="true"].ist-geschafft { border-color: rgba(16, 185, 129, 0.85); }
+.stufe-btn[aria-pressed="true"].ist-geschafft::after { color: #04201a; }
+
+/* abgeschlossene Aufgabe */
+.task.ist-geschafft { border-color: rgba(16, 185, 129, 0.55); }
+
+.task.ist-geschafft > .task-summary .station-label {
+  color: #04201a;
+  border-color: var(--secondary);
+  background: var(--secondary);
+}
+
+.task-haken {
+  padding: 0.25rem 0.6rem;
+  border: 1px solid rgba(16, 185, 129, 0.6);
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.16);
+  color: #b9f8dc;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.task-haken::after { content: " \2713"; }
+
+@media (max-width: 620px) {
+  .task-summary { flex-wrap: wrap; }
+  .task-summary::after { margin-left: auto; }
 }
