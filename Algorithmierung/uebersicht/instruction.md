@@ -28,9 +28,10 @@ inf8/Algorithmierung/
 │                               Kacheln: Übersicht · Übungen
 │
 └── Variablen/                  INHALT zum Thema Variablen
-    ├── uebersicht/             Übersichtsseite (noch leer, Platzhalter)
-    │   ├── index.html
-    │   └── style.css
+    ├── uebersicht/             Nachschlagewerk zum Thema
+    │   ├── index.html          6 Karten, alle offen sichtbar
+    │   ├── style.css
+    │   └── script.js
     └── uebung/                 Übungsseite
         ├── index.html
         ├── style.css
@@ -96,15 +97,33 @@ Unter 820 px Breite wird das Raster einspaltig.
 3. **Landingpage:** in `uebersicht/index.html` ein `<li>` ans Ende von `.tile-grid`
    hängen.
 
-## Offener Punkt
+## Aufteilung der Inhalte zum Thema Variablen
 
-`Variablen/uebersicht/index.html` ist ein leerer Platzhalter: Kopfbereich, Zurück-Link
-und Footer stehen, der `<main>` enthält nur ein auskommentiertes Karten-Gerüst.
+Die beiden Inhaltsseiten haben verschiedene Aufgaben und überschneiden sich nicht:
 
-## Seite lokal ansehen
+**Übersicht = Nachschlagen.** Sechs Karten, alle sofort sichtbar, kein Aufklappen:
+Darum geht es · Datentypen · Deklarieren, initialisieren, zuweisen ·
+Global oder lokal · In die Konsole schreiben · Systemvariablen.
+Interaktiv heißt hier **umschalten und vergleichen**, nicht lösen: einen Datentyp
+anklicken zeigt sein Beispiel samt Gegenbeispiel, ein Blickwinkel-Umschalter stellt
+globale und lokale Variable nebeneinander, ein Regler zeigt `print()` und `println()`
+an denselben Zyklen, und die Zeichenfläche liefert `mouseX`/`mouseY`/`width`/`height` live.
 
-Doppelklick auf eine `index.html` genügt, weil alle Links bis zur Datei ausgeschrieben
-sind. Sobald eine Seite `fetch()` oder ein `type="module"`-Skript verwendet, reicht das
-nicht mehr – dann in VS Code die Erweiterung **Live Server** benutzen (Rechtsklick auf
-die `index.html` → „Open with Live Server"). Das entspricht auch dem, was GitHub Pages
-später tut.
+**Keine Aufgaben auf der Übersicht.** Kein Prüfen-Knopf, keine Eingabefelder, keine
+Rückmeldung richtig/falsch, kein Punktestand. Das gehört alles auf die Übungsseite.
+
+**Übungen = anwenden.** Vier aufklappbare Aufgaben mit Prüfen und Rückmeldung:
+Datentyp-Blitz · Variablen zeichnen · Triff den Umriss · Der wachsende Kreis.
+
+Grundlage ist der LogSeq-Knoten „01 Datentypen, Variablen und Systemvariablen".
+
+## Farbcode in den Codebeispielen
+
+| Markierung | Bedeutung |
+|---|---|
+| grüner Balken links (`.is-scope`) | hier gilt die Variable |
+| gelber Balken (`.is-active`) | die gerade betrachtete Zeile |
+| roter Balken (`.is-broken`) | so geht es nicht |
+
+Jede Seite speichert ihren Zustand unter einem eigenen Schlüssel:
+`inf8-variablen-uebersicht-v1` bzw. `inf8-variablen-v1`.

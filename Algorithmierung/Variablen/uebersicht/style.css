@@ -1,5 +1,6 @@
 /* Variablen - Übersicht, Klasse 8, Algorithmierung
-   Basis-Tokens aus dem Haus-Stil. Seitenspezifische Regeln unten anhängen. */
+   Nachschlagewerk zum Thema: Gegenüberstellungen und Beispiele, keine Aufgaben.
+   Basis-Tokens aus dem Haus-Stil, danach die Bausteine dieser Seite. */
 
 
 :root {
@@ -39,9 +40,6 @@
 body {
   margin: 0;
   min-height: 100vh;
-  /* Footer bleibt unten, solange die Seite noch wenig Inhalt hat */
-  display: flex;
-  flex-direction: column;
   font-family: "Segoe UI", "Trebuchet MS", Verdana, sans-serif;
   color: var(--text);
   background-color: var(--bg);
@@ -261,10 +259,17 @@ h3 { margin-top: 0; color: #d9f8ff; }
   .zwei-spalten { grid-template-columns: minmax(0, 1fr); }
 }
 
-/* --- Kopfbereich --- */
+/* ==================================================================
+   Seitenbausteine
+   ================================================================== */
+
+body { display: flex; flex-direction: column; }
+.container { flex: 1; padding-bottom: 2.4rem; }
 .hero-inner { padding: 1.8rem 0 0.6rem; }
 
-/* --- Zurück-Link zur Kachelseite --- */
+code { font-family: "Cascadia Code", Consolas, "Courier New", monospace; color: #d9f8ff; }
+
+/* --- Zurück-Link --- */
 .back-link {
   display: inline-block;
   margin-bottom: 0.9rem;
@@ -277,4 +282,377 @@ h3 { margin-top: 0; color: #d9f8ff; }
 .back-link:hover { color: var(--primary); border-bottom-color: rgba(34, 211, 238, 0.5); }
 .back-link:focus-visible { outline: none; box-shadow: var(--focus); border-radius: 6px; }
 
-.container { flex: 1; padding-bottom: 2.4rem; }
+/* --- Karten --- */
+.card { margin-bottom: 1.2rem; padding: 1.1rem 1.1rem 1.3rem; }
+.card h2 { margin-bottom: 0.5rem; }
+.card > .section-text { margin-top: 0; }
+
+/* --- Merkliste ganz oben --- */
+.merkliste { margin: 0; padding: 0; list-style: none; }
+
+.merkliste li {
+  position: relative;
+  padding: 0.3rem 0 0.3rem 1.4rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.merkliste li::before {
+  content: "";
+  position: absolute;
+  top: 0.85rem;
+  left: 0.25rem;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--secondary);
+}
+
+/* --- Nachschlagetabelle --- */
+.tabelle {
+  width: 100%;
+  margin: 0 0 1rem;
+  border-collapse: collapse;
+  color: var(--muted);
+  text-align: left;
+}
+
+.tabelle caption { margin-bottom: 0.5rem; color: var(--muted); text-align: left; }
+
+.tabelle th, .tabelle td {
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid rgba(168, 181, 199, 0.16);
+  vertical-align: top;
+}
+
+.tabelle thead th {
+  color: var(--text);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tabelle tbody tr:last-child th, .tabelle tbody tr:last-child td { border-bottom: none; }
+.tabelle .mono { font-family: "Cascadia Code", Consolas, "Courier New", monospace; color: #d9f8ff; }
+.tabelle .wert { color: var(--accent); font-weight: 700; }
+
+/* Zeilenkopf ist ein Knopf: Klick zeigt das Beispiel darunter */
+.tabelle th[scope="row"] { padding: 0; }
+
+.typ-btn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.5rem 0.7rem;
+  border: none;
+  border-left: 3px solid transparent;
+  border-radius: 0;
+  color: var(--primary);
+  background: transparent;
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+  font-weight: 800;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.typ-btn:hover { background: rgba(34, 211, 238, 0.09); }
+.typ-btn:focus-visible { outline: none; box-shadow: var(--focus); }
+
+.typ-btn[aria-pressed="true"] {
+  border-left-color: var(--primary);
+  color: var(--on-primary);
+  background: linear-gradient(165deg, var(--primary), #17afc8);
+}
+
+.tabelle tr:has(.typ-btn[aria-pressed="true"]) td { background: rgba(34, 211, 238, 0.07); }
+
+/* --- Umschaltknöpfe --- */
+.fn-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.fn-btn {
+  min-height: 44px;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--button-border);
+  border-radius: 999px;
+  color: var(--button-text);
+  background: linear-gradient(165deg, var(--button-dark), var(--button-light));
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 150ms ease, filter 150ms ease, border-color 150ms ease;
+}
+
+.fn-btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
+.fn-btn:focus-visible { outline: none; box-shadow: var(--focus); }
+
+.fn-btn[aria-pressed="true"] {
+  border-color: rgba(34, 211, 238, 0.7);
+  color: var(--on-primary);
+  background: linear-gradient(165deg, var(--primary), #17afc8);
+}
+
+/* --- Zwei gleich breite, gleich hohe Bereiche --- */
+.split {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+.subpanel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 0.9rem;
+  border: 1px solid rgba(168, 181, 199, 0.18);
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.subpanel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  min-height: 44px;
+  margin-bottom: 0.7rem;
+}
+
+.subpanel-title {
+  margin: 0;
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* --- Codeblock --- */
+.code-block {
+  min-width: 0;
+  margin: 0;
+  padding: 14px 0;
+  overflow-x: auto;
+  border: 1px solid rgba(168, 181, 199, 0.18);
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.58);
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.subpanel .code-block { flex: 1; }
+
+/* Codeblock mit Konsole darunter: der Code behält seine natürliche Höhe,
+   den Rest des Panels füllt die Konsole. */
+.subpanel .code-block.kompakt { flex: none; margin-bottom: 0.7rem; }
+.code-block code { counter-reset: code-line; }
+
+.code-line {
+  position: relative;
+  display: block;
+  counter-increment: code-line;
+  min-height: 30px;
+  padding: 2px 14px 2px 50px;
+  border-left: 4px solid transparent;
+  color: #e2e8f0;
+  white-space: pre;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+/* grün = hier gilt die Variable */
+.code-line.is-scope {
+  border-left-color: var(--secondary);
+  background: rgba(16, 185, 129, 0.13);
+}
+
+/* gelb = die gerade betrachtete Zeile */
+.code-line.is-active {
+  border-left-color: var(--accent);
+  color: #fff7d6;
+  background: rgba(251, 191, 36, 0.18);
+}
+
+/* rot = geht so nicht */
+.code-line.is-broken {
+  border-left-color: var(--danger);
+  color: #fecdd3;
+  background: rgba(251, 113, 133, 0.16);
+}
+
+.code-line::before {
+  content: counter(code-line);
+  position: absolute;
+  left: 12px;
+  width: 22px;
+  color: #76869a;
+  text-align: right;
+  user-select: none;
+}
+
+.keyword { color: #67e8f9; }
+.type { color: #fca97a; }
+.fn { color: #6ee7b7; }
+.var { color: var(--accent); }
+.num { color: #93c5fd; }
+.str { color: #fda4af; }
+.comment { color: #8497ad; font-style: italic; }
+
+/* Bleibt im niedrigeren Panel Platz uebrig, sitzt der Inhalt mittig
+   statt oben zu kleben. */
+.fuellt-rest {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.fuellt-rest > .fazit { margin: 0; width: 100%; }
+
+/* --- Fazit unter einem Panel --- */
+.fazit {
+  margin: 0.7rem 0 0;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--border);
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.66);
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.fazit.gilt { border-left-color: var(--secondary); color: #b9f8dc; }
+.fazit.gilt-nicht { border-left-color: var(--danger); color: #fecdd3; }
+
+/* --- Konsole --- */
+.console {
+  flex: 1;
+  min-width: 0;
+  /* hoch genug fuer 6 Zeilen: die Karte springt beim Schieben des Reglers nicht */
+  min-height: 11rem;
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  overflow: auto;
+  border: 1px solid rgba(168, 181, 199, 0.18);
+  border-radius: 8px;
+  background: #0b1220;
+  color: #cfe9f5;
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.console-line { display: block; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+/* --- Wertanzeige am Regler --- */
+.status-pill {
+  margin: 0;
+  min-width: 3.5rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid rgba(34, 211, 238, 0.5);
+  border-radius: 999px;
+  color: #d7f7ff;
+  background: rgba(15, 23, 42, 0.92);
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+  font-weight: 800;
+  text-align: center;
+}
+
+/* --- Schieberegler --- */
+.regler {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.regler label { color: var(--muted); font-size: 0.9rem; white-space: nowrap; }
+.regler input[type="range"] { flex: 1; min-width: 0; accent-color: var(--primary); }
+.regler input[type="range"]:focus-visible { outline: none; box-shadow: var(--focus); border-radius: 999px; }
+
+/* --- Auswahlfeld --- */
+.feld { margin-bottom: 1rem; min-width: 0; }
+
+.feld label {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.feld select {
+  width: 100%;
+  padding: 0.55rem 0.6rem;
+  border: 1px solid var(--button-border);
+  border-radius: 8px;
+  color: var(--text);
+  background: rgba(15, 23, 42, 0.7);
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+}
+
+.feld select:focus-visible { outline: none; box-shadow: var(--focus); }
+
+/* --- Zeichenfläche --- */
+.canvas-board {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: 1px solid rgba(168, 181, 199, 0.18);
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.5);
+}
+
+/* --cw/--ch setzt das Skript, wenn size() gewechselt wird */
+.canvas-stack {
+  position: relative;
+  width: min(calc(var(--cw, 400) * 1px), 100%);
+  aspect-ratio: var(--cw, 400) / var(--ch, 400);
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 0 0 1px rgba(226, 232, 240, 0.9);
+}
+
+.canvas-stack:focus-visible { outline: none; box-shadow: var(--focus); }
+
+.canvas-stack canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.drawing-layer { z-index: 1; }
+.grid-layer { z-index: 2; pointer-events: none; }
+
+.canvas-caption {
+  margin: 0.6rem 0 0;
+  color: var(--muted);
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+  font-size: 0.92rem;
+  text-align: center;
+}
+
+/* --- Buttons --- */
+.btn.small { min-height: 44px; padding: 0.3rem 0.7rem; font-size: 0.85rem; }
+
+/* --- Mobil --- */
+@media (max-width: 900px) {
+  .split { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 540px) {
+  .code-block { font-size: 0.86rem; }
+  .tabelle th, .tabelle td { padding: 0.45rem 0.5rem; }
+  .regler { flex-wrap: wrap; }
+}

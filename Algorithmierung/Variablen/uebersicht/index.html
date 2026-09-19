@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Variablen &ndash; Übersicht</title>
   <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
 </head>
 <body>
   <header class="hero">
@@ -16,21 +17,230 @@
   </header>
 
   <main class="container">
-    <!-- Platzhalter: hier kommt der Inhalt hin.
-         Gerüst für eine Karte - zum Benutzen einfach auskommentieren:
 
-    <section class="card">
-      <h2>Titel</h2>
-      <p class="section-text">Ein bis drei Sätze Anleitung, dann die Interaktion.</p>
-      <div class="action-row">
-        <button class="btn" type="button">Prüfen</button>
-      </div>
-      <div class="feedback-box" aria-live="polite"></div>
+    <section class="card" aria-labelledby="kernTitle">
+      <h2 id="kernTitle">Darum geht es</h2>
+      <ul class="merkliste">
+        <li>Eine Variable ist ein benannter Speicherplatz für einen Wert.</li>
+        <li>Bei der Deklaration legst du Datentyp und Name fest.</li>
+        <li>Globale Variablen gelten im ganzen Programm, lokale nur in ihrem Block.</li>
+        <li><code>print()</code> und <code>println()</code> schreiben in die Konsole.</li>
+        <li>Systemvariablen wie <code>mouseX</code> und <code>width</code> setzt Processing selbst.</li>
+      </ul>
     </section>
 
-         Braucht die Seite JavaScript, dazu script.js anlegen und im <head> einbinden:
-         <script defer src="script.js"></script>
-    -->
+    <section class="card" aria-labelledby="typenTitle">
+      <h2 id="typenTitle">Datentypen</h2>
+      <p class="section-text">Klicke einen Datentyp an, um ein vollständiges Beispiel zu sehen.</p>
+
+      <table class="tabelle">
+        <thead>
+          <tr><th scope="col">Datentyp</th><th scope="col">Beispielwerte</th><th scope="col">Wofür</th></tr>
+        </thead>
+        <tbody id="typTabelle">
+          <tr>
+            <th scope="row"><button class="typ-btn" type="button" data-typ="int" aria-pressed="false">int</button></th>
+            <td class="mono wert">180, -4223, 0</td>
+            <td>ganze Zahlen</td>
+          </tr>
+          <tr>
+            <th scope="row"><button class="typ-btn" type="button" data-typ="float" aria-pressed="false">float</button></th>
+            <td class="mono wert">1.5, -3.8, 22.5</td>
+            <td>Kommazahlen, mit Punkt statt Komma</td>
+          </tr>
+          <tr>
+            <th scope="row"><button class="typ-btn" type="button" data-typ="boolean" aria-pressed="false">boolean</button></th>
+            <td class="mono wert">true, false</td>
+            <td>genau zwei Möglichkeiten</td>
+          </tr>
+          <tr>
+            <th scope="row"><button class="typ-btn" type="button" data-typ="char" aria-pressed="false">char</button></th>
+            <td class="mono wert">'A', 'x', '7'</td>
+            <td>ein einzelnes Zeichen</td>
+          </tr>
+          <tr>
+            <th scope="row"><button class="typ-btn" type="button" data-typ="String" aria-pressed="false">String</button></th>
+            <td class="mono wert">"Hallo", "Ada"</td>
+            <td>eine Zeichenkette</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="split">
+        <section class="subpanel" aria-labelledby="typBeispielTitle">
+          <div class="subpanel-heading">
+            <h3 id="typBeispielTitle" class="subpanel-title">Beispiel</h3>
+            <button class="btn ghost small" type="button" data-kopieren="typCode">Kopieren</button>
+          </div>
+          <pre class="code-block"><code id="typCode" aria-label="Processing-Beispiel"></code></pre>
+        </section>
+
+        <section class="subpanel" aria-labelledby="typFehlerTitle">
+          <div class="subpanel-heading">
+            <h3 id="typFehlerTitle" class="subpanel-title">Geht nicht</h3>
+          </div>
+          <pre class="code-block"><code id="typFehler" aria-label="Häufiger Fehler"></code></pre>
+          <p class="fazit" id="typFazit" aria-live="polite"></p>
+        </section>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="schritteTitle">
+      <h2 id="schritteTitle">Deklarieren, initialisieren, zuweisen</h2>
+      <p class="section-text">Drei Begriffe an einem Beispiel &ndash; wähle einen aus.</p>
+
+      <div class="fn-row" role="group" aria-label="Begriff wählen">
+        <button class="fn-btn" type="button" data-schritt="deklaration" aria-pressed="false">Deklaration</button>
+        <button class="fn-btn" type="button" data-schritt="initialisierung" aria-pressed="false">Initialisierung</button>
+        <button class="fn-btn" type="button" data-schritt="zuweisung" aria-pressed="false">Zuweisung</button>
+      </div>
+
+      <div class="split">
+        <section class="subpanel" aria-labelledby="schrittCodeTitle">
+          <div class="subpanel-heading">
+            <h3 id="schrittCodeTitle" class="subpanel-title">Code</h3>
+            <button class="btn ghost small" type="button" data-kopieren="schrittCode">Kopieren</button>
+          </div>
+          <pre class="code-block"><code id="schrittCode" aria-label="Processing-Beispiel"></code></pre>
+        </section>
+
+        <section class="subpanel" aria-labelledby="schrittTextTitle">
+          <div class="subpanel-heading">
+            <h3 id="schrittTextTitle" class="subpanel-title">Was passiert</h3>
+          </div>
+          <div class="fuellt-rest">
+            <p class="fazit" id="schrittFazit" aria-live="polite"></p>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="gueltigTitle">
+      <h2 id="gueltigTitle">Global oder lokal</h2>
+      <p class="section-text">Zweimal dieselbe Variable <code>wert</code>, nur an anderer Stelle deklariert. Der grüne Balken zeigt, wo sie gilt.</p>
+
+      <div class="fn-row" role="group" aria-label="Blickwinkel wählen">
+        <button class="fn-btn" type="button" data-blick="setup" aria-pressed="false">aus setup() gesehen</button>
+        <button class="fn-btn" type="button" data-blick="draw" aria-pressed="false">aus draw() gesehen</button>
+      </div>
+
+      <div class="split">
+        <section class="subpanel" aria-labelledby="globalTitle">
+          <div class="subpanel-heading">
+            <h3 id="globalTitle" class="subpanel-title">global</h3>
+            <button class="btn ghost small" type="button" data-kopieren="globalCode">Kopieren</button>
+          </div>
+          <pre class="code-block"><code id="globalCode" aria-label="Globale Variable"></code></pre>
+          <p class="fazit" id="globalFazit" aria-live="polite"></p>
+        </section>
+
+        <section class="subpanel" aria-labelledby="lokalTitle">
+          <div class="subpanel-heading">
+            <h3 id="lokalTitle" class="subpanel-title">lokal</h3>
+            <button class="btn ghost small" type="button" data-kopieren="lokalCode">Kopieren</button>
+          </div>
+          <pre class="code-block"><code id="lokalCode" aria-label="Lokale Variable"></code></pre>
+          <p class="fazit" id="lokalFazit" aria-live="polite"></p>
+        </section>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="konsoleTitle">
+      <h2 id="konsoleTitle">In die Konsole schreiben</h2>
+      <p class="section-text">Zweimal dasselbe Programm, nur Zeile&nbsp;5 unterscheidet sich. Der Regler bestimmt, wie viele <code>draw()</code>-Zyklen die Konsole zeigt.</p>
+
+      <div class="regler">
+        <label for="zyklen">draw()-Zyklen</label>
+        <input type="range" id="zyklen" min="1" max="6" step="1" value="3" aria-describedby="zyklenWert" />
+        <output class="status-pill" id="zyklenWert" for="zyklen">3</output>
+      </div>
+
+      <div class="split">
+        <section class="subpanel" aria-labelledby="printlnTitle">
+          <div class="subpanel-heading">
+            <h3 id="printlnTitle" class="subpanel-title">println()</h3>
+            <button class="btn ghost small" type="button" data-kopieren="codePrintln">Kopieren</button>
+          </div>
+          <pre class="code-block kompakt"><code id="codePrintln" aria-label="Programm mit println"></code></pre>
+          <pre class="console" id="konsolePrintln" aria-live="polite" aria-label="Ausgabe mit println"></pre>
+        </section>
+
+        <section class="subpanel" aria-labelledby="printTitle">
+          <div class="subpanel-heading">
+            <h3 id="printTitle" class="subpanel-title">print()</h3>
+            <button class="btn ghost small" type="button" data-kopieren="codePrint">Kopieren</button>
+          </div>
+          <pre class="code-block kompakt"><code id="codePrint" aria-label="Programm mit print"></code></pre>
+          <pre class="console" id="konsolePrint" aria-live="polite" aria-label="Ausgabe mit print"></pre>
+        </section>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="systemTitle">
+      <h2 id="systemTitle">Systemvariablen</h2>
+      <p class="section-text">Processing füllt diese Variablen selbst. Bewege den Zeiger über die Fläche oder wechsle <code>size()</code>.</p>
+
+      <div class="split">
+        <section class="subpanel" aria-labelledby="sysTabelleTitle">
+          <div class="subpanel-heading">
+            <h3 id="sysTabelleTitle" class="subpanel-title">Werte</h3>
+          </div>
+          <table class="tabelle">
+            <thead>
+              <tr><th scope="col">Variable</th><th scope="col">Bedeutung</th><th scope="col">aktuell</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row" class="mono">mouseX</th><td>x-Position des Zeigers</td><td class="mono wert" id="sysMouseX">&ndash;</td></tr>
+              <tr><th scope="row" class="mono">mouseY</th><td>y-Position, von oben gezählt</td><td class="mono wert" id="sysMouseY">&ndash;</td></tr>
+              <tr><th scope="row" class="mono">width</th><td>Breite aus <code>size()</code></td><td class="mono wert" id="sysWidth">400</td></tr>
+              <tr><th scope="row" class="mono">height</th><td>Höhe aus <code>size()</code></td><td class="mono wert" id="sysHeight">400</td></tr>
+            </tbody>
+          </table>
+          <div class="feld">
+            <label for="groesse">Aufruf von size()</label>
+            <select id="groesse">
+              <option value="400x400">size(400, 400)</option>
+              <option value="500x300">size(500, 300)</option>
+            </select>
+          </div>
+        </section>
+
+        <section class="subpanel" aria-labelledby="sysCanvasTitle">
+          <div class="subpanel-heading">
+            <h3 id="sysCanvasTitle" class="subpanel-title">Zeichenfläche</h3>
+          </div>
+          <div class="canvas-board">
+            <div class="canvas-stack" id="stack" tabindex="0" aria-label="Zeichenfläche: Zeiger bewegen oder Pfeiltasten benutzen">
+              <canvas id="zeichnung" class="drawing-layer" width="400" height="400"></canvas>
+              <canvas id="raster" class="grid-layer" width="400" height="400" aria-hidden="true"></canvas>
+            </div>
+          </div>
+          <p class="canvas-caption" id="aufruf" aria-live="polite">noch nichts gezeichnet</p>
+        </section>
+      </div>
+
+      <div class="split">
+        <section class="subpanel" aria-labelledby="sysCodeTitle">
+          <div class="subpanel-heading">
+            <h3 id="sysCodeTitle" class="subpanel-title">Beispiel</h3>
+            <button class="btn ghost small" type="button" data-kopieren="sysCode">Kopieren</button>
+          </div>
+          <pre class="code-block"><code id="sysCode" aria-label="Processing-Beispiel"></code></pre>
+        </section>
+
+        <section class="subpanel" aria-labelledby="sysHinweisTitle">
+          <div class="subpanel-heading">
+            <h3 id="sysHinweisTitle" class="subpanel-title">Merken</h3>
+          </div>
+          <ul class="merkliste">
+            <li><code>width</code> und <code>height</code> haben erst nach <code>size()</code> sinnvolle Werte.</li>
+            <li>Der Nullpunkt liegt oben links, <code>mouseY</code> wächst nach unten.</li>
+            <li><code>width/2</code> und <code>height/2</code> treffen die Mitte &ndash; unabhängig von der Größe.</li>
+          </ul>
+        </section>
+      </div>
+    </section>
+
   </main>
 
   <footer class="footer">
