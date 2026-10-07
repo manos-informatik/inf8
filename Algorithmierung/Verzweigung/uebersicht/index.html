@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verzweigungen und Boolesche Ausdrücke – Übersicht</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <a class="back-link" href="../../uebersicht/verzweigungen/index.html">&larr; Verzweigungen und Boolesche Ausdrücke</a>
+      <p class="eyebrow">Klasse 8 · Algorithmierung</p>
+      <h1>Übersicht</h1>
+    </div>
+  </header>
+  <main class="container">
+    <section class="card" aria-labelledby="kern-title">
+      <h2 id="kern-title">Darum geht es</h2>
+      <ul class="merkliste">
+        <li>Ein Boolescher Ausdruck ergibt <code>true</code> oder <code>false</code>.</li>
+        <li>Vergleiche prüfen Werte; <code>&amp;&amp;</code>, <code>||</code> und <code>!</code> verknüpfen Bedingungen.</li>
+        <li><code>if</code> führt einen Block aus, wenn seine Bedingung wahr ist.</li>
+        <li><code>else if</code> prüft den nächsten Fall, <code>else</code> fängt den Rest auf.</li>
+      </ul>
+    </section>
+
+    <section class="card" id="vergleiche" aria-labelledby="vergleich-title">
+      <h2 id="vergleich-title">Boolesche Ausdrücke und Vergleiche</h2>
+      <p class="section-text">Verschiebe <code>x</code> über die Grenze 200. Wähle einen Vergleich für das Codebeispiel.</p>
+      <div class="regler"><label for="vergleich-x">x</label><input id="vergleich-x" type="range" min="0" max="400" step="1" value="200"><output id="vergleich-wert" for="vergleich-x" class="status-pill">200</output></div>
+      <div class="split">
+        <div class="subpanel">
+          <h3>Vergleich mit 200</h3>
+          <table class="tabelle"><thead><tr><th scope="col">Operator</th><th scope="col">Bedeutung</th><th scope="col">Ergebnis</th></tr></thead><tbody id="vergleich-tabelle"></tbody></table>
+          <p class="merksatz"><code>x = 200;</code> weist zu. <code>x == 200</code> vergleicht.</p>
+        </div>
+        <div class="subpanel" data-example="vergleich"><h3>Beispiel</h3></div>
+      </div>
+    </section>
+
+    <section class="card" id="logik" aria-labelledby="logik-title">
+      <h2 id="logik-title">UND, ODER, NICHT</h2>
+      <div class="action-row" role="group" aria-label="Wahrheitswerte umschalten">
+        <button type="button" class="btn ghost" id="logik-a" aria-pressed="true">a = true</button>
+        <button type="button" class="btn ghost" id="logik-b" aria-pressed="false">b = false</button>
+      </div>
+      <div class="split">
+        <div class="subpanel">
+          <h3>Wahrheitstabellen</h3>
+          <table class="tabelle logic-table"><thead><tr><th scope="col">a</th><th scope="col">b</th><th scope="col">a &amp;&amp; b</th><th scope="col">a || b</th><th scope="col">!a</th></tr></thead><tbody id="logik-tabelle"></tbody></table>
+          <ul class="merkliste"><li><code>&amp;&amp;</code>: beide wahr</li><li><code>||</code>: mindestens eine wahr</li><li><code>!</code>: Wahrheitswert umkehren</li></ul>
+        </div>
+        <div class="subpanel" data-example="logik"><h3>Beispiel</h3></div>
+      </div>
+      <div class="split inset">
+        <div class="subpanel">
+          <h3>Bedingungen auf der Zeichenfläche</h3>
+          <div class="action-row" role="group" aria-label="Logischen Operator wählen">
+            <button type="button" class="btn ghost" data-logik="&&" aria-pressed="true">&amp;&amp;</button>
+            <button type="button" class="btn ghost" data-logik="||" aria-pressed="false">||</button>
+            <button type="button" class="btn ghost" data-logik="!" aria-pressed="false">!</button>
+          </div>
+          <p class="expression" id="bereich-ausdruck"></p>
+          <p class="merksatz">a: links von der Mitte<br>b: unterhalb der Mitte</p>
+          <output class="readout" id="bereich-wert" aria-live="polite"></output>
+        </div>
+        <div class="subpanel"><h3>Der grüne Bereich erfüllt die Bedingung</h3><div class="canvas-board"><div class="canvas-stack" data-pointer="bereich" tabindex="0" role="group" aria-label="Logische Bedingungen: Zeiger bewegen oder Pfeiltasten benutzen"><canvas width="400" height="400" class="drawing-layer" id="bereich-canvas"></canvas><canvas width="400" height="400" class="grid-layer" aria-hidden="true"></canvas></div></div></div>
+      </div>
+    </section>
+
+    <section class="card" id="wenn" aria-labelledby="wenn-title">
+      <h2 id="wenn-title">if und if … else</h2>
+      <p class="section-text">Bewege den Zeiger in einer der Flächen von rechts nach links und zurück.</p>
+      <div class="action-row position-buttons" data-position="wenn"></div>
+      <div class="split">
+        <div class="subpanel" data-example="nurif"><h3>nur if</h3><div class="canvas-board"><div class="canvas-stack" data-pointer="wenn" tabindex="0" role="group" aria-label="Nur if: Zeiger bewegen oder Pfeiltasten benutzen"><canvas width="400" height="400" class="drawing-layer" id="nurif-canvas"></canvas><canvas width="400" height="400" class="grid-layer" aria-hidden="true"></canvas></div></div><output class="readout" id="nurif-wert" aria-live="polite"></output></div>
+        <div class="subpanel" data-example="ifelse"><h3>if … else</h3><div class="canvas-board"><div class="canvas-stack" data-pointer="wenn" tabindex="0" role="group" aria-label="If else: Zeiger bewegen oder Pfeiltasten benutzen"><canvas width="400" height="400" class="drawing-layer" id="ifelse-canvas"></canvas><canvas width="400" height="400" class="grid-layer" aria-hidden="true"></canvas></div></div><output class="readout" id="ifelse-wert" aria-live="polite"></output></div>
+      </div>
+      <p class="merksatz">Ohne <code>else</code> bleibt die zuletzt gesetzte Füllfarbe erhalten. Anfangs ist sie weiß.</p>
+    </section>
+
+    <section class="card" id="kette" aria-labelledby="kette-title">
+      <h2 id="kette-title">else if: genau ein Zweig</h2>
+      <p class="section-text">Bewege den Zeiger. Der gelbe Balken zeigt die geprüften Bedingungen und den gewählten Farbzweig.</p>
+      <div class="action-row position-buttons" data-position="kette"></div>
+      <div class="split">
+        <div class="subpanel" data-example="viertel"><h3>Farbwahl</h3></div>
+        <div class="subpanel"><h3>Vier Viertel</h3><div class="canvas-board"><div class="canvas-stack" data-pointer="kette" tabindex="0" role="group" aria-label="Farbwechsel: Zeiger bewegen oder Pfeiltasten benutzen"><canvas width="400" height="400" class="drawing-layer" id="viertel-canvas"></canvas><canvas width="400" height="400" class="grid-layer" aria-hidden="true"></canvas></div></div><output class="readout" id="viertel-wert" aria-live="polite"></output><p class="merksatz">Mittellinien gehören zu rechts bzw. unten: <code>&gt;=</code>.</p></div>
+      </div>
+    </section>
+
+    <section class="card" id="noten" aria-labelledby="noten-title">
+      <h2 id="noten-title">Reihenfolge der Bedingungen</h2>
+      <p class="section-text">Wähle die Punktzahl. Beide Reihenfolgen liefern dieselbe Rückmeldung.</p>
+      <div class="regler"><label for="punkte">Punkte</label><input id="punkte" type="range" min="0" max="15" step="1" value="9"><output id="punkte-wert" for="punkte" class="status-pill">9</output></div>
+      <div class="split"><div class="subpanel" data-example="aufsteigend"><h3>Von niedrig nach hoch</h3></div><div class="subpanel" data-example="absteigend"><h3>Von hoch nach niedrig</h3></div></div>
+      <p class="merksatz">Der erste passende Zweig gewinnt. Weitere <code>else if</code>-Bedingungen werden nicht mehr geprüft.</p>
+    </section>
+    <noscript><p class="merksatz">Aktiviere JavaScript, um die Beispiele und Zeichenflächen zu sehen.</p></noscript>
+  </main>
+  <footer class="footer"><p>&copy; 2026 Martin-Andersen-Nexö-Gymnasium Dresden</p></footer>
+  <p class="sr-only" id="kopier-status" role="status"></p>
+</body>
+</html>

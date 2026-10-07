@@ -426,3 +426,28 @@ zum gespeicherten Stand nach, sodass Zyklus und Schritt einen Seitenwechsel übe
 `Funktionen/uebung/` gibt es noch nicht. Die Übungen-Kachel steht deshalb auskommentiert
 in `uebersicht/funktionen/index.html` – eine Zeile einkommentieren, sobald die Seite da ist.
 Die Aufgaben A0 bis A2 und T0 (Ampel) aus dem Knoten warten dort.
+
+## Thema Verzweigungen und Boolesche Ausdrücke
+
+Grundlage ist der LogSeq-Knoten „03 Boolesche Ausdrücke und Verzweigungen“.
+Die Kachelseite steht unter `uebersicht/verzweigungen/index.html`, der Inhalt im
+vorgegebenen Ordner `Verzweigung/uebersicht/`. Dieser Großbuchstabe bleibt wegen
+des ausdrücklich festgelegten Zielpfads erhalten.
+
+| Karte | Interaktion |
+|---|---|
+| Darum geht es | vier Merksätze |
+| Boolesche Ausdrücke und Vergleiche | x-Regler, sechs Operatoren mit gleichzeitig sichtbaren Ergebnissen |
+| UND, ODER, NICHT | Wahrheitswerte umschalten, Wahrheitstabelle, Bereiche auf der Zeichenfläche vergleichen |
+| if und if … else | gemeinsame Zeigerposition in zwei nebeneinanderstehenden Beispielen |
+| else if: genau ein Zweig | Farbwechsel in vier Vierteln, Mittellinien rechts/unten zugeordnet |
+| Reihenfolge der Bedingungen | Punktzahl-Regler, auf- und absteigende Prüfung nebeneinander |
+
+Der gelbe Codebalken markiert geprüfte Bedingungen und Anweisungen des gewählten
+Zweigs. Quelltext und Vorschau entstehen aus denselben Ausdrucks- und
+Anweisungsbäumen; Konsolenwerte werden aus dem dargestellten Programm berechnet.
+Die Zeichenflächen sind auch mit Pfeiltasten bedienbar (Shift: zehn Pixel).
+
+`localStorage`-Schlüssel: `inf8-verzweigungen-uebersicht-v1`. Gespeichert werden nur
+Auswahl, Regler und Zeigerpositionen sowie die erhaltene Füllfarbe im Nur-if-Beispiel.
+Eine Übungsseite ist noch nicht angelegt; die Kachelseite verlinkt nur die Übersicht.
