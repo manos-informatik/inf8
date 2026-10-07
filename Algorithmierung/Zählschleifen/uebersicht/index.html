@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zählschleifen – Übersicht</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <header class="hero"><div class="hero-inner">
+    <a class="back-link" href="../../uebersicht/zaehlschleifen/index.html">&larr; Zählschleifen</a>
+    <p class="eyebrow">Klasse 8 · Algorithmierung</p>
+    <h1>Übersicht</h1>
+  </div></header>
+  <main class="container">
+    <section class="card" aria-labelledby="kern-title">
+      <h2 id="kern-title">Darum geht es</h2>
+      <ul class="merkliste">
+        <li>Eine <code>for</code>-Schleife wiederholt ihren Rumpf.</li>
+        <li>Der Schleifenkopf legt Start, Laufbedingung und Update fest.</li>
+        <li>Die im Kopf deklarierte Variable <code>i</code> gilt nur in dieser Schleife.</li>
+        <li>Mit <code>i</code> berechnest du Positionen, Farben und Größen.</li>
+      </ul>
+    </section>
+
+    <section class="card" id="aufbau" aria-labelledby="aufbau-title">
+      <h2 id="aufbau-title">Aufbau einer for-Schleife</h2>
+      <p class="section-text">Wähle einen Bestandteil. Code und Ablauf markieren dieselbe Stelle.</p>
+      <div class="action-row" role="group" aria-label="Bestandteil wählen">
+        <button type="button" class="btn ghost" data-part="start" aria-pressed="true">Initialisierung</button>
+        <button type="button" class="btn ghost" data-part="test" aria-pressed="false">Laufbedingung</button>
+        <button type="button" class="btn ghost" data-part="update" aria-pressed="false">Update</button>
+        <button type="button" class="btn ghost" data-part="body" aria-pressed="false">Rumpf</button>
+      </div>
+      <div class="split">
+        <div class="subpanel" data-example="aufbau"><h3>Vollständiges Beispiel</h3></div>
+        <div class="subpanel">
+          <h3>Ablauf</h3>
+          <ol class="loop-flow">
+            <li data-flow="start"><code>int i = 0</code><span>einmal am Anfang</span></li>
+            <li data-flow="test"><code>i &lt; 5</code><span>vor jedem Durchlauf; bei false endet die Schleife</span></li>
+            <li data-flow="body"><code>println(i);</code><span>bei true ausführen</span></li>
+            <li data-flow="update"><code>i++</code><span>danach erhöhen und wieder die Bedingung prüfen</span></li>
+          </ol>
+          <p class="merksatz" id="aufbau-hinweis" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="grenze" aria-labelledby="grenze-title">
+      <h2 id="grenze-title">Laufbedingung: &lt; oder &lt;=</h2>
+      <p class="section-text">Verschiebe die Grenze. Beide Programme beginnen mit <code>i = 0</code>.</p>
+      <div class="regler"><label for="grenzwert">Grenze</label><input type="range" id="grenzwert" min="0" max="6" step="1" value="4"><output for="grenzwert" id="grenzwert-wert" class="status-pill">4</output></div>
+      <div class="split">
+        <div class="subpanel" data-example="kleiner"><h3>i &lt; Grenze</h3><div class="canvas-board"><div class="canvas-stack"><canvas class="drawing-layer" id="kleiner-canvas" width="400" height="200"></canvas><canvas class="grid-layer" width="400" height="200" aria-hidden="true"></canvas></div></div><output id="kleiner-wert" class="readout" aria-live="polite"></output></div>
+        <div class="subpanel" data-example="gleich"><h3>i &lt;= Grenze</h3><div class="canvas-board"><div class="canvas-stack"><canvas class="drawing-layer" id="gleich-canvas" width="400" height="200"></canvas><canvas class="grid-layer" width="400" height="200" aria-hidden="true"></canvas></div></div><output id="gleich-wert" class="readout" aria-live="polite"></output></div>
+      </div>
+    </section>
+
+    <section class="card" id="position" aria-labelledby="position-title">
+      <h2 id="position-title">Positionen mit i berechnen</h2>
+      <p class="section-text">Ändere die Reihe. Klicke ein Feld oder eine Tabellenzeile an.</p>
+      <div class="controls-grid">
+        <div class="regler"><label for="anzahl">Anzahl</label><input type="range" id="anzahl" min="0" max="8" step="1" value="5"><output for="anzahl" id="anzahl-wert" class="status-pill">5</output></div>
+        <div class="regler"><label for="breite">Zellenbreite</label><input type="range" id="breite" min="20" max="50" step="1" value="50"><output for="breite" id="breite-wert" class="status-pill">50</output></div>
+        <div class="regler"><label for="luecke">Lücke</label><input type="range" id="luecke" min="4" max="12" step="1" value="4"><output for="luecke" id="luecke-wert" class="status-pill">4</output></div>
+      </div>
+      <div class="split">
+        <div class="subpanel" data-example="position"><h3>Die Reihe zeichnen</h3></div>
+        <div class="subpanel"><h3>i und die x-Position</h3><div class="canvas-board"><div class="canvas-stack" data-canvas-select="position"><canvas class="drawing-layer" id="position-canvas" width="400" height="200"></canvas><canvas class="grid-layer" width="400" height="200" aria-hidden="true"></canvas></div></div><div class="table-space"><table class="tabelle"><thead><tr><th scope="col">i</th><th scope="col">x = i * Zellenbreite</th></tr></thead><tbody id="position-tabelle"></tbody></table></div><output id="position-wert" class="readout" aria-live="polite"></output></div>
+      </div>
+    </section>
+
+    <section class="card" id="farbe" aria-labelledby="farbe-title">
+      <h2 id="farbe-title">Farbwechsel in der Reihe</h2>
+      <p class="section-text">Wähle ein Feld. Die Bedingung entscheidet in jedem Durchlauf über seine Farbe.</p>
+      <div class="action-row iteration-buttons" data-select="farbe" role="group" aria-label="Feld betrachten"></div>
+      <div class="split">
+        <div class="subpanel" data-example="farbe"><h3>for mit if … else</h3></div>
+        <div class="subpanel"><h3>Sechs Felder</h3><div class="canvas-board"><div class="canvas-stack" data-canvas-select="farbe"><canvas class="drawing-layer" id="farbe-canvas" width="400" height="200"></canvas><canvas class="grid-layer" width="400" height="200" aria-hidden="true"></canvas></div></div><output id="farbe-wert" class="readout" aria-live="polite"></output></div>
+      </div>
+    </section>
+
+    <section class="card" id="balken" aria-labelledby="balken-title">
+      <h2 id="balken-title">Balkendiagramm</h2>
+      <p class="section-text">Ändere die Höhenzunahme. Wähle einen Balken und vergleiche Höhe und y-Position.</p>
+      <div class="regler"><label for="schritt">Zunahme</label><input type="range" id="schritt" min="10" max="35" step="1" value="30"><output for="schritt" id="schritt-wert" class="status-pill">30</output></div>
+      <div class="action-row iteration-buttons" data-select="balken" role="group" aria-label="Balken betrachten"></div>
+      <div class="split">
+        <div class="subpanel" data-example="balken"><h3>Höhe aus i berechnen</h3></div>
+        <div class="subpanel"><h3>Alle Balken stehen unten</h3><div class="canvas-board"><div class="canvas-stack" data-canvas-select="balken"><canvas class="drawing-layer" id="balken-canvas" width="400" height="200"></canvas><canvas class="grid-layer" width="400" height="200" aria-hidden="true"></canvas></div></div><table class="tabelle"><thead><tr><th scope="col">i</th><th scope="col">Höhe</th><th scope="col">y = height − Höhe</th></tr></thead><tbody id="balken-tabelle"></tbody></table><output id="balken-wert" class="readout" aria-live="polite"></output></div>
+      </div>
+    </section>
+    <noscript><p class="merksatz">Aktiviere JavaScript, um die Beispiele und Zeichenflächen zu sehen.</p></noscript>
+  </main>
+  <footer class="footer"><p>&copy; 2026 Martin-Andersen-Nexö-Gymnasium Dresden</p></footer>
+  <p class="sr-only" id="kopier-status" role="status"></p>
+</body>
+</html>

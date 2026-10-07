@@ -451,3 +451,28 @@ Die Zeichenflächen sind auch mit Pfeiltasten bedienbar (Shift: zehn Pixel).
 `localStorage`-Schlüssel: `inf8-verzweigungen-uebersicht-v1`. Gespeichert werden nur
 Auswahl, Regler und Zeigerpositionen sowie die erhaltene Füllfarbe im Nur-if-Beispiel.
 Eine Übungsseite ist noch nicht angelegt; die Kachelseite verlinkt nur die Übersicht.
+
+## Thema Zählschleifen
+
+Grundlage ist der LogSeq-Knoten „05 Zählschleifen“. Im ersten Beispiel steht
+versehentlich nur `i` im Update; die Übersicht verwendet dort das korrekte `i++`.
+Die Navigation liegt unter `uebersicht/zaehlschleifen/index.html`; der Inhalt steht
+im ausdrücklich vorgegebenen Ordner `Zählschleifen/uebersicht/`. Dieser bestehende
+Zielpfad behält seine Schreibweise; alle neu angelegten Dateinamen sind ASCII.
+
+| Karte | Interaktion |
+|---|---|
+| Darum geht es | vier Merksätze |
+| Aufbau einer for-Schleife | Initialisierung, Laufbedingung, Update oder Rumpf wählen; Code und Ablauf markieren dieselbe Stelle |
+| Laufbedingung: < oder <= | gemeinsame Grenze, zwei vollständige Beispiele mit i-Werten und letzter Prüfung |
+| Positionen mit i berechnen | Anzahl, Zellenbreite und Lücke einstellen; ein Feld in der vollständigen Reihe betrachten |
+| Farbwechsel in der Reihe | sechs Felder; Auswahl zeigt die Bedingung und den Farbzweig dieses Durchlaufs |
+| Balkendiagramm | Höhenzunahme einstellen; Höhe und y-Position eines Balkens in Tabelle und Vorschau vergleichen |
+
+Die Auswahl eines Felds springt frei zwischen den Durchläufen; es gibt keine
+Start-/Schrittfolge. Code, Tabellen und Zeichenflächen werden aus denselben
+Ausdrucks- und Anweisungsbäumen erzeugt. Schriftligaturen sind deaktiviert,
+Wertanzeigen stehen untereinander.
+
+`localStorage`-Schlüssel: `inf8-zaehlschleifen-uebersicht-v1`. Gespeichert werden nur
+Regler und Auswahl. Die Kachelseite verlinkt ausschließlich die vorhandene Übersicht.
