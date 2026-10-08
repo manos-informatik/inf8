@@ -469,7 +469,33 @@ Die Zeichenflächen sind auch mit Pfeiltasten bedienbar (Shift: zehn Pixel).
 
 `localStorage`-Schlüssel: `inf8-verzweigungen-uebersicht-v1`. Gespeichert werden nur
 Auswahl, Regler und Zeigerpositionen sowie die erhaltene Füllfarbe im Nur-if-Beispiel.
-Eine Übungsseite ist noch nicht angelegt; die Kachelseite verlinkt nur die Übersicht.
+Die Kachelseite verlinkt die Übersicht und die Übungen unter `Verzweigung/uebung/`.
+
+### Übungen zu Verzweigungen und Booleschen Ausdrücken
+
+Fünf Aufgaben mit je drei Stufen entsprechen den fünf Fachkarten der Übersicht:
+
+| Übersicht / Übung | Stufen |
+|---|---|
+| Boolesche Ausdrücke und Vergleiche | kleiner als, bis einschließlich, ungleich |
+| UND, ODER, NICHT | beide wahr, links oder unten, außerhalb von links unten |
+| if und if … else | obere Hälfte, Gegenfall, erhaltene Füllfarbe reparieren |
+| else if: genau ein Zweig | rechts oben, vier Viertel, Mittellinien |
+| Reihenfolge der Bedingungen | absteigend ordnen, aufsteigende Grenzen, genau eine Meldung |
+
+Auswahlen stehen im vollständigen Processing-Sketch und beginnen mit `?`.
+„Prüfen“ führt alle angegebenen Fälle aus, einschließlich Grenzwerten und Mittellinien.
+Ein Fall kann in der Tabelle ausgewählt werden; Code, Werte und Zeichenfläche wechseln
+zusammen. Die Mausfolge rechts → links → rechts wird mit erhaltener Füllfarbe simuliert.
+Gültige falsche Lösungen zeigen ihre tatsächliche Ausgabe und den ersten abweichenden Fall.
+Notenbereiche stammen aus T0 des Logseq-Knotens; die Farbviertel aus A0.
+Die zuvor entfernten Abschnitte zu Bewegungsrichtung und boolean-Zustandsvariable
+werden nicht wieder eingeführt.
+
+`localStorage`-Schlüssel: `inf8-verzweigungen-uebung-v1`. Auswahlen, ausgewählter
+Prüffall, Prüfstand, bestandene Stufen und offene Aufgaben werden getrennt je Stufe
+gespeichert. Der begrenzte Auswerter liest den dargestellten Code ohne `eval`;
+er ist eine Simulation der benötigten Anweisungen, kein vollständiger Processing-Compiler.
 
 ## Thema Zählschleifen
 
