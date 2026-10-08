@@ -15,6 +15,7 @@ Repo: `manos-informatik/inf8` · Pages-Wurzel: `https://manos-informatik.github.
 | Variablen – Übungen | `Algorithmierung/Variablen/uebung/` | `…/inf8/Algorithmierung/Variablen/uebung/` |
 | Funktionen (Kachelseite) | `Algorithmierung/uebersicht/funktionen/` | `…/inf8/Algorithmierung/uebersicht/funktionen/` |
 | Funktionen – Übersicht | `Algorithmierung/Funktionen/uebersicht/` | `…/inf8/Algorithmierung/Funktionen/uebersicht/` |
+| Funktionen – Übungen | `Algorithmierung/Funktionen/uebung/` | `…/inf8/Algorithmierung/Funktionen/uebung/` |
 
 ## Zwei Zweige: Navigation und Inhalt
 
@@ -41,7 +42,8 @@ inf8/Algorithmierung/
         └── script.js
 
 Funktionen/                INHALT zum Thema Funktionen
-└── uebersicht/             Nachschlagewerk (uebung/ fehlt noch)
+├── uebersicht/             Nachschlagewerk
+└── uebung/                 Übungen mit drei Stufen je Hauptaufgabe
 ```
 
 Ebenen: **Landingpage → Thema → Übersicht | Übungen**
@@ -421,11 +423,28 @@ zum gespeicherten Stand nach, sodass Zyklus und Schritt einen Seitenwechsel übe
 
 `localStorage`-Schlüssel: `inf8-funktionen-uebersicht-v1`.
 
-### Offener Punkt
+### Übungen zu Funktionen
 
-`Funktionen/uebung/` gibt es noch nicht. Die Übungen-Kachel steht deshalb auskommentiert
-in `uebersicht/funktionen/index.html` – eine Zeile einkommentieren, sobald die Seite da ist.
-Die Aufgaben A0 bis A2 und T0 (Ampel) aus dem Knoten warten dort.
+`Funktionen/uebung/` enthält vier Aufgaben mit je drei unabhängig gespeicherten
+Stufen sowie die Transferaufgabe „Ampel modularisieren“. Die Übungen-Kachel ist aktiv.
+
+| Übersicht | Übung | Schwerpunkt der drei Stufen |
+|---|---|---|
+| Aufbau einer Funktion | Funktion definieren und aufrufen | Kopf ergänzen, Aufruf wählen, Definition platzieren |
+| Ein draw() oder viele Funktionen | Ein Programm zerlegen | Hintergrund/Figur trennen, Position auslagern, Aufrufreihenfolge mit Rahmen |
+| Warum die Position global sein muss | Gemeinsame Positionsvariablen | Deklarationsort, zwei lokale x, Verdeckung und Zurücksetzen |
+| Namen, die etwas sagen | Passende Namen und Aufgaben | Name zum Rumpf, Aufruf umbenennen, zeigeInfo() aufteilen |
+
+Die Zeichenanweisungen für die Ampel sind vorgegeben; geübt werden Zuordnung und
+Aufrufe. A2 mit Größen- und Farbberechnung bleibt eine weiterführende Unterrichtsaufgabe.
+Die Auswahlen beginnen mit `?`. Nach „Prüfen“ führt ein begrenzter Processing-Auswerter
+den tatsächlich angezeigten Sketch mit vier draw()-Zyklen aus; auch gültige falsche
+Lösungen erhalten ihre eigene Vorschau. Keine Ausführung mit `eval`.
+Der Auswerter ist eine Simulation der benötigten Anweisungen, kein Processing-Compiler.
+
+`localStorage`-Schlüssel: `inf8-funktionen-uebung-v1`. Auswahlen, Prüfen-Stand,
+bestandene Stufen und aufgeklappte Aufgaben bleiben erhalten. Die zwölf Hauptstufen
+zählen zum Fortschritt; die Ampel wird separat als geschafft markiert.
 
 ## Thema Verzweigungen und Boolesche Ausdrücke
 
