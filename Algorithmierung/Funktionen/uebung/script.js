@@ -51,7 +51,7 @@
       id: 'aufbau', title: 'Funktion definieren und aufrufen',
       stages: [
         {
-          title: '1 · Der Funktionskopf',
+          id: 'kopf', title: '1 · Der Funktionskopf',
           goal: 'Ergänze die parameterlose void-Funktion, die in draw() aufgerufen wird.',
           hint: 'Vergleiche Funktionskopf und Aufruf. Eine parameterlose Funktion hat trotzdem ein leeres Klammerpaar.',
           fields: [
@@ -66,7 +66,7 @@
           wrong: () => 'Der Funktionskopf passt noch nicht zum parameterlosen void-Aufruf.'
         },
         {
-          title: '2 · Die Funktion ausführen',
+          id: 'aufruf', title: '2 · Die Funktion ausführen',
           goal: 'Ergänze genau einen Aufruf: Nach dem Hintergrund soll die Figur erscheinen.',
           hint: 'Eine Definition führt sich nicht selbst aus. Der Aufruf in draw() entscheidet, welche Funktion läuft.',
           fields: [field('aufruf', 'Aufruf in draw()', ['bewegeFigur()', 'zeichneHintergrund()', 'zeichneSpielfigur()'], 'zeichneSpielfigur()')],
@@ -78,7 +78,7 @@
             : 'Der Code läuft, zeichnet aber nur den Hintergrund. Die Figur fehlt.'
         },
         {
-          title: '3 · Die Definition platzieren',
+          id: 'definition', title: '3 · Die Definition platzieren',
           goal: 'Platziere die Definition von zeichneSpielfigur(), damit der Sketch gestartet werden kann.',
           hint: 'In setup() und draw() stehen Anweisungen und Aufrufe. Eine neue Funktionsdefinition steht außerhalb dieser Funktionen.',
           fields: [field('ort', 'Definition steht', ['in draw()', 'außerhalb von setup() und draw()', 'in setup()'], 'außerhalb von setup() und draw()')],
@@ -101,7 +101,7 @@
       id: 'zerlegen', title: 'Ein Programm zerlegen',
       stages: [
         {
-          title: '1 · Hintergrund und Figur',
+          id: 'figur', title: '1 · Hintergrund und Figur',
           goal: 'Ordne die Anweisungen zu: Der Hintergrund bekommt eine Funktion, Füllfarbe und Kreis gehören zur Figur.',
           hint: 'Ordne nach der Aufgabe der Anweisung. Eine Füllfarbe gehört zu dem Objekt, für das sie gesetzt wird.',
           fields: groupFields(drawingEntries, ['zeichneSpielfigur', 'zeichneHintergrund']),
@@ -114,7 +114,7 @@
           wrong: () => 'Das Bild kann stimmen, aber die Aufteilung noch nicht: background gehört zum Hintergrund, fill und circle zur Figur.'
         },
         {
-          title: '2 · Die Position aktualisieren',
+          id: 'position', title: '2 · Die Position aktualisieren',
           goal: 'Ordne die Anweisungen zu. aktualisierePosition() übernimmt die Mausposition; zeichneSpielfigur() zeichnet die Figur.',
           hint: 'Eine Funktion berechnet die Position, die andere benutzt sie zum Zeichnen. x und y bleiben global.',
           fields: groupFields(positionEntries, ['zeichneSpielfigur', 'aktualisierePosition']),
@@ -127,7 +127,7 @@
           wrong: () => 'Der Sketch läuft, aber die Aufgaben sind vermischt. Mausposition und Zeichnen brauchen jeweils ihre eigene Funktion.'
         },
         {
-          title: '3 · Aufrufe in der richtigen Reihenfolge',
+          id: 'reihenfolge', title: '3 · Aufrufe in der richtigen Reihenfolge',
           goal: 'Rufe jede Funktion genau einmal auf. Der Hintergrund kommt zuerst; die Figur soll sichtbar sein und der Rahmen zuletzt entstehen.',
           hint: 'background() übermalt alles Vorherige. Die Reihenfolge der Aufrufe bestimmt, was am Ende sichtbar bleibt.',
           fields: ['eins', 'zwei', 'drei'].map((id, i) => field(id, 'Aufruf ' + (i + 1),
@@ -147,7 +147,7 @@
       id: 'position', title: 'Gemeinsame Positionsvariablen',
       stages: [
         {
-          title: '1 · Eine gemeinsame Variable',
+          id: 'global', title: '1 · Eine gemeinsame Variable',
           goal: 'Platziere int x = 50; so, dass beide Funktionen dieselbe Position nutzen. Erwartete Kreispositionen: 53, 56, 59, 62.',
           hint: 'Eine lokale Variable gehört zu einer Funktion. Beide Funktionen sollen hier auf dasselbe x zugreifen.',
           fields: [field('ort', 'int x = 50; steht', ['in draw()', 'global vor setup()', 'in bewegeFigur()'], 'global vor setup()')],
@@ -159,7 +159,7 @@
           wrong: () => 'Das lokale x ist in zeichneSpielfigur() nicht bekannt.'
         },
         {
-          title: '2 · Zwei lokale x reparieren',
+          id: 'lokal', title: '2 · Zwei lokale x reparieren',
           goal: 'Ändere die Deklarationen so, dass der Kreis in vier Zyklen bei 53, 56, 59 und 62 gezeichnet wird.',
           hint: 'Zwei Variablen mit demselben Namen sind nicht automatisch dieselbe Variable. Schau auf ihre Gültigkeitsbereiche.',
           fields: [field('variante', 'Deklarationen', ['beide Funktionen: eigenes lokales x',
@@ -176,7 +176,7 @@
             : 'Der Code läuft, aber nur das lokale x wird erhöht. Das globale x und die Figur bleiben bei 50.'
         },
         {
-          title: '3 · Das globale x wird verdeckt',
+          id: 'verdeckt', title: '3 · Das globale x wird verdeckt',
           goal: 'Repariere die markierte Auswahl in zeichneSpielfigur(). Der Kreis soll die wachsende globale Position verwenden.',
           hint: 'Eine lokale Deklaration kann ein globales x verdecken. Eine Zuweisung an das globale x würde dessen Wert dagegen verändern.',
           fields: [field('zeile', 'Zeile in zeichneSpielfigur()', ['int x = 50;', 'x = 50;', '// lokale Deklaration entfernen'], '// lokale Deklaration entfernen')],
@@ -192,7 +192,7 @@
       id: 'namen', title: 'Passende Namen und Aufgaben',
       stages: [
         {
-          title: '1 · Was tut die Funktion?',
+          id: 'rumpf', title: '1 · Was tut die Funktion?',
           goal: 'Wähle einen Namen, der die einzige Anweisung im Funktionsrumpf beschreibt.',
           hint: 'Lies den Rumpf, bevor du den Namen wählst. Ein Verb beschreibt die Aufgabe der Funktion.',
           fields: [field('name', 'Name für background(200)', ['zeichneSpielfigur', 'bewegeFigur', 'zeichneHintergrund'], 'zeichneHintergrund')],
@@ -201,7 +201,7 @@
           wrong: () => 'Der Code läuft, aber der Name verspricht etwas anderes als background(200).'
         },
         {
-          title: '2 · Definition und Aufruf umbenennen',
+          id: 'umbenennen', title: '2 · Definition und Aufruf umbenennen',
           goal: 'f1() heißt jetzt zeichneSpielfigur(). Passe den Aufruf in draw() an.',
           hint: 'Ein neuer Name an der Definition muss auch bei jedem zugehörigen Aufruf verwendet werden.',
           fields: [field('aufruf', 'Aufruf nach dem Umbenennen', ['f1()', 'zeichneHintergrund()', 'zeichneSpielfigur()'], 'zeichneSpielfigur()')],
@@ -211,7 +211,7 @@
           wrong: () => 'Der Aufruf passt nicht zu einer vorhandenen Funktionsdefinition.'
         },
         {
-          title: '3 · zeigeInfo() aufteilen',
+          id: 'aufteilen', title: '3 · zeigeInfo() aufteilen',
           goal: 'Teile zeigeInfo() auf: Funktion A zeichnet den Hintergrund, Funktion B gibt x aus. Wähle passende Namen und ordne beide Anweisungen zu.',
           hint: 'Hintergrund zeichnen und einen Wert ausgeben sind zwei Aufgaben. Name und Rumpf müssen zusammenpassen.',
           fields: [
@@ -233,7 +233,7 @@
       id: 'ampel', title: 'Ampel modularisieren', transfer: true,
       stages: [
         {
-          title: 'Transfer · Gehäuse und Lampen',
+          id: 'modularisieren', title: 'Transfer · Gehäuse und Lampen',
           goal: 'Ordne die Zeichenblöcke zu und ergänze die zwei Aufrufe. Das Gehäuse soll hinter den drei Lampen liegen.',
           hint: 'Halte fill() und die zugehörige Form zusammen. Ein später gezeichnetes Gehäuse würde die Lampen überdecken.',
           fields: [
@@ -452,10 +452,11 @@
     return { tasks };
   }
 
+  window.AlgorithmProgress?.setStageLayout(STORAGE_KEY, TASKS);
   function restore() {
     const clean = initialState();
     try {
-      const raw = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      const raw = (window.AlgorithmProgress ? window.AlgorithmProgress.getPageState(STORAGE_KEY) : JSON.parse(localStorage.getItem(STORAGE_KEY)));
       if (!raw || typeof raw.tasks !== 'object' || raw.tasks === null) return clean;
       for (const task of TASKS) {
         const saved = raw.tasks[task.id], current = clean.tasks[task.id];
@@ -479,7 +480,7 @@
     return clean;
   }
   const state = restore();
-  const save = () => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (_) { /* Exercises also work without storage. */ } };
+  const save = () => { try { window.AlgorithmProgress ? window.AlgorithmProgress.savePageState(STORAGE_KEY, state) : localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (_) { /* Exercises also work without storage. */ } };
   const el = (tag, className, text) => {
     const node = document.createElement(tag);
     if (className) node.className = className;
@@ -584,7 +585,7 @@
       });
     });
     const progress = document.getElementById('progress');
-    const text = count + ' von 12 Stufen geschafft';
+    const text = count + ' von ' + TASKS.filter(task => !task.transfer).reduce((sum, task) => sum + task.stages.length, 0) + ' Stufen geschafft';
     if (progress.textContent !== text) progress.textContent = text;
   }
 
@@ -738,4 +739,5 @@
     root.append(details);
   });
   TASKS.forEach(renderTask);
+  window.AlgorithmProgress?.trackPageState(STORAGE_KEY, state);
 })();

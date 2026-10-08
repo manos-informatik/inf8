@@ -1,5 +1,56 @@
 # Aufbau der Seite „Imperative Programmierung"
 
+## Lernstand speichern und laden
+
+Alle Algorithmierungsseiten verwenden `assets/js/progress.js` und
+`assets/css/progress.css`. Die beiden Knöpfe im Kopfbereich speichern bzw. laden
+eine JSON-Datei mit dem **gesamten** Lernstand, wie auf der Lernwebseite für Klasse 6.
+Änderungen werden zusätzlich automatisch im Browser gespeichert.
+
+- Gemeinsamer Browser-Schlüssel: `inf8-algorithmierung-progress-v2`.
+- Dateiformat: `{version: 2, app: "inf8-algorithmierung", savedAt, pages}`.
+  Jede Seite steht unter einer festen Kennung mit `pageState` und Besuchsmetadaten.
+- Die bisherigen acht Browser-Schlüssel werden automatisch übernommen, auch wenn
+  die betreffende Inhaltsseite beim ersten Speichern noch nicht besucht wurde.
+  Anschließend ist der gemeinsame Speicher maßgeblich.
+- Laden ergänzt vorhandene Seiten, Aufgaben und Stufen. Explizit enthaltene Werte
+  ersetzen die entsprechenden Werte; fehlende Einträge bleiben erhalten. Neue
+  Aufgaben ohne gespeicherten Stand beginnen mit ihren normalen leeren Vorgaben.
+  Der Antwortsatz einer enthaltenen Stufe wird vollständig wiederhergestellt.
+- Unbekannte Seiten, Aufgaben und Stufen bleiben beim erneuten Speichern erhalten.
+  Speicherdateien der Version 1 werden migriert. Fremde Dateien oder beschädigtes
+  JSON werden ohne Änderung des bisherigen Lernstands abgewiesen.
+
+### Neue Seiten und Aufgaben ergänzen
+
+1. Jede neue HTML-Seite erhält eine **dauerhafte**, eindeutige
+   `data-page-key`-Kennung am `body`, die gemeinsame Toolbar und die beiden
+   relativen Asset-Pfade. Das gemeinsame Skript läuft vor dem Seitenskript.
+2. Das Seitenskript liest mit `AlgorithmProgress.getPageState(KEY)` und
+   speichert mit `AlgorithmProgress.savePageState(KEY, state)`. Nach vollständiger
+   Initialisierung ruft es `AlgorithmProgress.trackPageState(KEY, state)` auf.
+   Dadurch funktionieren auch gelöschte Eingaben beim Zurücksetzen.
+   Neue Seiten werden anhand ihrer Kennung automatisch registriert.
+3. Aufgaben und Stufen bekommen jeweils feste `id`-Werte. Vor dem Wiederherstellen
+   meldet die Übungsseite ihre Aufgaben mit
+   `AlgorithmProgress.setStageLayout(KEY, TASKS)` an. Stufen werden in der Datei
+   nach diesen Kennungen gespeichert, nicht nach ihrem Platz in einer Liste.
+   Einfügen oder Umordnen verändert dadurch die Zuordnung alter Antworten nicht.
+4. Vorhandene Kennungen niemals für andere Inhalte wiederverwenden oder wegen
+   geänderter Überschriften umbenennen. Neue Inhalte bekommen neue Kennungen.
+   Fortschrittszähler aus den vorhandenen Aufgaben berechnen.
+5. `legacyLayouts` im gemeinsamen Skript beschreibt ausschließlich die ursprünglichen
+   Array-Stände. Diese Reihenfolge bleibt unverändert, auch wenn neue Stufen dazukommen.
+   Die Variablenübungen behalten ihre bestehenden Aufgaben- und Stufenkennungen;
+   auch dort neue Inhalte unter neuen Kennungen ergänzen.
+
+Beim Laden wird der geprüfte Gesamtstand zuerst gespeichert und anschließend die
+aktuelle Seite neu geladen. Wenn der Browser das Speichern sperrt, erscheint eine
+Fehlermeldung und der bisherige Stand bleibt erhalten.
+
+Die Kompatibilitätsprüfungen laufen ohne zusätzliche Pakete mit
+`node --test Algorithmierung/tests/progress.test.cjs` aus dem Repo `inf8`.
+
 Diese Datei beschreibt, wie der Seitenbaum aufgebaut ist und wie neue Kacheln
 und Seiten dazukommen. Sie wird nicht ausgeliefert, sie ist die Anleitung dazu.
 

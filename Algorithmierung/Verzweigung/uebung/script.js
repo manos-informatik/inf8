@@ -36,50 +36,50 @@
 
   const TASKS = [
     { id: 'vergleiche', title: 'Boolesche Ausdrücke und Vergleiche', stages: [
-      { title: '1 · Kleiner als die Grenze', goal: 'Ergänze den Vergleich: true genau dann, wenn x kleiner als 200 ist.',
+      { id: 'kleiner', title: '1 · Kleiner als die Grenze', goal: 'Ergänze den Vergleich: true genau dann, wenn x kleiner als 200 ist.',
         hint: 'Teste auch x = 200. „Kleiner“ schließt den Grenzwert aus.',
         fields: [field('op', 'Vergleichsoperator', comparisons)], cases: comparisonCases(x => x < 200),
         source: (_, c) => consoleSketch('int x = ' + c.values.x + ';', 'x {{op}} 200') },
-      { title: '2 · Die Grenze gehört dazu', goal: 'Ergänze den Vergleich: true für alle x bis einschließlich 200.',
+      { id: 'einschliesslich', title: '2 · Die Grenze gehört dazu', goal: 'Ergänze den Vergleich: true für alle x bis einschließlich 200.',
         hint: '„Bis einschließlich“ bedeutet: Der Grenzwert selbst gehört noch dazu.',
         fields: [field('op', 'Vergleichsoperator', comparisons)], cases: comparisonCases(x => x <= 200),
         source: (_, c) => consoleSketch('int x = ' + c.values.x + ';', 'x {{op}} 200') },
-      { title: '3 · Überall außer in der Mitte', goal: 'Ergänze den Vergleich: Nur bei x = 200 soll false ausgegeben werden.',
+      { id: 'ungleich', title: '3 · Überall außer in der Mitte', goal: 'Ergänze den Vergleich: Nur bei x = 200 soll false ausgegeben werden.',
         hint: 'Gesucht ist der Vergleich, der Gleichheit ausschließt.',
         fields: [field('op', 'Vergleichsoperator', comparisons)], cases: comparisonCases(x => x !== 200),
         source: (_, c) => consoleSketch('int x = ' + c.values.x + ';', 'x {{op}} 200') }
     ] },
     { id: 'logik', title: 'UND, ODER, NICHT', stages: [
-      { title: '1 · Beide müssen wahr sein', goal: 'Verknüpfe a und b: Das Ergebnis soll nur true sein, wenn beide wahr sind.',
+      { id: 'und', title: '1 · Beide müssen wahr sein', goal: 'Verknüpfe a und b: Das Ergebnis soll nur true sein, wenn beide wahr sind.',
         hint: 'Entscheidend ist auch der Fall, in dem nur eine der beiden Bedingungen wahr ist.',
         fields: [field('op', 'Logischer Operator', ['||','&&','=='])],
         cases: [[false,false],[false,true],[true,false],[true,true]].map(([a,b]) => ({ values:{a,b}, expected:String(a && b) })),
         source: (_, c) => consoleSketch('boolean a = ' + c.values.a + ';\nboolean b = ' + c.values.b + ';', 'a {{op}} b') },
-      { title: '2 · Links oder unten', goal: 'Die Bedingung soll links von der Mitte oder in der unteren Hälfte wahr sein. Die waagerechte Mitte gehört zu unten.',
+      { id: 'oder', title: '2 · Links oder unten', goal: 'Die Bedingung soll links von der Mitte oder in der unteren Hälfte wahr sein. Die waagerechte Mitte gehört zu unten.',
         hint: 'Bei ODER genügt eine wahre Teilbedingung. Auch der Bereich, in dem beide wahr sind, gehört dazu.',
         visual: true, fields: [field('op', 'Operator zwischen a und b', ['&&','||','=='])],
         cases: regionCases((x,y) => x < 200 || y >= 200),
         source: () => booleanArea('a {{op}} b') },
-      { title: '3 · Außerhalb von links unten', goal: 'Die Bedingung soll überall wahr sein, außer im linken unteren Viertel.',
+      { id: 'nicht', title: '3 · Außerhalb von links unten', goal: 'Die Bedingung soll überall wahr sein, außer im linken unteren Viertel.',
         hint: 'Negiere die gesamte Bedingung für links unten, nicht nur eine ihrer Teilbedingungen.',
         visual: true, fields: [field('ausdruck', 'Verneinter Ausdruck', ['!a && b','!(a || b)','!(a && b)'])],
         cases: regionCases((x,y) => !(x < 200 && y >= 200)),
         source: () => booleanArea('{{ausdruck}}') }
     ] },
     { id: 'wenn', title: 'if und if … else', stages: [
-      { title: '1 · Oben rot, unten blau', goal: 'Wähle die Bedingung für die obere Hälfte. Auf der waagerechten Mitte soll der Kreis blau sein.',
+      { id: 'if', title: '1 · Oben rot, unten blau', goal: 'Wähle die Bedingung für die obere Hälfte. Auf der waagerechten Mitte soll der Kreis blau sein.',
         hint: 'Für oben und unten ist die y-Position entscheidend.',
         visual: true, kind: 'color', fields: [field('bedingung', 'Bedingung für rot',
           ['mouseX < width / 2','mouseY > height / 2','mouseY < height / 2'])],
         cases: regionPoints.map(([x,y]) => point(x,y,y < 200 ? 'rot' : 'blau')),
         source: () => visualSketch(halfBranch('{{bedingung}}')) },
-      { title: '2 · Den Gegenfall ergänzen', goal: 'Ergänze den zweiten Zweig: Links soll der Kreis rot, rechts und auf der Mitte blau sein.',
+      { id: 'else', title: '2 · Den Gegenfall ergänzen', goal: 'Ergänze den zweiten Zweig: Links soll der Kreis rot, rechts und auf der Mitte blau sein.',
         hint: 'Der Gegenfall soll genau dann laufen, wenn die erste Bedingung falsch ist.',
         visual: true, kind: 'color',
         fields: [field('zweig', 'Zweiter Zweig', ['if (mouseX < width / 2)','else','if (mouseY >= height / 2)'])],
         cases: regionPoints.map(([x,y]) => point(x,y,x < 200 ? 'rot' : 'blau')),
         source: () => visualSketch('if (mouseX < width / 2) {\n  ' + fill('rot') + '\n} {{zweig}} {\n  ' + fill('blau') + '\n}') },
-      { title: '3 · Eine alte Farbe bleibt erhalten', goal: 'Repariere die Farbregel für die Mausfolge rechts → links → rechts. Der Kreis soll blau → rot → blau werden.',
+      { id: 'fuellfarbe', title: '3 · Eine alte Farbe bleibt erhalten', goal: 'Repariere die Farbregel für die Mausfolge rechts → links → rechts. Der Kreis soll blau → rot → blau werden.',
         hint: 'fill() behält seine Farbe über draw()-Zyklen hinweg. background() setzt die Füllfarbe nicht zurück.',
         visual: true, kind: 'color', history: true, external: ['regel'],
         fields: [field('regel', 'Farbregel', ['nur if','if mit else','immer rot'])],
@@ -88,7 +88,7 @@
           a.regel === 'immer rot' ? fill('rot') : 'if (mouseX < width / 2) {\n  ' + fill('rot') + '\n}') }
     ] },
     { id: 'kette', title: 'else if: genau ein Zweig', stages: [
-      { title: '1 · Rechts oben ergänzen', goal: 'Ergänze den gelben Zweig: links oben rot, rechts oben gelb, die gesamte untere Hälfte blau.',
+      { id: 'rechts-oben', title: '1 · Rechts oben ergänzen', goal: 'Ergänze den gelben Zweig: links oben rot, rechts oben gelb, die gesamte untere Hälfte blau.',
         hint: 'Für rechts oben müssen die horizontale und die vertikale Bedingung gemeinsam erfüllt sein.',
         visual: true, kind: 'color', fields: [field('bedingung', 'Bedingung für gelb', [
           'mouseX >= width / 2 && mouseY >= height / 2',
@@ -97,12 +97,12 @@
         cases: quarterPoints.map(([x,y]) => point(x,y,y >= 200 ? 'blau' : x < 200 ? 'rot' : 'gelb')),
         source: () => visualSketch('if (mouseX < width / 2 && mouseY < height / 2) {\n  ' + fill('rot') +
           '\n} else if ({{bedingung}}) {\n  ' + fill('gelb') + '\n} else {\n  ' + fill('blau') + '\n}') },
-      { title: '2 · Vier Viertel, eine Farbwahl', goal: 'Verbinde die Zweige: links oben rot, rechts oben gelb, links unten cyan, rechts unten blau. Pro Zyklus soll ein Farbzweig laufen.',
+      { id: 'viertel', title: '2 · Vier Viertel, eine Farbwahl', goal: 'Verbinde die Zweige: links oben rot, rechts oben gelb, links unten cyan, rechts unten blau. Pro Zyklus soll ein Farbzweig laufen.',
         hint: 'Mehrere getrennte if-Anweisungen können nacheinander Farben setzen. In einer Kette gewinnt der erste passende Zweig.',
         visual: true, kind: 'color', fields: [field('zweig', 'Verbindung der Farbzweige', ['if','else if'])],
         cases: quarterCases,
         source: () => visualSketch(quarters('{{zweig}}','>=','>=')) },
-      { title: '3 · Die Mittellinien', goal: 'Ergänze die Vergleiche. Die senkrechte Mitte gehört zu rechts; die waagerechte Mitte gehört zu unten.',
+      { id: 'mittellinien', title: '3 · Die Mittellinien', goal: 'Ergänze die Vergleiche. Die senkrechte Mitte gehört zu rechts; die waagerechte Mitte gehört zu unten.',
         hint: 'Prüfe die Werte genau auf den Mittellinien, nicht nur die vier Ecken.',
         visual: true, kind: 'color',
         fields: [field('xop', 'Vergleich für rechts', ['>','==','>=']),field('yop', 'Vergleich für unten', ['==','>=','>'])],
@@ -110,7 +110,7 @@
         source: () => visualSketch(quarters('else if','{{xop}}','{{yop}}')) }
     ] },
     { id: 'reihenfolge', title: 'Reihenfolge der Bedingungen', stages: [
-      { title: '1 · Den höchsten Bereich zuerst prüfen', goal: 'Ordne die Prüfungen mit >= so, dass jede Punktzahl die passende Rückmeldung erhält.',
+      { id: 'absteigend', title: '1 · Den höchsten Bereich zuerst prüfen', goal: 'Ordne die Prüfungen mit >= so, dass jede Punktzahl die passende Rückmeldung erhält.',
         hint: '14 Punkte erfüllen >= 7, >= 10 und >= 13. In einer else-if-Kette zählt nur der erste passende Zweig.',
         external: ['folge'], fields: [field('folge', 'Reihenfolge der Grenzen', ['7 → 10 → 13','13 → 10 → 7','10 → 13 → 7'])],
         cases: pointsCases,
@@ -120,11 +120,11 @@
           const rows = (orders[a.folge] || [7,10,13]).map(n => ['punkte >= ' + n,names[n]]);
           return gradeSketch(c.values.punkte, rows, 'else if', 'nicht bestanden');
         } },
-      { title: '2 · Aufsteigend mit Grenzwerten', goal: 'Prüfe von niedrig nach hoch: 0–6 nicht bestanden, 7–9 bestanden, 10–12 gut, 13–15 sehr gut.',
+      { id: 'aufsteigend', title: '2 · Aufsteigend mit Grenzwerten', goal: 'Prüfe von niedrig nach hoch: 0–6 nicht bestanden, 7–9 bestanden, 10–12 gut, 13–15 sehr gut.',
         hint: 'Die Werte 6, 9 und 12 gehören jeweils noch zum niedrigeren Bereich.',
         fields: [field('op','Vergleich an den oberen Grenzen',['<','>=','<='])], cases: pointsCases,
         source: (_,c) => gradeSketch(c.values.punkte,[['punkte {{op}} 6','nicht bestanden'],['punkte {{op}} 9','bestanden'],['punkte {{op}} 12','gut']]) },
-      { title: '3 · Genau eine Rückmeldung', goal: 'Repariere die Verbindung der Zweige. Für jede Punktzahl soll genau eine passende Konsolenzeile erscheinen.',
+      { id: 'eine-meldung', title: '3 · Genau eine Rückmeldung', goal: 'Repariere die Verbindung der Zweige. Für jede Punktzahl soll genau eine passende Konsolenzeile erscheinen.',
         hint: 'Mehrere unabhängige if-Anweisungen können mehrere Meldungen ausgeben. else if prüft nur weiter, wenn vorher kein Zweig gepasst hat.',
         fields: [field('zweig','Verbindung der Notenprüfungen',['if','else if'])], cases: pointsCases,
         source: (_,c) => gradeSketch(c.values.punkte,[['punkte >= 13','sehr gut'],['punkte >= 10','gut'],['punkte >= 7','bestanden']],'{{zweig}}') }
@@ -276,14 +276,15 @@
   const initialState = () => ({ tasks:Object.fromEntries(TASKS.map((task,i) => [task.id,{
     active:0, open:i === 0, stages:task.stages.map(() => ({answers:{},sample:0,checked:false,passed:false}))
   }])) });
+  window.AlgorithmProgress?.setStageLayout(KEY, TASKS);
   function restore() {
     const clean = initialState();
     try {
-      const raw = JSON.parse(localStorage.getItem(KEY));
+      const raw = (window.AlgorithmProgress ? window.AlgorithmProgress.getPageState(KEY) : JSON.parse(localStorage.getItem(KEY)));
       for (const task of TASKS) {
         const saved = raw?.tasks?.[task.id], current = clean.tasks[task.id];
         if (!saved || typeof saved !== 'object') continue;
-        if (Number.isInteger(saved.active) && saved.active >= 0 && saved.active < 3) current.active = saved.active;
+        if (Number.isInteger(saved.active) && saved.active >= 0 && saved.active < task.stages.length) current.active = saved.active;
         if (typeof saved.open === 'boolean') current.open = saved.open;
         task.stages.forEach((stage,i) => {
           const record = Array.isArray(saved.stages) ? saved.stages[i] : null, target = current.stages[i];
@@ -297,7 +298,7 @@
     return clean;
   }
   const state = restore();
-  const save = () => { try { localStorage.setItem(KEY,JSON.stringify(state)); } catch (_) {} };
+  const save = () => { try { window.AlgorithmProgress ? window.AlgorithmProgress.savePageState(KEY, state) : localStorage.setItem(KEY, JSON.stringify(state)); } catch (_) {} };
   const stageFor = task => task.stages[state.tasks[task.id].active];
   const recordFor = task => state.tasks[task.id].stages[state.tasks[task.id].active];
   const missing = (stage,record) => stage.fields.some(entry => !entry.options.includes(record.answers[entry.id]));
@@ -416,7 +417,7 @@
         node.setAttribute('aria-pressed',String(current.active === i));
       });
     }
-    const node = document.getElementById('progress'), text = count + ' von 15 Stufen geschafft';
+    const node = document.getElementById('progress'), text = count + ' von ' + TASKS.reduce((sum, task) => sum + task.stages.length, 0) + ' Stufen geschafft';
     if (node.textContent !== text) node.textContent = text;
   }
   function renderTask(task) {
@@ -506,4 +507,5 @@
     details.addEventListener('toggle',() => { state.tasks[task.id].open = details.open; save(); }); root.append(details);
   });
   TASKS.forEach(renderTask);
+  window.AlgorithmProgress?.trackPageState(KEY, state);
 })();

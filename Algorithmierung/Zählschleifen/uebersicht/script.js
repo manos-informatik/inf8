@@ -4,10 +4,10 @@
   const state = { part: "start", grenze: 4, anzahl: 5, breite: 50, luecke: 4, schritt: 30, position: 0, farbe: 0, balken: 0 };
   const $ = id => document.getElementById(id);
   const setText = (el, text) => { if (el.textContent !== String(text)) el.textContent = text; };
-  const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* optional */ } };
+  const persist = () => { try { window.AlgorithmProgress ? window.AlgorithmProgress.savePageState(KEY, state) : localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* optional */ } };
   function restore() {
     try {
-      const saved = JSON.parse(localStorage.getItem(KEY));
+      const saved = (window.AlgorithmProgress ? window.AlgorithmProgress.getPageState(KEY) : JSON.parse(localStorage.getItem(KEY)));
       if (!saved || typeof saved !== "object" || Array.isArray(saved)) return;
       if (["start","test","update","body"].includes(saved.part)) state.part = saved.part;
       for (const [key,min,max] of [["grenze",0,6],["anzahl",0,8],["breite",20,50],["luecke",4,12],["schritt",10,35],["position",0,7],["farbe",0,5],["balken",0,4]]) {
@@ -278,4 +278,5 @@
   restore();
   controls.forEach(([id,key])=>{$(id).value = state[key]; setText($(`${id}-wert`),state[key]);});
   renderBuild(); renderBoundary(); renderPosition(); renderColor(); renderBars();
+  window.AlgorithmProgress?.trackPageState(KEY, state);
 })();

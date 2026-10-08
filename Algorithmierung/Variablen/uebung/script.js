@@ -38,7 +38,7 @@
 
   const persist = () => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      window.AlgorithmProgress ? window.AlgorithmProgress.savePageState(STORAGE_KEY, state) : localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch {
       /* Speichern ist optional. */
     }
@@ -46,7 +46,7 @@
 
   const restore = () => {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      const raw = window.AlgorithmProgress ? JSON.stringify(window.AlgorithmProgress.getPageState(STORAGE_KEY)) : localStorage.getItem(STORAGE_KEY);
       if (!raw) return;
 
       const data = JSON.parse(raw);
@@ -2101,4 +2101,5 @@
   setzeSchritt(state.schritt3);
   setzeStufe(state.stufe, false);
   zeigeFortschritt();
+  window.AlgorithmProgress?.trackPageState(STORAGE_KEY, state);
 })();

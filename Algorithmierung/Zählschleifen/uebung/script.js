@@ -25,76 +25,76 @@
 
   const TASKS = [
     {id:'aufbau',title:'Aufbau einer for-Schleife',stages:[
-      {title:'1 · Mit dem richtigen Wert starten',goal:'Ergänze den Startwert. Die Konsole soll 0, 1, 2, 3 und 4 ausgeben.',
+      {id: 'start', title:'1 · Mit dem richtigen Wert starten',goal:'Ergänze den Startwert. Die Konsole soll 0, 1, 2, 3 und 4 ausgeben.',
         hint:'Die Initialisierung legt den ersten i-Wert fest. Sie läuft nur einmal vor der Schleife.',kind:'indices',
         fields:[field('start','Startwert von i',['1','0','5'])],cases:[test({},'0, 1, 2, 3, 4')],
         source:() => consoleLoop('','{{start}}','i < 5','i++')},
-      {title:'2 · Nach jedem Durchlauf weiterzählen',goal:'Ergänze das Update. i soll nacheinander die Werte 0, 1, 2, 3 und 4 annehmen.',
+      {id: 'update', title:'2 · Nach jedem Durchlauf weiterzählen',goal:'Ergänze das Update. i soll nacheinander die Werte 0, 1, 2, 3 und 4 annehmen.',
         hint:'Das Update läuft nach dem Rumpf. Prüfe, ob i dadurch auf die Grenze zuläuft oder sich von ihr entfernt.',kind:'indices',
         fields:[field('update','Update von i',['i--','i = i + 2','i++'])],cases:[test({},'0, 1, 2, 3, 4')],
         source:() => consoleLoop('','0','i < 5','{{update}}')},
-      {title:'3 · Den ganzen Schleifenkopf ergänzen',goal:'Ergänze den Kopf: von 0 bis anzahl - 1, jeden Wert genau einmal. Bei anzahl = 0 soll nichts ausgegeben werden.',
+      {id: 'kopf', title:'3 · Den ganzen Schleifenkopf ergänzen',goal:'Ergänze den Kopf: von 0 bis anzahl - 1, jeden Wert genau einmal. Bei anzahl = 0 soll nichts ausgegeben werden.',
         hint:'Start, Laufbedingung und Update müssen zusammenpassen. Prüfe auch den Fall ohne Durchlauf.',kind:'indices',
         fields:[field('start','Startwert',['1','0']),field('op','Laufbedingung',['<=','<']),field('update','Update',['i = i + 2','i++'])],
         cases:[0,1,5].map(anzahl => test({anzahl},iValues(anzahl))),
         source:(_,c) => consoleLoop('int anzahl = ' + c.values.anzahl + ';','{{start}}','i {{op}} anzahl','{{update}}')}
     ]},
     {id:'grenze',title:'Laufbedingung: < oder <=',stages:[
-      {title:'1 · Genau anzahl Felder',goal:'Die Schleife beginnt bei i = 0. Ergänze den Vergleich für genau anzahl Felder.',
+      {id: 'ab-null', title:'1 · Genau anzahl Felder',goal:'Die Schleife beginnt bei i = 0. Ergänze den Vergleich für genau anzahl Felder.',
         hint:'Bei Startwert 0 ist der letzte gewünschte Index anzahl - 1.',kind:'count',visual:true,
         fields:[field('op','Vergleich mit anzahl',['<=','>','<'])],cases:[0,1,4].map(anzahl => test({anzahl},String(anzahl))),
         source:(_,c) => drawingLoop(rowDeclaration(c),'rect(20 + i * 50, 80, 40, 40);','int i = 0; i {{op}} anzahl; i++')},
-      {title:'2 · Ab 1 zählen',goal:'Diesmal beginnt i bei 1. Ergänze den Vergleich für genau anzahl Felder.',
+      {id: 'ab-eins', title:'2 · Ab 1 zählen',goal:'Diesmal beginnt i bei 1. Ergänze den Vergleich für genau anzahl Felder.',
         hint:'Jetzt sollen die Werte 1 bis einschließlich anzahl durchlaufen werden.',kind:'count',visual:true,
         fields:[field('op','Vergleich ab Startwert 1',['<','<=','>'])],cases:[0,1,4].map(anzahl => test({anzahl},String(anzahl))),
         source:(_,c) => drawingLoop(rowDeclaration(c),'rect(20 + (i - 1) * 50, 80, 40, 40);','int i = 1; i {{op}} anzahl; i++')},
-      {title:'3 · Der letzte Index gehört dazu',goal:'Ergänze die Bedingung. Zeichne die Felder mit den Indizes 0 bis einschließlich grenze.',
+      {id: 'letzter-index', title:'3 · Der letzte Index gehört dazu',goal:'Ergänze die Bedingung. Zeichne die Felder mit den Indizes 0 bis einschließlich grenze.',
         hint:'Die Grenze ist hier ein Index, keine Anzahl. Auch bei grenze = 0 soll ein Feld entstehen.',kind:'count',visual:true,
         fields:[field('bedingung','Laufbedingung',['i < grenze','i < grenze - 1','i <= grenze'])],cases:[0,2,4].map(grenze => test({grenze},String(grenze + 1))),
         source:(_,c) => drawingLoop(['int grenze = ' + c.values.grenze + ';'],'rect(20 + i * 50, 80, 40, 40);','int i = 0; {{bedingung}}; i++')}
     ]},
     {id:'position',title:'Positionen mit i berechnen',stages:[
-      {title:'1 · Vier verschiedene Positionen',goal:'Ergänze x. Die vier Felder sollen bei 20, 70, 120 und 170 beginnen.',
+      {id: 'x', title:'1 · Vier verschiedene Positionen',goal:'Ergänze x. Die vier Felder sollen bei 20, 70, 120 und 170 beginnen.',
         hint:'i verändert sich in jedem Durchlauf. Der erste Wert ist 0; der Abstand zwischen zwei Feldern beträgt 50.',kind:'positions',visual:true,
         fields:[field('x','x-Position',['i * 50','20 + i','20 + i * 50'])],cases:[test({anzahl:4},'20, 70, 120, 170')],
         source:(_,c) => drawingLoop(rowDeclaration(c),'rect({{x}}, 80, 40, 40);')},
-      {title:'2 · Vier Pixel Abstand lassen',goal:'Ergänze die Quadratgröße. In jeder Zelle sollen rechts vier Pixel frei bleiben.',
+      {id: 'abstand', title:'2 · Vier Pixel Abstand lassen',goal:'Ergänze die Quadratgröße. In jeder Zelle sollen rechts vier Pixel frei bleiben.',
         hint:'Die x-Position wächst um zellenBreite. Das Quadrat muss um die gewünschte Lücke kleiner sein.',kind:'sizes',visual:true,
         fields:[field('groesse','Breite und Höhe',['zellenBreite','zellenBreite + 4','zellenBreite - 4'])],
         cases:[30,50].map(zellenBreite => test({anzahl:4,zellenBreite},(zellenBreite - 4) + ' × ' + (zellenBreite - 4))),
         source:(_,c) => drawingLoop(rowDeclaration(c),'rect(20 + i * zellenBreite, 80, {{groesse}}, {{groesse}});')},
-      {title:'3 · Die Reihe über Variablen steuern',goal:'Ergänze Position und Größe: Start bei x = 20, eine Zelle pro Durchlauf und die vorgegebene Lücke zwischen den Quadraten.',
+      {id: 'variablen', title:'3 · Die Reihe über Variablen steuern',goal:'Ergänze Position und Größe: Start bei x = 20, eine Zelle pro Durchlauf und die vorgegebene Lücke zwischen den Quadraten.',
         hint:'Für die Position zählt die ganze Zellenbreite; von der Größe des Quadrats wird die Lücke abgezogen.',kind:'geometry',visual:true,
         fields:[field('x','x-Position',['20 + i','i * zellenBreite','20 + i * zellenBreite']),field('groesse','Quadratgröße',['zellenBreite + luecke','zellenBreite - luecke','luecke'])],
         cases:[[3,80,10],[5,60,4],[0,40,6]].map(([anzahl,zellenBreite,luecke]) => geometryCase({anzahl,zellenBreite,luecke},rowTarget(anzahl,zellenBreite,luecke))),
         source:(_,c) => drawingLoop([...rowDeclaration(c),'int luecke = ' + c.values.luecke + ';'],'rect({{x}}, 80, {{groesse}}, {{groesse}});')}
     ]},
     {id:'farbe',title:'Farbwechsel in der Reihe',stages:[
-      {title:'1 · Erstes und letztes Feld markieren',goal:'Nur das erste und das sechste Feld sollen grau sein; die vier dazwischen weiß.',
+      {id: 'rand', title:'1 · Erstes und letztes Feld markieren',goal:'Nur das erste und das sechste Feld sollen grau sein; die vier dazwischen weiß.',
         hint:'Erstes und sechstes Feld haben die Indizes 0 und 5. Ein Durchlauf kann nicht beide Indizes gleichzeitig haben.',kind:'colors',visual:true,
         fields:[field('op','Verknüpfung der Indizes',['&&','||'])],cases:colorCases('grau, weiß, weiß, weiß, weiß, grau'),
         source:() => colorLoop('if (i == 0 {{op}} i == 5) {\n  fill(120);\n} else {\n  fill(255);\n}')},
-      {title:'2 · Grau und weiß im Wechsel',goal:'Das erste, dritte und fünfte Feld sollen grau sein; die anderen weiß.',
+      {id: 'wechsel', title:'2 · Grau und weiß im Wechsel',goal:'Das erste, dritte und fünfte Feld sollen grau sein; die anderen weiß.',
         hint:'Die Feldnummer beginnt bei 1, der Schleifenindex bei 0.',kind:'colors',visual:true,
         fields:[field('bedingung','Bedingung für grau',['i == 1 || i == 3 || i == 5','i == 0 || i == 2 || i == 4','i == 2 || i == 4 || i == 6'])],
         cases:colorCases('grau, weiß, grau, weiß, grau, weiß'),
         source:() => colorLoop('if ({{bedingung}}) {\n  fill(120);\n} else {\n  fill(255);\n}')},
-      {title:'3 · Die Farbe in jedem Durchlauf setzen',goal:'Repariere die Farbregel für den Wechsel grau, weiß, grau, weiß, grau, weiß.',
+      {id: 'gegenfall', title:'3 · Die Farbe in jedem Durchlauf setzen',goal:'Repariere die Farbregel für den Wechsel grau, weiß, grau, weiß, grau, weiß.',
         hint:'fill() behält seine Farbe. Ohne Gegenfall bleibt nach dem ersten grauen Feld auch das nächste grau.',kind:'colors',visual:true,external:['regel'],
         fields:[field('regel','Farbregel',['nur if','if mit else','weiß nach dem if'])],cases:colorCases('grau, weiß, grau, weiß, grau, weiß'),
         source:a => colorLoop('if (' + alternating + ') {\n  fill(120);\n}' +
           (a.regel === 'if mit else' ? ' else {\n  fill(255);\n}' : a.regel === 'weiß nach dem if' ? '\nfill(255);' : ''))}
     ]},
     {id:'balken',title:'Balkendiagramm',stages:[
-      {title:'1 · Die Höhe wächst mit i',goal:'Ergänze die Höhenberechnung. Die fünf Balken sollen 30, 60, 90, 120 und 150 Pixel hoch sein.',
+      {id: 'hoehe', title:'1 · Die Höhe wächst mit i',goal:'Ergänze die Höhenberechnung. Die fünf Balken sollen 30, 60, 90, 120 und 150 Pixel hoch sein.',
         hint:'i beginnt bei 0. Trotzdem soll schon der erste Balken eine Höhe von 30 haben.',kind:'heights',visual:true,
         fields:[field('hoehe','Balkenhöhe',['i * 30','30','(i + 1) * 30'])],cases:[test({anzahl:5,schritt:30},'30, 60, 90, 120, 150')],
         source:(_,c) => bars(c,'{{hoehe}}','height - hoehe')},
-      {title:'2 · Alle Balken stehen unten',goal:'Ergänze die y-Position. Die Unterkante jedes Balkens soll genau am unteren Leinwandrand liegen.',
+      {id: 'unterkante', title:'2 · Alle Balken stehen unten',goal:'Ergänze die y-Position. Die Unterkante jedes Balkens soll genau am unteren Leinwandrand liegen.',
         hint:'Die y-Position bezeichnet die obere Kante. Obere Kante plus Balkenhöhe soll height ergeben.',kind:'geometry',visual:true,
         fields:[field('y','y-Position',['hoehe','height - 30','height - hoehe'])],cases:[geometryCase({anzahl:5,schritt:30},barTarget(5,30))],
         source:(_,c) => bars(c,'(i + 1) * schritt','{{y}}')},
-      {title:'3 · Anzahl und Höhenzunahme ändern',goal:'Ergänze Kopf und Höhe: genau anzahl Balken, jeder um schritt höher als der vorige. Alle Balken stehen unten.',
+      {id: 'variablen', title:'3 · Anzahl und Höhenzunahme ändern',goal:'Ergänze Kopf und Höhe: genau anzahl Balken, jeder um schritt höher als der vorige. Alle Balken stehen unten.',
         hint:'Prüfe alle Vorgaben. Ein fester Faktor kann für einen Fall passen und beim nächsten falsch sein.',kind:'geometry',visual:true,
         fields:[field('op','Laufbedingung',['<=','<','>']),field('hoehe','Höhenberechnung',['i * schritt','(i + 1) * 30','(i + 1) * schritt'])],
         cases:[[3,40],[5,20],[0,30]].map(([anzahl,schritt]) => geometryCase({anzahl,schritt},barTarget(anzahl,schritt))),
@@ -281,14 +281,15 @@
   const initialState = () => ({ tasks:Object.fromEntries(TASKS.map((task,i) => [task.id,{
     active:0, open:i === 0, stages:task.stages.map(() => ({answers:{},sample:0,checked:false,passed:false}))
   }])) });
+  window.AlgorithmProgress?.setStageLayout(KEY, TASKS);
   function restore() {
     const clean = initialState();
     try {
-      const raw = JSON.parse(localStorage.getItem(KEY));
+      const raw = (window.AlgorithmProgress ? window.AlgorithmProgress.getPageState(KEY) : JSON.parse(localStorage.getItem(KEY)));
       for (const task of TASKS) {
         const saved = raw?.tasks?.[task.id], current = clean.tasks[task.id];
         if (!saved || typeof saved !== 'object') continue;
-        if (Number.isInteger(saved.active) && saved.active >= 0 && saved.active < 3) current.active = saved.active;
+        if (Number.isInteger(saved.active) && saved.active >= 0 && saved.active < task.stages.length) current.active = saved.active;
         if (typeof saved.open === 'boolean') current.open = saved.open;
         task.stages.forEach((stage,i) => {
           const record = Array.isArray(saved.stages) ? saved.stages[i] : null, target = current.stages[i];
@@ -302,7 +303,7 @@
     return clean;
   }
   const state = restore();
-  const save = () => { try { localStorage.setItem(KEY,JSON.stringify(state)); } catch (_) {} };
+  const save = () => { try { window.AlgorithmProgress ? window.AlgorithmProgress.savePageState(KEY, state) : localStorage.setItem(KEY, JSON.stringify(state)); } catch (_) {} };
   const stageFor = task => task.stages[state.tasks[task.id].active];
   const recordFor = task => state.tasks[task.id].stages[state.tasks[task.id].active];
   const missing = (stage,record) => stage.fields.some(entry => !entry.options.includes(record.answers[entry.id]));
@@ -472,7 +473,7 @@
         node.setAttribute('aria-pressed',String(current.active === i));
       });
     }
-    const node = document.getElementById('progress'), text = count + ' von 15 Stufen geschafft';
+    const node = document.getElementById('progress'), text = count + ' von ' + TASKS.reduce((sum, task) => sum + task.stages.length, 0) + ' Stufen geschafft';
     if (node.textContent !== text) node.textContent = text;
   }
   function renderTask(task) {
@@ -586,4 +587,5 @@
     details.addEventListener('toggle',() => { state.tasks[task.id].open = details.open; save(); }); root.append(details);
   });
   TASKS.forEach(renderTask);
+  window.AlgorithmProgress?.trackPageState(KEY, state);
 })();

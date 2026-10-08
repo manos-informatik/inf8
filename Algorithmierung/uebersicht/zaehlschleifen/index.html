@@ -6,9 +6,18 @@
   <title>Zählschleifen</title>
   <link rel="icon" href="../../Zählschleifen/uebersicht/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../../assets/css/progress.css" />
+  <script defer src="../../assets/js/progress.js"></script>
 </head>
-<body>
-  <header class="hero"><div class="hero-inner">
+<body data-page-key="zaehlschleifen-navigation">
+  <header class="hero">
+    <div class="progress-toolbar" aria-label="Fortschritt Aktionen">
+      <button class="progress-btn" id="saveProgressBtn" type="button">Fortschritt speichern ↑</button>
+      <button class="progress-btn" id="loadProgressBtn" type="button">Fortschritt laden ↓</button>
+      <input id="loadProgressFile" type="file" accept="application/json,.json" hidden />
+      <span class="progress-message" id="progressMessage" role="status" aria-live="polite"></span>
+    </div>
+<div class="hero-inner">
     <a class="back-link" href="../index.html">&larr; Imperative Programmierung</a>
     <p class="eyebrow">Klasse 8 · Algorithmierung</p>
     <h1>Zählschleifen</h1>

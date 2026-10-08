@@ -9,7 +9,7 @@
   };
   const $ = id => document.getElementById(id);
   const setText = (el, text) => { if (el.textContent !== String(text)) el.textContent = text; };
-  const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* optional */ } };
+  const persist = () => { try { window.AlgorithmProgress ? window.AlgorithmProgress.savePageState(KEY, state) : localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* optional */ } };
 
   // Ausdrucksbäume liefern sowohl den Processing-Text als auch die Berechnung.
   // Kein eval und kein zweiter, separat gepflegter Beispielquelltext.
@@ -64,7 +64,7 @@
   ];
   function restore() {
     try {
-      const saved = JSON.parse(localStorage.getItem(KEY));
+      const saved = (window.AlgorithmProgress ? window.AlgorithmProgress.getPageState(KEY) : JSON.parse(localStorage.getItem(KEY)));
       if (!saved || typeof saved !== "object" || Array.isArray(saved)) return;
       for (const [key, min, max] of [["vergleichX",0,400],["punkte",0,15]]) {
         if (Number.isInteger(saved[key]) && saved[key] >= min && saved[key] <= max) state[key] = saved[key];
@@ -352,4 +352,5 @@
   restore();
   document.querySelectorAll(".grid-layer").forEach(grid);
   compareRender(); logicRender(); areaRender(); ifRender(); quarterRender(); gradeRender();
+  window.AlgorithmProgress?.trackPageState(KEY, state);
 })();

@@ -6,10 +6,19 @@
   <title>Funktionen – Übungen</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="../../assets/css/progress.css" />
+  <script defer src="../../assets/js/progress.js"></script>
   <script defer src="script.js"></script>
 </head>
-<body>
+<body data-page-key="funktionen-uebung">
   <header class="hero">
+    <div class="progress-toolbar" aria-label="Fortschritt Aktionen">
+      <button class="progress-btn" id="saveProgressBtn" type="button">Fortschritt speichern ↑</button>
+      <button class="progress-btn" id="loadProgressBtn" type="button">Fortschritt laden ↓</button>
+      <input id="loadProgressFile" type="file" accept="application/json,.json" hidden />
+      <span class="progress-message" id="progressMessage" role="status" aria-live="polite"></span>
+    </div>
+
     <div class="container">
       <a class="back-link" href="../../uebersicht/funktionen/index.html">&larr; Funktionen</a>
       <p class="eyebrow">Klasse 8 &middot; Algorithmierung</p>
@@ -19,7 +28,7 @@
   <main class="container">
     <div class="page-tools">
       <a class="reference-link" href="../uebersicht/index.html">Zur Übersicht</a>
-      <p id="progress" class="status-pill" aria-live="polite">0 von 12 Stufen geschafft</p>
+      <p id="progress" class="status-pill" aria-live="polite">0 Stufen geschafft</p>
     </div>
     <div id="tasks"></div>
   </main>

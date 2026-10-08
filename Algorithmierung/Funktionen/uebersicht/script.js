@@ -1,6 +1,6 @@
 /* Funktionen - Übersicht, Klasse 8, Algorithmierung
    Nachschlagewerk: Beispiele und Gegenüberstellungen. Keine Aufgaben, keine Bewertung.
-   Die Auswahl wird automatisch gesichert - keine Speichern-Knöpfe. */
+   Die Auswahl wird automatisch gesichert. Ein gemeinsamer Export sichert den gesamten Lernstand. */
 
 (() => {
   "use strict";
@@ -15,7 +15,7 @@
 
   const persist = () => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      window.AlgorithmProgress ? window.AlgorithmProgress.savePageState(STORAGE_KEY, state) : localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch {
       // Speichern ist optional; ohne localStorage geht nur die Auswahl zwischen Besuchen verloren.
     }
@@ -23,7 +23,7 @@
 
   const restore = () => {
     try {
-      const roh = localStorage.getItem(STORAGE_KEY);
+      const roh = window.AlgorithmProgress ? JSON.stringify(window.AlgorithmProgress.getPageState(STORAGE_KEY)) : localStorage.getItem(STORAGE_KEY);
       if (!roh) return;
       const d = JSON.parse(roh);
       if (!d || typeof d !== "object") return;
@@ -452,4 +452,5 @@
   renderAufbau();
   renderZerlegt();
   renderFigur();
+  window.AlgorithmProgress?.trackPageState(STORAGE_KEY, state);
 })();
