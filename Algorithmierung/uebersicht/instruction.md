@@ -520,4 +520,33 @@ Ausdrucks- und Anweisungsbäumen erzeugt. Schriftligaturen sind deaktiviert,
 Wertanzeigen stehen untereinander.
 
 `localStorage`-Schlüssel: `inf8-zaehlschleifen-uebersicht-v1`. Gespeichert werden nur
-Regler und Auswahl. Die Kachelseite verlinkt ausschließlich die vorhandene Übersicht.
+Regler und Auswahl. Die Kachelseite verlinkt Übersicht und Übungen.
+
+### Übungen zu Zählschleifen
+
+`Zählschleifen/uebung/` enthält fünf Aufgaben mit je drei Stufen, passend zu den
+fünf Fachkarten der Übersicht:
+
+| Übersicht / Übung | Stufen |
+|---|---|
+| Aufbau einer for-Schleife | Startwert, Update, vollständiger Kopf |
+| Laufbedingung: < oder <= | ab 0 zählen, ab 1 zählen, letzter Index eingeschlossen |
+| Positionen mit i berechnen | Positionen, vier Pixel Abstand, Reihe über Variablen |
+| Farbwechsel in der Reihe | erstes/letztes Feld, alternierende Indizes, Farbe je Durchlauf |
+| Balkendiagramm | wachsende Höhen, Unterkante, Anzahl und Zunahme variabel |
+
+Auswahlen beginnen mit `?` und stehen im vollständigen Processing-Sketch.
+„Prüfen“ führt alle angegebenen Konfigurationen aus, darunter eine Anzahl von 0.
+Code, Rechtecke, Durchlaufwerte und Tabellen entstehen aus dem dargestellten Programm.
+Die Iterationstabelle zeigt auch gültige falsche Ergebnisse. Bei einer falschen
+Lösung wird der erste abweichende Prüffall in Code und Vorschau ausgewählt.
+Bei einer falschen Zählrichtung stoppt die Vorschau nach 40 Durchläufen und meldet die weiterhin
+wahre Laufbedingung. Solche Schleifen werden nicht zum Kopieren angeboten.
+Die Variable i bleibt auf den Schleifenblock beschränkt.
+
+Aufgaben zu Reihen und Farbwechsel beziehen sich auf A0 bis A2; das Balkendiagramm
+auf T0 des Logseq-Knotens „05 Zählschleifen“.
+`localStorage`-Schlüssel: `inf8-zaehlschleifen-uebung-v1`. Auswahlen, Prüffall,
+Prüfstand, bestandene Stufen und offene Aufgaben werden je Stufe gesichert.
+Der Auswerter unterstützt die hier benötigten Sprachbausteine ohne `eval` und
+ersetzt keinen vollständigen Processing-Compiler.
